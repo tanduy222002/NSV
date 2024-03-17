@@ -1,0 +1,38 @@
+# Use a base image with JDK and Maven installed
+FROM maven:3.8.4-openjdk-17-slim AS builder
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the pom.xml file to the container
+COPY mvnw pom.xml ./
+
+# Copy the Maven configuration directory (.mvn/) from the host machine to the /app/.mvn directory inside the Docker container
+COPY .mvn/ .mvn
+
+# Download project dependencies and store them locally in the Docker container
+RUN ./mvnw dependency:go-offline
+
+# Copy the source code of the application from the host machine to the /app/src directory inside the Docker container
+COPY ./src ./src
+
+
+RUN ./mvnw clean install
+
+
+
+
+# Create a new image containing only the built application
+FROM openjdk:17-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the built JAR file from the builder stage to the current directory in the container
+COPY --from=builder /app/target/*.jar app/*.jar
+
+# Expose the port the application runs on
+EXPOSE 8080
+
+# Command to run the application
+CMD ["java", "-jar", "app/*.jar"]
