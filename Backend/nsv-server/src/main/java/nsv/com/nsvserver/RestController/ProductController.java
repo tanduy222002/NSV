@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/products")
 @SecurityRequirement(name = "bearerAuth")
+@CrossOrigin
 public class ProductController {
     private ProductService productService;
 
