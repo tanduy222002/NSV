@@ -21,6 +21,7 @@ import java.util.List;
 @Validated
 @RequestMapping(value = "/api/employees")
 @SecurityRequirement(name = "bearerAuth")
+@CrossOrigin
 public class EmployeeController {
 
     private EmployeeService employeeService;
