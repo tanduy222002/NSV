@@ -1,5 +1,5 @@
 # Use a base image with JDK and Maven installed
-FROM maven:3.8.4-openjdk-17-slim AS builder
+FROM eclipse-temurin:17-jdk-focal AS builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -23,7 +23,7 @@ RUN ./mvnw clean install
 
 
 # Create a new image containing only the built application
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jdk-focal
 
 # Set the working directory in the container
 WORKDIR /app

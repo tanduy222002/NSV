@@ -16,14 +16,12 @@ import nsv.com.nsvserver.Service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
 @RequestMapping(value = "/api/auth")
+@CrossOrigin
 public class AuthController {
 
     private AuthService authService;
@@ -37,7 +35,7 @@ public class AuthController {
         this.forgotPasswordService = forgotPasswordService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/sign-in")
     @Operation(summary = "Get json web token by authentication")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sign in successfully",
@@ -55,7 +53,7 @@ public class AuthController {
 
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
         System.out.println("authenticateUser controller");
-        AuthResponseDto authResponse = authService.authenticateUser(authRequest.getUserName(), authRequest.getPassword());
+        AuthResponseDto authResponse = authService.authenticateUser(authRequest.getUsername(), authRequest.getPassword());
         return ResponseEntity.ok(authResponse);
     }
 
@@ -72,7 +70,7 @@ public class AuthController {
 
     })
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 //        AuthResponseDto authResponse = authService.signUp(signUpRequest.getUserName(), signUpRequest.getPassword(), signUpRequest.getRoles());
         AuthResponseDto authResponse = authService.signUp(signUpRequest);
