@@ -28,7 +28,8 @@ public class JwtTokenService {
     private String JWT_SECRET;
 
     //Thời gian có hiệu lực của chuỗi jwt
-    private final long JWT_EXPIRATION = 604800000L;
+    @Value("${JWT_EXPIRATION}")
+    private  long JWT_EXPIRATION;
 //    private final long JWT_EXPIRATION = 1L;
 
 

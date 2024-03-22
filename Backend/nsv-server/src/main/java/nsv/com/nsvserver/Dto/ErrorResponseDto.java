@@ -5,13 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmailDetail {
-    private String recipient;
-    @JsonProperty("msg_body")
-    private String msgBody;
-    private String subject;
-    private String attachment;
+@NoArgsConstructor
+public class ErrorResponseDto {
+    @JsonProperty("times_tamp")
+    private Date timestamp;
+    private String status;
+    private String message;
+
 }

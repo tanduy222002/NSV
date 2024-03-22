@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class AuthResponseDto implements Serializable {
     private String token;
     private List<?> roles;
     private String message;
+    @JsonProperty("refresh_token")
     private String refreshToken;
 
 
