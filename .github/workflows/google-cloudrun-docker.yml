@@ -47,8 +47,8 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches: 
-    - main
-  paths:
+    - 'main'
+    paths:
     - 'Backend/**'  # Any change within the Backend folder and its subdirectories
 
 env:
