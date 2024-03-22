@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class ProfileDto {
     @Schema( example = "tanduy", required = true)
     private String name;
     @Schema( example = "0794368181")
+    @JsonProperty("phone_number")
     private String phoneNumber;
     @Schema( example = "tanduy222002@gmail.com")
     private String email;

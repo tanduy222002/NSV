@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
-@RequestMapping(value = "/api/auth")
+@RequestMapping(value = "/auth")
 @CrossOrigin
 public class AuthController {
 
@@ -78,6 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
+    @Operation(summary = "Get json web token by sending refresh token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequestDto refreshTokenRequest) {
         String refreshToken = refreshTokenRequest.getRefreshToken();
         String newToken= refreshTokenService.refreshToken(refreshToken);
@@ -87,6 +88,7 @@ public class AuthController {
 
 
     @PostMapping("/request-otp")
+    @Operation(summary = "Send request otp to get otp code by sending email address")
     public ResponseEntity<?> requestOtp(@Valid @RequestBody GenerateOtpRequestDto otpRequest) {
         Otp otp=forgotPasswordService.generateOtpAndSendByEmail(otpRequest);
         GenerateOtpResponseDto res = new GenerateOtpResponseDto(otp.getExpiryDate(),"Otp is sent to email address: "+otpRequest.getIdentifier());
@@ -94,6 +96,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
+    @Operation(summary = "verify otp that sent and get new token to renew password")
     public ResponseEntity<?> verifyOtp(@Valid @RequestBody OtpVerifyRequestDto otpVerifyRequestDto) {
         String accessToken = forgotPasswordService.verifyOtp(otpVerifyRequestDto.getCode(),otpVerifyRequestDto.getIdentifier());
         OtpVerifyResponseDto res = new OtpVerifyResponseDto(accessToken, "Otp verify successfully");
@@ -104,6 +107,7 @@ public class AuthController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/reset-password")
+    @Operation(summary = "Renew password with token got from verify otp")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordDto) {
         String message = forgotPasswordService.resetPassword(resetPasswordDto.getNewPassword(),resetPasswordDto.getConfirmNewPassword());
         ResetPasswordResponseDto res = new ResetPasswordResponseDto(message);
