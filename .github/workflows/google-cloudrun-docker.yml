@@ -53,7 +53,7 @@ env:
   GAR_LOCATION: us-central1 # TODO: update Artifact Registry location
   SERVICE: nsv  # TODO: update Cloud Run service name
   REGION: us-central1 # TODO: update Cloud Run service region
-  REPOSITORY: bkhostel-repository
+  REPOSITORY: nsv-repository
 
 jobs:
   deploy:
@@ -67,15 +67,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+
+        steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Google Auth
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          workload_identity_provider: projects/364547968872/locations/global/workloadIdentityPools/github-action/providers/github-action
+          
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
 
        # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: github-build-deploy-cloudrun@applied-oxygen-416003.iam.gserviceaccount.com # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+          service_account:  '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
 
       # NOTE: Alternative option - authentication via credentials json
       # - name: Google Auth
