@@ -1,40 +1,55 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { BiSolidShow, BiSolidHide } from 'react-icons/bi';
 
 type PasswordInputProps = {
     placeHolder: string;
+    value: string;
+    onChange: any;
     label: string;
+    name: string;
+    errorMessage?: ReactNode;
 };
 
-const PasswordInput = ({ label, placeHolder }: PasswordInputProps) => {
+const PasswordInput = ({
+    label,
+    value,
+    onChange,
+    name,
+    placeHolder,
+    errorMessage
+}: PasswordInputProps) => {
     const [isShowed, setIsShowed] = useState(false);
     const showPassword = () => setIsShowed(true);
     const hidePassword = () => setIsShowed(false);
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col relative">
             <label
                 htmlFor="password"
                 className="font-semibold text-base text-[#1A3389]"
             >
                 {placeHolder}
             </label>
+            {errorMessage}
             <div className="flex items-center justify-between border border-[#1A3389] text-[#1A3389] bg-white font-semibold rounded-md text-sm px-4 py-2">
                 <input
                     className="outline-none flex-1"
                     id={label}
+                    value={value}
+                    onChange={onChange}
                     type={isShowed ? 'text' : 'password'}
                     placeholder={placeHolder}
+                    name={name}
                 />
-                {isShowed ? (
+                {!isShowed ? (
                     <BiSolidShow
                         className="cursor-pointer"
-                        onClick={hidePassword}
+                        onClick={showPassword}
                     />
                 ) : (
                     <BiSolidHide
                         className="cursor-pointer"
-                        onClick={showPassword}
+                        onClick={hidePassword}
                     />
                 )}
             </div>

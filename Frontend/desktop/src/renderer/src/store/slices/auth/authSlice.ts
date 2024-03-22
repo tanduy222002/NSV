@@ -10,22 +10,21 @@ type AuthSliceState = {
     value: AuthUser | null;
 };
 
-// const initState: AuthSliceState = { value: null };
-const initState: AuthSliceState = {
-    value: {
-        username: 'test user',
-        email: 'user@example.com',
-        phoneNo: '0xxx012345'
-    }
-};
+const initState: AuthSliceState = { value: null };
+// const initState: AuthSliceState = {
+//     value: {
+//         username: 'test user',
+//         email: 'user@example.com',
+//         phoneNo: '0xxx012345'
+//     }
+// };
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState: initState,
     reducers: {
-        loggedIn: (state, action: PayloadAction<AuthUser>) =>
-            (state.value = action.payload),
-        loggedOut: (state) => (state.value = null)
+        loggedIn: (_, action: PayloadAction<AuthSliceState>) => action.payload,
+        loggedOut: () => initState
     }
 });
 

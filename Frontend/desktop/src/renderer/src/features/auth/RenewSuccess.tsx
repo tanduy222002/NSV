@@ -1,18 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { MdCheckCircleOutline } from 'react-icons/md';
+import { Button } from '@renderer/components';
 
 const RenewSuccess = () => {
     const navigate = useNavigate();
-    const goToRenewPasswordForm = () => navigate('/renew-password');
-    const goToLoginForm = () => navigate('/login');
-    const handleValidateEmail = () => {
-        goToRenewPasswordForm();
-    };
+    const goToLoginForm = () => navigate('/auth/login');
     return (
-        <div
-            className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col items-center gap-4"
-            onSubmit={() => handleValidateEmail()}
-        >
+        <div className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col items-center gap-4">
             <h1 className="text-xl font-semibold text-[#1A3389]">
                 Tạo mới thành công!
             </h1>
@@ -21,13 +15,11 @@ const RenewSuccess = () => {
                 khẩu mới
             </p>
             <MdCheckCircleOutline className="text-green-600 w-[180px] h-[180px]" />
-            <button
+            <Button
                 className="bg-[#1A3389] rounded-md px-4 py-2 text-white font-semibold w-full"
-                type="button"
-                onClick={goToLoginForm}
-            >
-                Quay lại trang đăng nhập
-            </button>
+                action={goToLoginForm}
+                text="Quay lại trang đăng nhập"
+            />
         </div>
     );
 };

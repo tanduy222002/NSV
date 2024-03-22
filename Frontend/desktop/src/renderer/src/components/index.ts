@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import ModalProvider from './ModalProvider';
 import FormInput from './FormInput';
 import ConfirmationPopup from './ConfirmationPopup';
+import Loading from './Loading';
 
 export {
     Button,
@@ -13,5 +14,6 @@ export {
     SearchBar,
     ModalProvider,
     FormInput,
-    ConfirmationPopup
+    ConfirmationPopup,
+    Loading
 };
