@@ -1,9 +1,10 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nsv.com.nsvserver.Entity.Otp;
+
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenerateOtpResponseDto {
-    private Date otp_expiry_date;
+    @JsonProperty("otp_expiry_date")
+    private Date otpExpiryDate;
     private String message;
 }

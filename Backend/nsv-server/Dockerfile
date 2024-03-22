@@ -11,7 +11,7 @@ COPY mvnw pom.xml ./
 COPY .mvn/ .mvn
 
 # Download project dependencies and store them locally in the Docker container
-RUN ./mvnw dependency:go-offline
+RUN ./mvnw dependency:resolve
 
 # Copy the source code of the application from the host machine to the /app/src directory inside the Docker container
 COPY ./src ./src
