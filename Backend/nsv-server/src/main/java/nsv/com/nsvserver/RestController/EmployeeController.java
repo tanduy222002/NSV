@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping(value = "/api/employees")
+@RequestMapping(value = "/employees")
 @SecurityRequirement(name = "bearerAuth")
 public class EmployeeController {
 
