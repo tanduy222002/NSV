@@ -46,7 +46,10 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+    - main
+  paths:
+    - 'Backend/**'  # Any change within the Backend folder and its subdirectories
 
 env:
   PROJECT_ID: applied-oxygen-416003 # TODO: update Google Cloud project id
