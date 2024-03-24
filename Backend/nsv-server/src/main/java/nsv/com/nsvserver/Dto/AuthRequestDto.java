@@ -1,6 +1,5 @@
 package nsv.com.nsvserver.Dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -10,7 +9,7 @@ import nsv.com.nsvserver.Anotation.StrongPassword;
 @Setter
 @ToString
 @AllArgsConstructor
-public class AuthRequest {
+public class AuthRequestDto {
     @NotBlank(message = "user name is mandatory")
     @Schema( example = "tanduy222002@gmail.com", required = true)
     private String username;

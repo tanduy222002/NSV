@@ -50,9 +50,9 @@ public class AuthController {
 
     })
 
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequestDto authRequestDto) {
         System.out.println("authenticateUser controller");
-        AuthResponseDto authResponse = authService.authenticateUser(authRequest.getUsername(), authRequest.getPassword());
+        AuthResponseDto authResponse = authService.authenticateUser(authRequestDto.getUsername(), authRequestDto.getPassword());
         return ResponseEntity.ok(authResponse);
     }
 
@@ -70,9 +70,9 @@ public class AuthController {
     })
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-//        AuthResponseDto authResponse = authService.signUp(signUpRequest.getUserName(), signUpRequest.getPassword(), signUpRequest.getRoles());
-        AuthResponseDto authResponse = authService.signUp(signUpRequest);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
+//        AuthResponseDto authResponse = authService.signUp(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(), signUpRequestDto.getRoles());
+        AuthResponseDto authResponse = authService.signUp(signUpRequestDto);
         return ResponseEntity.ok(authResponse);
     }
 
@@ -88,27 +88,23 @@ public class AuthController {
 
     @PostMapping("/request-otp")
     @Operation(summary = "Send request otp to get otp code by sending email address")
-    public ResponseEntity<?> requestOtp(@Valid @RequestBody GenerateOtpRequestDto otpRequest) {
+    public ResponseEntity<?> requestOtp(@Valid @RequestBody GenerateOtpRequestDto otpRequest) throws Exception {
         Otp otp=forgotPasswordService.generateOtpAndSendByEmail(otpRequest);
         GenerateOtpResponseDto res = new GenerateOtpResponseDto(otp.getExpiryDate(),"Otp is sent to email address: "+otpRequest.getIdentifier());
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/verify-otp")
-    @Operation(summary = "verify otp that sent and get new token to renew password")
-    public ResponseEntity<?> verifyOtp(@Valid @RequestBody OtpVerifyRequestDto otpVerifyRequestDto) {
-        String accessToken = forgotPasswordService.verifyOtp(otpVerifyRequestDto.getCode(),otpVerifyRequestDto.getIdentifier());
-        OtpVerifyResponseDto res = new OtpVerifyResponseDto(accessToken, "Otp verify successfully");
-        return ResponseEntity.ok(res);
 
 
-    }
 
-    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("/reset-password")
     @Operation(summary = "Renew password with token got from verify otp")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordDto) {
-        String message = forgotPasswordService.resetPassword(resetPasswordDto.getNewPassword(),resetPasswordDto.getConfirmNewPassword());
+        String message = forgotPasswordService.resetPassword(
+                resetPasswordDto.getNewPassword(),
+                resetPasswordDto.getCode(),
+                resetPasswordDto.getIdentifier()
+        );
         ResetPasswordResponseDto res = new ResetPasswordResponseDto(message);
         return ResponseEntity.ok(res);
 

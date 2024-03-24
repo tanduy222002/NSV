@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailDetail {
+public class EmailDetailDto {
     private String recipient;
     @JsonProperty("msg_body")
     private String msgBody;
