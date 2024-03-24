@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import nsv.com.nsvserver.Anotation.MatchingPassword;
 import nsv.com.nsvserver.Anotation.StrongPassword;
+import nsv.com.nsvserver.Anotation.ValidEmail;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
         password = "password",
         confirmPassword = "confirmPassword"
 )
-public class SignUpRequest {
+public class SignUpRequestDto {
     @Schema( example = "tanduy222002@gmail.com", required = true)
     @NotBlank(message = "user name is mandatory")
     @Size(max = 50,message = "user name must not exceed 50 characters")
@@ -35,6 +36,12 @@ public class SignUpRequest {
     @JsonProperty("confirm_password")
     private String confirmPassword;
 
-    @Schema(example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false)
+
+    @NotBlank(message = "email is mandatory")
+    @ValidEmail
+    @Schema( example = "tanduy222002@gmail.com", required = true,description = "Email will receive updates, alerts, and important information related to account activity, services...")
+    private String email;
+
+    @Schema(example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false,description = "the account will automatically be assigned the default role of \"ROLE_EMPLOYEE\" if no role is specified ")
     private List<String> roles;
 }

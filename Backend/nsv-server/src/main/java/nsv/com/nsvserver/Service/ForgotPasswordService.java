@@ -1,20 +1,19 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Client.EmailService;
-import nsv.com.nsvserver.Dto.EmailDetail;
+import nsv.com.nsvserver.Dto.EmailDetailDto;
 import nsv.com.nsvserver.Dto.GenerateOtpRequestDto;
 import nsv.com.nsvserver.Entity.Employee;
-import nsv.com.nsvserver.Entity.EmployeeDetail;
 import nsv.com.nsvserver.Entity.Otp;
+import nsv.com.nsvserver.Exception.EmailNotFoundException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.OtpExpiredException;
 import nsv.com.nsvserver.Exception.OtpNotMatchIdentifierException;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
 import nsv.com.nsvserver.Repository.OtpRepository;
+import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,44 +38,73 @@ public class ForgotPasswordService {
 
     private JwtTokenService jwtTokenService;
 
+    private RefreshTokenRepository refreshTokenRepository;
+
     PasswordEncoder encoder;
 
     @Autowired
-    public ForgotPasswordService(PasswordEncoder encoder,EmailService emailService, EmployeeRepository employeeRepository, OtpRepository otpRepository, JwtTokenService jwtTokenService) {
+    public ForgotPasswordService(RefreshTokenRepository refreshTokenRepository,PasswordEncoder encoder,EmailService emailService, EmployeeRepository employeeRepository, OtpRepository otpRepository, JwtTokenService jwtTokenService) {
         this.emailService = emailService;
         this.employeeRepository = employeeRepository;
         this.otpRepository = otpRepository;
         this.jwtTokenService=jwtTokenService;
         this.encoder=encoder;
+        this.refreshTokenRepository=refreshTokenRepository;
     }
 
     @Transactional
-    public Otp generateOtpAndSendByEmail(GenerateOtpRequestDto otpRequest){
-        try{
-            Otp otp = generateOtp(otpRequest.getIdentifier());
-        EmailDetail emailDetail = new EmailDetail();
-        emailDetail.setRecipient(otpRequest.getIdentifier());
-        emailDetail.setSubject("Otp for reset password");
+    public Otp generateOtpAndSendByEmail(GenerateOtpRequestDto otpRequest) throws Exception{
+        Otp otp = generateOtp(otpRequest.getIdentifier());
+        EmailDetailDto emailDetailDto = new EmailDetailDto();
+        emailDetailDto.setRecipient(otpRequest.getIdentifier());
+        emailDetailDto.setSubject("Otp for reset password");
         // Read the HTML template into a String variable
         Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
         String absolutePath = currentPath.toAbsolutePath().toString();
 
         String htmlContent = readHtmlTemplateFromFile(absolutePath);
-        htmlContent=htmlContent.replace("{User}", emailDetail.getRecipient());
+        htmlContent=htmlContent.replace("{User}", emailDetailDto.getRecipient());
         htmlContent=htmlContent.replace("{OTP}",otp.getCode());
 
-        emailDetail.setMsgBody(htmlContent);
-        emailService.sendEmailWithHtmlContent(emailDetail);
+        emailDetailDto.setMsgBody(htmlContent);
+        emailService.sendEmailWithHtmlContent(emailDetailDto);
             return otp;
-        }
 
-        catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
+
     }
 
-    public String verifyOtp(String otpCode, String identifier){
-        Otp userOtp = otpRepository.findByCode(otpCode).orElseThrow(
+
+
+    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        byte[] bytes = Files.readAllBytes(path);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+    @Transactional
+    public Otp generateOtp(String email){
+        Employee employee = employeeRepository.findByEmail(email).
+                orElseThrow(
+                        ()->new EmailNotFoundException("No employee found with email: "+email)
+                );
+
+        String code = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
+        Otp otp =new Otp();
+        otp.setCode(code);
+        otp.setExpiryDate(
+                new Date(System.currentTimeMillis()+ OTP_EXPIRATION)
+        );
+
+        if (employee.getOtp()!=null){
+            otpRepository.delete(employee.getOtp());
+        }
+        employee.setOtp(otp);
+        employeeRepository.save(employee);
+        return otp;
+    }
+
+    @Transactional
+    public String resetPassword(String newPassword, String otp, String identifier) {
+        Otp userOtp = otpRepository.findByCode(otp).orElseThrow(
                 ()->new NotFoundException("Otp does not exist")
         );
         if(userOtp.getExpiryDate().getTime()<System.currentTimeMillis()){
@@ -87,39 +115,11 @@ public class ForgotPasswordService {
         if(!email.equals(identifier)){
             throw new OtpNotMatchIdentifierException();
         }
-
-        String token = jwtTokenService.generateToken(employee);
-        return token;
-    }
-
-    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        byte[] bytes = Files.readAllBytes(path);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-    public Otp generateOtp(String email){
-        String code = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
-        Otp otp =new Otp();
-        otp.setCode(code);
-        otp.setExpiryDate(
-                new Date(System.currentTimeMillis()+ OTP_EXPIRATION)
-        );
-        Employee employee = employeeRepository.findByEmail(email).
-                orElseThrow(()->new NotFoundException("No employee found with email: " + email));
-        if (employee.getOtp()!=null){
-            otpRepository.delete(employee.getOtp());
-        }
-        employee.setOtp(otp);
-        employeeRepository.save(employee);
-        return otp;
-    }
-
-    @Transactional
-    public String resetPassword(String newPassword, String confirmNewPassword) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        EmployeeDetail employeeDetail = (EmployeeDetail) authentication.getPrincipal();
-        Employee employee=employeeDetail.getEmployee();
-                employee.setPassword(encoder.encode(newPassword));
+        employee.setPassword(encoder.encode(newPassword));
+        refreshTokenRepository.delete(employee.getRefreshToken());
+        otpRepository.delete(userOtp);
+        employee.setRefreshToken(null);
+        employee.setOtp(null);
         employeeRepository.save(employee);
         return "New password was updated";
     }

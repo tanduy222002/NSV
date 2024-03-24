@@ -1,23 +1,17 @@
-package nsv.com.nsvserver.Service;
+package nsv.com.nsvserver.ClientImpl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import nsv.com.nsvserver.Client.EmailService;
-import nsv.com.nsvserver.Dto.EmailDetail;
+import nsv.com.nsvserver.Dto.EmailDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.antlr.v4.runtime.misc.Utils.readFile;
 
@@ -34,13 +28,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmail(EmailDetail emailDetail) {
+    public void sendEmail(EmailDetailDto emailDetailDto) {
         try{
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("duytan222002@gmail.com");
-        message.setTo(emailDetail.getRecipient());
-        message.setSubject(emailDetail.getSubject());
-        message.setText(emailDetail.getMsgBody());
+        message.setTo(emailDetailDto.getRecipient());
+        message.setSubject(emailDetailDto.getSubject());
+        message.setText(emailDetailDto.getMsgBody());
         mailSender.send(message);}
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -49,17 +43,17 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailWithHtmlContent(EmailDetail emailDetail) {
+    public void sendEmailWithHtmlContent(EmailDetailDto emailDetailDto) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
         try {
             mimeMessageHelper.setFrom("tanduy222002@gmail.com");
-            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setTo(emailDetailDto.getRecipient());
             mimeMessageHelper.setSubject(
-                    emailDetail.getSubject());
+                    emailDetailDto.getSubject());
 
-            mimeMessageHelper.setText(emailDetail.getMsgBody(),true);
+            mimeMessageHelper.setText(emailDetailDto.getMsgBody(),true);
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -67,7 +61,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void SendEmailWithAttachments(EmailDetail emailDetail) {
+    public void SendEmailWithAttachments(EmailDetailDto emailDetailDto) {
         MimeMessage mimeMessage
                 = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
@@ -79,15 +73,15 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper
                     = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom("tanduy222002@gmail.com");
-            mimeMessageHelper.setTo(emailDetail.getRecipient());
-            mimeMessageHelper.setText(emailDetail.getMsgBody());
+            mimeMessageHelper.setTo(emailDetailDto.getRecipient());
+            mimeMessageHelper.setText(emailDetailDto.getMsgBody());
             mimeMessageHelper.setSubject(
-                    emailDetail.getSubject());
+                    emailDetailDto.getSubject());
 
             // Adding the attachment
             FileSystemResource file
                     = new FileSystemResource(
-                    new File(emailDetail.getAttachment()));
+                    new File(emailDetailDto.getAttachment()));
 
             mimeMessageHelper.addAttachment(
                     file.getFilename(), file);

@@ -3,9 +3,8 @@ package nsv.com.nsvserver.Service;
 
 import jakarta.transaction.Transactional;
 import nsv.com.nsvserver.Dto.AuthResponseDto;
-import nsv.com.nsvserver.Dto.SignUpRequest;
+import nsv.com.nsvserver.Dto.SignUpRequestDto;
 import nsv.com.nsvserver.Entity.*;
-import nsv.com.nsvserver.Exception.IllegalRoleException;
 import nsv.com.nsvserver.Exception.UserNameExistsException;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
 import nsv.com.nsvserver.Repository.RoleRepository;
@@ -73,11 +72,12 @@ public class AuthService {
         return new AuthResponseDto(employee.getId(),jwt,roles,"Create successfully",employee.getRefreshToken().getToken());
     }
     @Transactional
-    public AuthResponseDto signUp(SignUpRequest signUpRequest){
+    public AuthResponseDto signUp(SignUpRequestDto signUpRequestDto){
         //Get request information
-        String userName = signUpRequest.getUserName();
-        String password = signUpRequest.getPassword();
-        List<String> roles = signUpRequest.getRoles();
+        String userName = signUpRequestDto.getUserName();
+        String password = signUpRequestDto.getPassword();
+        String email= signUpRequestDto.getEmail();
+        List<String> roles = signUpRequestDto.getRoles();
 
         //Check if username is already existed
         if (employeeRepository.existsByUserName(userName)){
@@ -88,7 +88,7 @@ public class AuthService {
         Employee employee =new Employee(userName, encoder.encode(password));
 
         //Set roles for employee
-        if(roles==null){
+        if(roles==null || roles.isEmpty()){
             roles =Arrays.asList("ROLE_EMPLOYEE");
         }
         else{
@@ -112,7 +112,7 @@ public class AuthService {
         //Create profile for employee
         Profile employeeProfile = new Profile();
         employeeProfile.setName(userName);
-        employeeProfile.setEmail(userName);
+        employeeProfile.setEmail(email);
         employee.setProfile(employeeProfile);
 
         //Create refreshToken and Insert employee into db

@@ -129,19 +129,20 @@ public class AuthExceptionHandler {
                 e.getMessage()),
                 HttpStatus.NOT_FOUND);
     }
-    @org.springframework.web.bind.annotation.ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<?> handleDefaultException(Exception e) {
-        System.out.println(e.getClass().getName());
-        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                e.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.NOT_FOUND.toString(),
+                e.getMessage()),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> handleEmailNotFoundException(EmailNotFoundException e) {
+        System.out.println("EmailNotFoundException");
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.NOT_FOUND.toString(),
                 e.getMessage()),
@@ -159,12 +160,31 @@ public class AuthExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<?> handleRefreshTokenExpiredException(RefreshTokenExpiredException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-                HttpStatus.UNAUTHORIZED.toString(),
+                HttpStatus.FORBIDDEN.toString(),
                 e.getMessage()),
-                HttpStatus.UNAUTHORIZED);
+                HttpStatus.FORBIDDEN);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<?> handleOtpExpiredException(OtpExpiredException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.FORBIDDEN.toString(),
+                e.getMessage()),
+                HttpStatus.FORBIDDEN);
+    }
+//    @org.springframework.web.bind.annotation.ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ResponseEntity<?> handleDefaultException(Exception e) {
+//        System.out.println(e.getClass().getName());
+//        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+//                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+//                e.getMessage()),
+//                HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+
 
 }

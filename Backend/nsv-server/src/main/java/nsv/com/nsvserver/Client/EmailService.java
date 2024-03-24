@@ -1,10 +1,10 @@
 package nsv.com.nsvserver.Client;
 
-import nsv.com.nsvserver.Dto.EmailDetail;
+import nsv.com.nsvserver.Dto.EmailDetailDto;
 
 public interface EmailService {
-    void sendEmail(EmailDetail emailDetail);
-    void SendEmailWithAttachments(EmailDetail emailDetail);
+    void sendEmail(EmailDetailDto emailDetailDto);
+    void SendEmailWithAttachments(EmailDetailDto emailDetailDto);
 
-    void sendEmailWithHtmlContent(EmailDetail emailDetail);
+    void sendEmailWithHtmlContent(EmailDetailDto emailDetailDto);
 }

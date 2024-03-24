@@ -66,7 +66,9 @@ public class Employee {
 
     public void setRefreshToken(RefreshToken refreshToken) {
         this.refreshToken = refreshToken;
+        if(refreshToken != null){
         refreshToken.setEmployee(this);
+        }
     }
 
     public void setProfile(Profile profile) {
@@ -76,7 +78,9 @@ public class Employee {
 
     public void setOtp(Otp otp) {
         this.otp = otp;
+        if(otp != null){
         otp.setEmployee(this);
+        }
     }
 
     @Override
