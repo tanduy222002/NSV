@@ -18,7 +18,7 @@ public class Quality {
     private String name;
 
     @Column(name = "note")
-    private String seasonal;
+    private String description;
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="type_id", nullable=false)

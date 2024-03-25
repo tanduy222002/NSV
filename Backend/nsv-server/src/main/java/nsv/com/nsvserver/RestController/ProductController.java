@@ -16,6 +16,7 @@ import nsv.com.nsvserver.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,8 +55,9 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal  Server Error")
 
     })
-    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productCreateDto) {
-            productService.createNewProduct(productCreateDto);
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
+    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productDto) {
+        productService.createNewProduct(productDto);
         return ResponseEntity.ok("New product is added successfully");
     }
 
