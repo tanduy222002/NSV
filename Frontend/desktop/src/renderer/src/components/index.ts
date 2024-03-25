@@ -6,6 +6,7 @@ import ModalProvider from './ModalProvider';
 import FormInput from './FormInput';
 import ConfirmationPopup from './ConfirmationPopup';
 import Loading from './Loading';
+import Wrapper from './Wrapper';
 
 export {
     Button,
@@ -15,5 +16,6 @@ export {
     ModalProvider,
     FormInput,
     ConfirmationPopup,
-    Loading
+    Loading,
+    Wrapper
 };

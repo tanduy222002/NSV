@@ -33,17 +33,29 @@ const LoginForm = () => {
         return errors;
     };
 
-    const handleLogin = async ({ username, password }) => {
-        console.log('submit form request: ', username, password);
-        mutation.mutate({ username, password });
-        navigate('/');
-    };
-
     const mutation = useMutation({
         mutationFn: async (payload: any) => {
-            await makeLoginRequest(payload);
+            return await makeLoginRequest(payload);
         }
     });
+
+    const handleLogin = async ({ username, password }) => {
+        console.log('submit form request: ', username, password);
+        const response: any = await mutation.mutateAsync({
+            username,
+            password
+        });
+        if (response?.status === 401) {
+            alert('Thông tin đăng nhập không hợp lệ');
+            return;
+        }
+        if (response?.status >= 500) {
+            alert('Đã có lỗi xảy ra. Vui lòng thử lại sau');
+            return;
+        }
+        // update user
+        navigate('/');
+    };
 
     if (mutation.isPending) return <Loading />;
 

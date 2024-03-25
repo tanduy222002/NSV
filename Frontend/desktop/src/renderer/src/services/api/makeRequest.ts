@@ -26,7 +26,7 @@ export const makeRequest = ({ method, url, params, body }: HttpRequest) => {
         data: body
     })
         .then((res) => res.data)
-        .catch((err) => console.log('error: ', err?.message));
+        .catch((err) => err?.response);
 };
 
 export const makeAuthRequest = ({
@@ -46,5 +46,5 @@ export const makeAuthRequest = ({
         data: body
     })
         .then((res) => res.data)
-        .catch((err) => console.log('error: ', err?.message));
+        .catch((err) => err);
 };

@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { Formik } from 'formik';
 import { Button } from '@renderer/components';
 import { TextInput, PasswordInput, InputError } from './components';
+import { makeSignupRequest } from '@renderer/services/api';
 import { emailRegex, phoneNumberRegex } from './constant';
 
 type RegisterFormValues = {
@@ -9,6 +11,7 @@ type RegisterFormValues = {
     email: string;
     phoneNumber: string;
     password: string;
+
     confirmPassword: string;
 };
 
@@ -66,12 +69,20 @@ const RegisterForm = () => {
         return errors;
     };
 
-    const handleRegister = () => {};
+    const mutation = useMutation({
+        mutationFn: async (payload: any) => {
+            return await makeSignupRequest(payload);
+        }
+    });
+
+    const handleRegister = () => {
+        // const response = await mutation.mutateAsync(payload);
+    };
     return (
         <Formik
             initialValues={registerFormInitValues}
             validate={validateInput}
-            onSubmit={handleRegister}
+            onSubmit={(values) => handleRegister(values)}
         >
             {({ values, errors, handleChange, handleSubmit, touched }) => (
                 <form

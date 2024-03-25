@@ -29,7 +29,7 @@ const TableView = ({
     deleteAction
 }: TableViewProps) => {
     return (
-        <table className="w-full border-collapse">
+        <table className="w-full h-fit border-collapse">
             <tr className="border border-1">
                 {columns.map(({ title, sortable }) => (
                     <th className="px-2 py-2" key={title}>

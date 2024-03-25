@@ -10,14 +10,14 @@ type AuthSliceState = {
     value: AuthUser | null;
 };
 
-const initState: AuthSliceState = { value: null };
-// const initState: AuthSliceState = {
-//     value: {
-//         username: 'test user',
-//         email: 'user@example.com',
-//         phoneNo: '0xxx012345'
-//     }
-// };
+// const initState: AuthSliceState = { value: null };
+const initState: AuthSliceState = {
+    value: {
+        username: 'test user',
+        email: 'user@example.com',
+        phoneNo: '0xxx012345'
+    }
+};
 
 export const authSlice = createSlice({
     name: 'auth',

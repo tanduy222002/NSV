@@ -1,12 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import AuthPage from './pages/AuthPage';
 import LoginForm from './features/auth/LoginForm';
 import RegisterForm from './features/auth/RegisterForm';
 import RenewPasswordForm from './features/auth/RenewPasswordForm';
 import ForgotPasswordForm from './features/auth/ForgotPasswordForm';
 import RenewSuccess from './features/auth/RenewSuccess';
 import HomePage from './pages/HomePage';
-import { ProductPage, WareHousePage, ExportPage, ImportPage } from './pages';
+import {
+    AuthPage,
+    ProductPage,
+    WareHousePage,
+    ExportPage,
+    ImportPage,
+    CreateProductPage,
+    EditProductPage
+} from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { Sidebar } from './layouts';
@@ -51,6 +58,14 @@ function App(): JSX.Element {
                                 <Route
                                     path="/product"
                                     element={<ProductPage />}
+                                />
+                                <Route
+                                    path="/product/create"
+                                    element={<CreateProductPage />}
+                                />
+                                <Route
+                                    path="/product/edit"
+                                    element={<EditProductPage />}
                                 />
                                 <Route
                                     path="/export"
