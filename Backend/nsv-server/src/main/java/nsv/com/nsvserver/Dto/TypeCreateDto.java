@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 
 public class TypeCreateDto {
-
     @NotBlank(message = "name is mandatory")
     @Schema( example = "Ri 6", required = true)
     private String name;

@@ -2,6 +2,7 @@ package nsv.com.nsvserver.ClientImpl;
 
 import com.cloudinary.Cloudinary;
 import nsv.com.nsvserver.Client.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 @Service
 public class ImageServiceImpl implements ImageService {
     private Cloudinary cloudinary;
-
+    @Autowired
     public ImageServiceImpl(Cloudinary cloudinary) {
         this.cloudinary = cloudinary;
     }

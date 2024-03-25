@@ -56,8 +56,8 @@ public class ProductController {
 
     })
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
-    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productCreateDto) {
-            productService.createNewProduct(productCreateDto);
+    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productDto) {
+        productService.createNewProduct(productDto);
         return ResponseEntity.ok("New product is added successfully");
     }
 
