@@ -48,6 +48,7 @@ public class ProductController {
 
 
 
+
     @PostMapping("")
     @Operation(summary = "Create a new product")
     @ApiResponses(value = {
@@ -66,6 +67,7 @@ public class ProductController {
     }
 
 
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     @PostMapping("/{productId}/types")
     @Operation(summary = "Create a new type for product")
     @ApiResponses(value = {
@@ -78,6 +80,7 @@ public class ProductController {
     }
 
 
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     @PostMapping("/types/{typeId}")
     @Operation(summary = "Create a new quality for type")
     @ApiResponses(value = {
@@ -89,6 +92,7 @@ public class ProductController {
         return ResponseEntity.ok("New type is added successfully");
     }
 
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     @PostMapping("/products/types/qualities")
     @Operation(summary = "Create a new quality for type")
     @ApiResponses(value = {
