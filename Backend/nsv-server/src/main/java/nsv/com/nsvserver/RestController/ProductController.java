@@ -7,11 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import nsv.com.nsvserver.Dto.EmployeeDto;
-import nsv.com.nsvserver.Dto.ProductCreateDto;
-import nsv.com.nsvserver.Dto.ProductDto;
-import nsv.com.nsvserver.Dto.TypeCreateDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Product;
+import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,18 +32,20 @@ public class ProductController {
 
     @GetMapping("")
     @Operation(summary = "Get all products")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get product list successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EmployeeDto.class)) }),
 
-            @ApiResponse(responseCode = "500", description = "Internal  Server Error")
-
-    })
     public ResponseEntity<?> getAllProduct() {
         List<ProductDto> productDtoList = productService.getAllProducts();
         return ResponseEntity.ok(productDtoList);
     }
+
+    @GetMapping("/{productId}")
+    @Operation(summary = "Get product by id")
+
+    public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
+        Product product = productService.getProductById(productId);
+        return ResponseEntity.ok(new ProductDto(product));
+    }
+
 
 
     @PostMapping("")
@@ -56,8 +56,12 @@ public class ProductController {
 
     })
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
-    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productDto) {
-        productService.createNewProduct(productDto);
+    public ResponseEntity<?> createNewProduct(@Valid @RequestBody ProductCreateDto productDto) throws Exception {
+        productService.createNewProduct(
+                productDto.getName()
+                ,productDto.getVariety()
+                ,productDto.getImage()
+        );
         return ResponseEntity.ok("New product is added successfully");
     }
 
@@ -68,9 +72,32 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Create type for product successfully"),
             @ApiResponse(responseCode = "500", description = "Internal  Server Error")
     })
-    public ResponseEntity<?> createTypeForProduct(@PathVariable Integer productId,@Valid @RequestBody TypeCreateDto typeCreateDto) {
+    public ResponseEntity<?> createTypeForProduct(@PathVariable Integer productId,@Valid @RequestBody TypeCreateDto typeCreateDto) throws Exception{
         productService.createNewTypeForProduct(typeCreateDto,productId);
         return ResponseEntity.ok("New type is added successfully");
+    }
+
+
+    @PostMapping("/types/{typeId}")
+    @Operation(summary = "Create a new quality for type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Create type for product successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal  Server Error")
+    })
+    public ResponseEntity<?> createQualityForType(@PathVariable Integer typeId, @Valid @RequestBody QualityCreateDto qualityCreateDto) throws Exception{
+        productService.createQualityForType(new Quality(qualityCreateDto),typeId);
+        return ResponseEntity.ok("New type is added successfully");
+    }
+
+    @PostMapping("/products/types/qualities")
+    @Operation(summary = "Create a new quality for type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Create type for product successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal  Server Error")
+    })
+    public ResponseEntity<?> createProductTypeQuality(@Valid @RequestBody ProductTypeQualityDto dto) throws Exception{
+        productService.createProductQualityType(dto);
+        return ResponseEntity.ok("New product with types and qualities is added successfully");
     }
 
 }

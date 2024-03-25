@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import nsv.com.nsvserver.Dto.TypeCreateDto;
+import nsv.com.nsvserver.Dto.TypeWithQualityDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,19 @@ public class Type {
     @JoinColumn(name="product_id", nullable=false)
     private Product product;
 
-    @OneToMany(mappedBy="type",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy="type",cascade = CascadeType.ALL)
     private List<Quality> qualities = new ArrayList<>();
 
+    public void addQuality(Quality quality) {
+        if (this.qualities==null){
+            this.qualities = new ArrayList<>();
+            this.qualities.add(quality);
+        }
+        else{
+            this.qualities.add(quality);
+        }
+        quality.setType(this);
+    }
     public Type() {
     }
     public void addProduct(Product product) {
@@ -53,4 +64,12 @@ public class Type {
         this.lowerTemperatureThreshold=dto.getLowerTemperatureThreshold();
         this.upperTemperatureThreshold=dto.getUpperTemperatureThreshold();
     }
+    public Type(TypeWithQualityDto dto) {
+        this.name=dto.getName();
+        this.seasonal=dto.getSeasonal();
+        this.image=dto.getImage();
+        this.lowerTemperatureThreshold=dto.getLowerTemperatureThreshold();
+        this.upperTemperatureThreshold=dto.getUpperTemperatureThreshold();
+    }
+
 }
