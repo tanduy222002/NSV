@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy="product",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
     private List<Type> types = new ArrayList<>();
 
     public Product() {

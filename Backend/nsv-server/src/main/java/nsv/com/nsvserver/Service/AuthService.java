@@ -7,6 +7,7 @@ import nsv.com.nsvserver.Dto.SignUpRequestDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.UserNameExistsException;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
+import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import nsv.com.nsvserver.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,18 +35,19 @@ public class AuthService {
 
     JwtTokenService jwtTokenService;
 
+    RefreshTokenRepository refreshTokenRepository;
+
     RefreshTokenService refreshTokenService;
+
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager,
-                       EmployeeRepository employeeRepository, RoleRepository roleRepository,
-                       PasswordEncoder encoder, JwtTokenService jwtTokenService,
-                       RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, EmployeeRepository employeeRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenService jwtTokenService, RefreshTokenRepository refreshTokenRepository, RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.employeeRepository = employeeRepository;
+        this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtTokenService = jwtTokenService;
-        this.roleRepository = roleRepository;
-        this.refreshTokenService =refreshTokenService;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public AuthResponseDto authenticateUser (String userName, String password){
@@ -119,14 +121,18 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenService.generateRefreshToken(employee);
 
 
-
-
-
-
         //generate jwt token and return DTO used for response
         String jwt = jwtTokenService.generateToken(employee);
         return new AuthResponseDto(employee.getId(),jwt,roles,"Signup successfully",refreshToken.getToken());
 
+    }
+
+    @Transactional
+    public void logOut(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        EmployeeDetail employeeDetail = (EmployeeDetail) authentication.getPrincipal();
+        Employee employee = employeeDetail.getEmployee();
+        refreshTokenRepository.deleteByEmployee(employee);
     }
     public void checkValidRole(List<String> roles){
         List<String> acceptedRole = Arrays.asList("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_MANAGER");

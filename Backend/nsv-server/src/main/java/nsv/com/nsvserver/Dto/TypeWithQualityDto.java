@@ -2,16 +2,19 @@ package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import nsv.com.nsvserver.Anotation.Base64Img;
 
+import java.util.List;
 
-@Getter
-@Setter
-
-public class TypeCreateDto {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class TypeWithQualityDto {
     @NotBlank(message = "name is mandatory")
     @Schema( example = "Ri 6", required = true)
     private String name;
@@ -30,5 +33,7 @@ public class TypeCreateDto {
     @Base64Img
     @Schema(description = "The base64 encoded of image start with prefix: \"data:image/jpeg;base64,\" + code")
     private String image;
-
+    @JsonProperty("qualities")
+    @Valid
+    private List<QualityCreateDto> qualityCreateDtoList;
 }
