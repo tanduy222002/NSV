@@ -1,4 +1,4 @@
-import { cn } from '@renderer/lib/util';
+import { cn } from '@renderer/utils/util';
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 

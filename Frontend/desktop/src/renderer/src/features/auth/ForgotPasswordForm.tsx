@@ -14,7 +14,8 @@ const forgotPasswordFormInitValues: ForgotPasswordFormValues = {
 
 const ForgotPasswordForm = () => {
     const navigate = useNavigate();
-    const goToRenewPasswordForm = () => navigate('/auth/renew-password');
+    const goToRenewPasswordForm = (values: ForgotPasswordFormValues) =>
+        navigate(`/auth/renew-password/${values.email}`);
     const goToLoginForm = () => navigate('/auth/login');
     const validateInput = ({ email }: ForgotPasswordFormValues) => {
         const errors: any = {};
@@ -27,7 +28,7 @@ const ForgotPasswordForm = () => {
         <Formik
             initialValues={forgotPasswordFormInitValues}
             validate={validateInput}
-            onSubmit={goToRenewPasswordForm}
+            onSubmit={(values) => goToRenewPasswordForm(values)}
         >
             {({ values, errors, handleChange, handleSubmit, touched }) => (
                 <form

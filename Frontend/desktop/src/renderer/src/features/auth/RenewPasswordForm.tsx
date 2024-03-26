@@ -1,8 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { Button } from '@renderer/components';
 import { TextInput, PasswordInput, InputError } from './components';
+import {
+    makeGenerateOtpRequest,
+    makeRenewPasswordRequest
+} from '@renderer/services/api';
 
 type RenewPasswordFormValues = {
     password: string;
@@ -17,14 +22,50 @@ const renewPasswordFormInitValues: RenewPasswordFormValues = {
 };
 
 const RenewPasswordForm = () => {
+    const { identifier } = useParams();
     const navigate = useNavigate();
     const [activeTime, setActiveTime] = useState(0);
+
+    const generateOtpMutation = useMutation({
+        mutationFn: async () => {
+            return await makeGenerateOtpRequest({
+                identifier: identifier as string,
+                deliveryMethod: 'email'
+            });
+        }
+    });
+
+    const renewPasswordMutation = useMutation({
+        mutationFn: async (values: RenewPasswordFormValues) => {
+            return await makeRenewPasswordRequest({
+                otp: values.otp,
+                password: values.password,
+                identifier: identifier as string
+            });
+        }
+    });
 
     const goToRenewPasswordSuccess = () => navigate('/auth/renew-success');
     const goToLoginForm = () => navigate('/auth/login');
     const setRenewPasswordDuration = () => setActiveTime(10);
-    const handleRenewPassword = () => {
-        goToRenewPasswordSuccess();
+
+    const generateOtp = async () => {
+        await generateOtpMutation.mutateAsync();
+        setRenewPasswordDuration();
+    };
+    const handleRenewPassword = async (values) => {
+        if (activeTime === 0) {
+            alert('Mã otp đã hết hạn. Vui lòng thử lại.');
+            return;
+        }
+
+        const response: any = await renewPasswordMutation.mutateAsync(values);
+
+        if (response?.status === 200) {
+            goToRenewPasswordSuccess();
+        } else {
+            alert('Thông tin không hợp lệ');
+        }
     };
 
     const validateInput = ({
@@ -120,7 +161,7 @@ const RenewPasswordForm = () => {
                     ) : (
                         <Button
                             className="bg-[#1A3389] rounded-md px-4 py-2 text-white font-semibold w-full"
-                            action={setRenewPasswordDuration}
+                            action={generateOtp}
                             text="Tạo mới mật khẩu"
                         />
                     )}

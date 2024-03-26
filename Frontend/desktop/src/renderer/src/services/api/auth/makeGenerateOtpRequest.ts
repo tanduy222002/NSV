@@ -3,7 +3,7 @@ import { makeRequest } from '../makeRequest';
 type OtpConfirmationMethod = 'email' | 'sms';
 
 type GenerateOtpPayload = {
-    username: string;
+    identifier: string; // email or phone number depend on confirmation method
     deliveryMethod: OtpConfirmationMethod;
 };
 
@@ -12,9 +12,12 @@ export const makeGenerateOtpRequest = async (payload: GenerateOtpPayload) => {
     let response = undefined;
     try {
         response = await makeRequest({
-            url: '/api/auth/request-otp',
+            url: '/auth/request-otp',
             method: 'post',
-            body: payload
+            body: {
+                identifier: payload.identifier,
+                deliveryMethod: payload.deliveryMethod
+            }
         });
     } catch (err) {
         console.log('error: ', err);

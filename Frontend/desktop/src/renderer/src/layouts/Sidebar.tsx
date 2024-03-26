@@ -7,10 +7,13 @@ import { CiSettings } from 'react-icons/ci';
 import { LuHelpCircle } from 'react-icons/lu';
 import { MdOutlineLogout } from 'react-icons/md';
 import { RiUserSettingsLine } from 'react-icons/ri';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import SidebarSection from './SidebarSection';
 import warehouseSrc from '@renderer/assets/warehouse.png';
 import logoSrc from '@renderer/assets/logo.png';
+import { useAppDispatch } from '@renderer/hooks';
+import { loggedOut } from '@renderer/store/slices/auth/authSlice';
+import { useLocalStorage } from '@renderer/hooks';
 
 const firstSectionItems = [
     {
@@ -55,20 +58,25 @@ const secondSectionItems = [
         title: 'Trợ giúp',
         icon: <LuHelpCircle />,
         path: '/help'
-    },
-    {
-        title: 'Đăng xuất',
-        icon: <MdOutlineLogout />,
-        path: '/',
-        className: 'text-red-500',
-        activeClassName: 'text-red-500'
     }
 ];
 
 const Sidebar = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { deleteItem: deleteAccessToken } = useLocalStorage('access-token');
+    const { deleteItem: deleteRefreshToken } = useLocalStorage('refresh-token');
+
+    const loggout = () => {
+        navigate('/auth/login');
+        deleteAccessToken();
+        deleteRefreshToken();
+        dispatch(loggedOut());
+    };
+
     return (
         <div className="flex items-center">
-            <div className="flex flex-col items-center w-[280px] h-screen py-8 border border-gray-500">
+            <div className="flex flex-col items-center w-[280px] h-screen py-8 border-r border-gray-200">
                 <div className="flex items-center gap-2 my-8">
                     <div>
                         <img
@@ -86,7 +94,7 @@ const Sidebar = () => {
                     </div>
                     <p className="font-semibold text-2xl">NSV</p>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                     {firstSectionItems.map(({ title, icon, path }) => (
                         <SidebarSection
                             key={title}
@@ -96,19 +104,22 @@ const Sidebar = () => {
                         />
                     ))}
                 </div>
-                <div className="flex flex-col gap-2 mt-auto">
-                    {secondSectionItems.map(
-                        ({ title, icon, path, className, activeClassName }) => (
-                            <SidebarSection
-                                key={title}
-                                title={title}
-                                icon={icon}
-                                path={path}
-                                className={className}
-                                activeClassName={activeClassName}
-                            />
-                        )
-                    )}
+                <div className="flex flex-col gap-4 mt-auto">
+                    {secondSectionItems.map(({ title, icon, path }) => (
+                        <SidebarSection
+                            key={title}
+                            title={title}
+                            icon={icon}
+                            path={path}
+                        />
+                    ))}
+                    <button
+                        className=" flex items-center gap-2 font-semibold text-red-500 border-none"
+                        onClick={loggout}
+                    >
+                        <MdOutlineLogout />
+                        <p>Đăng xuất</p>
+                    </button>
                 </div>
             </div>
             <Outlet />

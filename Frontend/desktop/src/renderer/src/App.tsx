@@ -40,7 +40,7 @@ function App(): JSX.Element {
                                     element={<ForgotPasswordForm />}
                                 />
                                 <Route
-                                    path="renew-password"
+                                    path="renew-password/:identifier"
                                     element={<RenewPasswordForm />}
                                 />
                                 <Route

@@ -1,8 +1,15 @@
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
 const Loading = () => {
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
+        <button
+            type="button"
+            className="bg-indigo-500 flex items-center px-2 py-2 absolute top-1/2 right-1/2 translate-x-1/2 translate-y-1/2 rounded-md"
+            disabled
+        >
+            <AiOutlineLoading3Quarters className="animate-spin h-5 w-5 mr-3 text-white" />
+            <p className="font-semibold text-base text-white">Đang xử lý...</p>
+        </button>
     );
 };
 

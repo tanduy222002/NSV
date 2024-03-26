@@ -1,5 +1,5 @@
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
-import { cn } from '@renderer/lib/util';
+import { cn } from '@renderer/utils/util';
 
 type PaginationProps = {
     maxPage: number;

@@ -75,8 +75,9 @@ const RegisterForm = () => {
         }
     });
 
-    const handleRegister = () => {
-        // const response = await mutation.mutateAsync(payload);
+    const handleRegister = async (payload) => {
+        const response = await mutation.mutateAsync(payload);
+        console.log('response:', response);
     };
     return (
         <Formik

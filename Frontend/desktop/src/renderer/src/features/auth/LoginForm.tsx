@@ -1,9 +1,14 @@
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { Button, Loading } from '@renderer/components';
+import { Button, Loading, InformationPopup } from '@renderer/components';
 import { TextInput, PasswordInput, InputError } from './components';
+import { useAppDispatch } from '@renderer/hooks';
 import { makeLoginRequest } from '@renderer/services/api';
-import { useMutation } from '@tanstack/react-query';
+import { useLocalStorage } from '@renderer/hooks';
+import { parseJwt } from '@renderer/utils';
+import { loggedIn } from '@renderer/store/slices/auth/authSlice';
 
 type LoginFormValues = {
     username: string;
@@ -17,8 +22,14 @@ const loginFormInitValues: LoginFormValues = {
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { setItem: setAccessToken } = useLocalStorage('access-token');
+    const { setItem: setRefreshToken } = useLocalStorage('refresh-token');
+    const [error, setError] = useState<any>(null);
     const goToRegisterForm = () => navigate('/auth/register');
     const goToForgotPasswordForm = () => navigate('/auth/forgot-password');
+
+    const closeErrorPopup = () => setError(null);
 
     const validateInput = ({ username, password }: LoginFormValues) => {
         const errors: any = {};
@@ -45,19 +56,30 @@ const LoginForm = () => {
             username,
             password
         });
+
         if (response?.status === 401) {
-            alert('Thông tin đăng nhập không hợp lệ');
+            setError({
+                title: 'Danh tính không hợp lệ',
+                body: 'Vui lòng kiểm tra lại thông tin đăng nhập của bạn'
+            });
+            // alert('Thông tin đăng nhập không hợp lệ');
             return;
         }
         if (response?.status >= 500) {
-            alert('Đã có lỗi xảy ra. Vui lòng thử lại sau');
+            setError(true);
+            // alert('Đã có lỗi xảy ra. Vui lòng thử lại sau');
             return;
         }
         // update user
+        setAccessToken(response?.token);
+        setRefreshToken(response?.refresh_token);
+        console.log('login res: ', response);
+        const { sub } = parseJwt(response?.token);
+        dispatch(
+            loggedIn({ value: { username: sub, email: '', phoneNo: '' } })
+        );
         navigate('/');
     };
-
-    if (mutation.isPending) return <Loading />;
 
     return (
         <Formik
@@ -67,9 +89,17 @@ const LoginForm = () => {
         >
             {({ values, errors, handleChange, handleSubmit, touched }) => (
                 <form
-                    className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col gap-6"
+                    className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col gap-6 relative"
                     onSubmit={handleSubmit}
                 >
+                    {mutation.isPending && <Loading />}
+                    {error && (
+                        <InformationPopup
+                            {...error}
+                            type="error"
+                            closeAction={closeErrorPopup}
+                        />
+                    )}
                     <h1 className="text-xl font-semibold text-[#1A3389]">
                         Giải pháp quản lý kho <br /> nông sản thông minh
                     </h1>
