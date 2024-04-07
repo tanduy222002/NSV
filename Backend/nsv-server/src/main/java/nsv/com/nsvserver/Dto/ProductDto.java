@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 
-public class ProductDto {
+public class ProductDto  {
 
     private Integer id;
 
@@ -33,4 +33,6 @@ public class ProductDto {
         this.variety=product.getVariety();
 
     }
+
+
 }

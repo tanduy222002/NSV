@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class Quality {
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="type_id", nullable=false)
+    @JsonBackReference
     private Type type;
 
     public Quality(QualityCreateDto dto) {

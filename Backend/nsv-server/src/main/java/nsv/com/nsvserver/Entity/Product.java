@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,8 @@ public class Product {
     private String image;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
-    private List<Type> types = new ArrayList<>();
+//    @JsonManagedReference
+    private List<Type> types;
 
     public Product() {
     }

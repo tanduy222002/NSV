@@ -1,5 +1,7 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,8 +38,10 @@ public class Type {
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="product_id", nullable=false)
+//    @JsonBackReference
     private Product product;
 
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY,mappedBy="type",cascade = CascadeType.ALL)
     private List<Quality> qualities = new ArrayList<>();
 

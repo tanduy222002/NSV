@@ -1,26 +1,29 @@
 package nsv.com.nsvserver.Service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
 import nsv.com.nsvserver.Client.ImageService;
-import nsv.com.nsvserver.Dto.ProductCreateDto;
-import nsv.com.nsvserver.Dto.ProductDto;
-import nsv.com.nsvserver.Dto.ProductTypeQualityDto;
-import nsv.com.nsvserver.Dto.TypeCreateDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Product;
 import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Entity.Type;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.ProductExistsException;
 import nsv.com.nsvserver.Exception.UploadImageException;
-import nsv.com.nsvserver.Repository.ProductRepository;
-import nsv.com.nsvserver.Repository.QualityRepository;
-import nsv.com.nsvserver.Repository.TypeRepository;
+import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,9 +49,23 @@ public class ProductService {
         return product;
     }
 
-    public List<ProductDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream().map(Product->new ProductDto(Product)).collect(Collectors.toList());
+    public PageDto getAllProducts(Integer pageIndex,Integer pageSize, String name, String variety) {
+        Pageable pageable = PageRequest.of(pageIndex-1, pageSize);
+        Specification<Product> specifications = new ProductSpecification(new SearchCriteria());
+
+        if(name!=null && !name.isBlank()){
+            ProductSpecification nameSpecification = new ProductSpecification(new SearchCriteria("name", ":",name));
+            specifications=specifications.and(nameSpecification);
+        }
+
+        if(variety!=null && !variety.isBlank()){
+            ProductSpecification varietySpecification = new ProductSpecification(new SearchCriteria("variety", ":",variety));
+            specifications=specifications.and(varietySpecification);
+        }
+        Page<Product> page = productRepository.findAll(specifications,pageable);
+        List<ProductDto> productDtos=page.getContent().stream().map(ProductDto::new).collect(Collectors.toList());
+        return new PageDto(page.getTotalPages(),page.getTotalElements(),pageIndex,productDtos);
+
     }
     @Transactional
     public void createNewProduct(String name, String variety, String base64Img) throws Exception {
@@ -117,5 +134,7 @@ public class ProductService {
 
 
     }
+
+
 
 }
