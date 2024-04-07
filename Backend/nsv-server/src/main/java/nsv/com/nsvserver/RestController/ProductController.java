@@ -1,23 +1,21 @@
 package nsv.com.nsvserver.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Product;
 import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -31,11 +29,13 @@ public class ProductController {
     }
 
     @GetMapping("")
-    @Operation(summary = "Get all products")
-
-    public ResponseEntity<?> getAllProduct() {
-        List<ProductDto> productDtoList = productService.getAllProducts();
-        return ResponseEntity.ok(productDtoList);
+    @Operation(summary = "Get products with filter and pagination")
+    public ResponseEntity<?> getAllProduct(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                           @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+                                           @RequestParam(required = false) String name,
+                                           @RequestParam(required = false) String variety) {
+        PageDto page= productService.getAllProducts(pageIndex,pageSize,name,variety);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{productId}")
@@ -94,7 +94,7 @@ public class ProductController {
 
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     @PostMapping("/products/types/qualities")
-    @Operation(summary = "Create a new quality for type")
+    @Operation(summary = "Create a new product with type and quality")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Create type for product successfully"),
             @ApiResponse(responseCode = "500", description = "Internal  Server Error")
