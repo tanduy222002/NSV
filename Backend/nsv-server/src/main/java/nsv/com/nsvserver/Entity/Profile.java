@@ -33,7 +33,7 @@ public class Profile {
     private Employee employee;
 
     @OneToMany(mappedBy="profile",cascade = CascadeType.ALL)
-    private List<Address> addresses = new ArrayList<Address>();
+    private List<Address> addresses;
     public Profile(String name, String phoneNumber, String email, String gender, Employee employee) {
         this.name = name;
         this.phoneNumber = phoneNumber;
