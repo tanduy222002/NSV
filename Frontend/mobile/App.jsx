@@ -1,33 +1,21 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LoginScreen } from "./screens";
-
-const Stack = createNativeStackNavigator();
+import { NavigationContainer } from '@react-navigation/native';
+import { AuthRoute, MainRoute } from './routes';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { authSlice } from './store/slices/auth/authSlice';
+import { useAppSelector } from './hooks';
+import AppBody from './AppBody';
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
-
-      {/* <View style={styles.container}>
-        <Text className="font-semibold text-red-500">
-          Open up App.js to start working on your project!
-        </Text>
-        <StatusBar style="auto" />
-      </View> */}
-    </NavigationContainer>
-  );
+    const isLoggedin = false;
+    // const isLoggedin = store.getState(authSlice).auth.value != null;
+    console.log('auth status: ', isLoggedin);
+    return (
+        <Provider store={store}>
+            <NavigationContainer>
+                <AppBody />
+                {/* {isLoggedin ? <MainRoute /> : <AuthRoute />} */}
+            </NavigationContainer>
+        </Provider>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
