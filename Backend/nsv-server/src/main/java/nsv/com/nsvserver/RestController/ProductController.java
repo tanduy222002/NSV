@@ -1,5 +1,7 @@
 package nsv.com.nsvserver.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -7,14 +9,19 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.*;
+import nsv.com.nsvserver.Entity.District;
 import nsv.com.nsvserver.Entity.Product;
 import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -44,6 +51,15 @@ public class ProductController {
     public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
         return ResponseEntity.ok(new ProductDto(product));
+    }
+
+    @GetMapping("/variety")
+    @Operation(summary = "Get variety of products")
+    public ResponseEntity<?> getVariety() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClassPathResource resource = new ClassPathResource("static/variety.json");
+        List<String> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<String>>() {});
+        return ResponseEntity.ok(data);
     }
 
 

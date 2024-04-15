@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import nsv.com.nsvserver.Dto.AddressDto;
 
 @Entity
 @Table(name = "Address")
@@ -27,5 +28,8 @@ public class Address {
 
 
     public Address() {
+    }
+    public Address(AddressDto dto){
+
     }
 }
