@@ -51,7 +51,7 @@ public class AddressService {
 
     public void addDistrict(String districtName, Integer provinceId){
         Optional<Province> province =provinceRepository.findById(provinceId);
-        if(province.get() == null){
+        if(!province.isPresent()){
             throw new NotFoundException("Province not found: "+provinceId);
         };
 
@@ -95,7 +95,7 @@ public class AddressService {
     @Transactional
     public Address createAddress(String streetAddress, Integer wardId, Integer districtId, Integer provinceId) {
         Address address = new Address(streetAddress);
-        Ward ward = wardRepository.findById(provinceId).orElseThrow(()->new NotFoundException("Province not found: "+provinceId));
+        Ward ward = wardRepository.findById(wardId).orElseThrow(()->new NotFoundException("Ward not found: "+wardId));
         address.setWard(ward);
         addressRepository.save(address);
         return address;

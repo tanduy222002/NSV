@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Service;
 
+import nsv.com.nsvserver.Dto.AddressDto;
 import nsv.com.nsvserver.Dto.CreatePartnerDto;
 import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.Partner;
@@ -16,9 +17,12 @@ import java.util.List;
 public class PartnerService {
     PartnerRepository partnerRepository;
 
+    AddressService addressService;
+
     @Autowired
-    public PartnerService(PartnerRepository partnerRepository) {
+    public PartnerService(PartnerRepository partnerRepository, AddressService addressService) {
         this.partnerRepository = partnerRepository;
+        this.addressService = addressService;
     }
 
     @Transactional
@@ -28,11 +32,9 @@ public class PartnerService {
         partnerProfile.setName(createPartnerDto.getName());
         partnerProfile.setEmail(createPartnerDto.getEmail());
         partnerProfile.setPhoneNumber(createPartnerDto.getPhoneNumber());
-        List<Address> addresses = new ArrayList<Address>();
-        createPartnerDto.getAddresses().stream().forEach(address -> {
-
-        });
-
+        AddressDto addressDto = createPartnerDto.getAddress();
+        Address address = addressService.createAddress(addressDto.getAddress(),addressDto.getWardId(),addressDto.getDistrictId(), addressDto.getProvinceId());
+        partnerProfile.setAddress(address);
 
         Partner partner =new Partner();
         partner.setBankAccount(createPartnerDto.getBankAccount());

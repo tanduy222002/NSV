@@ -22,7 +22,7 @@ public class Partner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "bank_acount",unique = true)
+    @Column(name = "bank_account")
     private String bankAccount;
 
     @Column(name = "tax_number")

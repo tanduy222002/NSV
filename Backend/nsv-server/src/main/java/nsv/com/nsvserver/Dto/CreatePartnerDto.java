@@ -3,6 +3,7 @@ package nsv.com.nsvserver.Dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,8 @@ public class CreatePartnerDto {
     @Schema( example = "vinafood@gmail.com")
     private String email;
 
-
-    private List<AddressDto> addresses;
+    @Valid
+    private AddressDto address;
 
     @Schema( example = "01234567890")
     @JsonProperty("tax_number")
