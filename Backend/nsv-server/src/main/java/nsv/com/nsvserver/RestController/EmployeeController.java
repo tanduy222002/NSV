@@ -7,10 +7,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Service.AuthService;
 import nsv.com.nsvserver.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +42,10 @@ public class EmployeeController {
 
     })
 
-    public ResponseEntity<?> getAllEmployee() {
-        List<EmployeeDto> employeesDtoList = employeeService.getAllEmployee();
-        return ResponseEntity.ok(employeesDtoList);
+    public ResponseEntity<?> getAllEmployee(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                            @RequestParam(defaultValue = "5") @Min(1) Integer pageSize) {
+        PageDto pageDto = employeeService.getAllEmployeeProfile(pageIndex,pageSize);
+        return ResponseEntity.ok(pageDto);
     }
 
     @GetMapping("/{id}")

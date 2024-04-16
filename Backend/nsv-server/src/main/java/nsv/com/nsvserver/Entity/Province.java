@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,7 +25,7 @@ public class Province {
     private String name;
 
     @OneToMany(mappedBy="province",cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonBackReference
     private List<District> districts;
 
     public Province(Integer id, String name) {

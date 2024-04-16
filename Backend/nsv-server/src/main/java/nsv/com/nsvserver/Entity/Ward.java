@@ -1,6 +1,7 @@
 package nsv.com.nsvserver.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Ward {
     private Integer id;
 
     @OneToMany(mappedBy="ward",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Address> addresses;
 
     @Column(name = "name")
@@ -25,7 +27,7 @@ public class Ward {
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="district_id", nullable=false)
-    @JsonBackReference
+    @JsonManagedReference
     private District district;
 
 

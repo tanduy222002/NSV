@@ -29,13 +29,17 @@ public class EmployeeDto {
     private String email;
     @Schema( example = "M")
     private String gender;
-    @Schema( example = "[]")
-    private List<String> addresses = new ArrayList<String>();
+//    @Schema( example = "[]")
+    private Address addresses;
 
     private String status;
 
     private List<String> roles = new ArrayList<>();
 
     public EmployeeDto() {
+    }
+
+    public EmployeeDto(String name) {
+        this.name = name;
     }
 }

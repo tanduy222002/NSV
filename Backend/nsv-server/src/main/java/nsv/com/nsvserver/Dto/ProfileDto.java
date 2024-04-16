@@ -22,8 +22,8 @@ public class ProfileDto {
     private String email;
     @Schema( example = "M")
     private String gender;
-    @Schema( example = "[]")
-    private List<String> addresses = new ArrayList<String>();
+
+    private AddressDto addresses;
 
     public ProfileDto() {
     }

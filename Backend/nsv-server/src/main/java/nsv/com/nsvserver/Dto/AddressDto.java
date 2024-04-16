@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddressDto {
     private String address;
-    private String ward;
-    private String province;
+    private Integer wardId;
+    private Integer districtId;
+    private Integer provinceId;
 }
