@@ -22,7 +22,7 @@ public class District {
     private Integer id;
 
     @OneToMany(mappedBy="district",cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonBackReference
     private List<Ward> wards;
 
     @Column(name = "name")
@@ -30,7 +30,7 @@ public class District {
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="province_id", nullable=false)
-    @JsonBackReference
+    @JsonManagedReference
     private Province province;
 
     public District(Integer id, String name) {

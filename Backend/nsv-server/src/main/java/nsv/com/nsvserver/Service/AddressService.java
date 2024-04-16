@@ -1,16 +1,19 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.ProvinceResponseDto;
+import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.District;
 import nsv.com.nsvserver.Entity.Province;
 import nsv.com.nsvserver.Entity.Ward;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
+import nsv.com.nsvserver.Repository.AddressRepository;
 import nsv.com.nsvserver.Repository.DistrictRepository;
 import nsv.com.nsvserver.Repository.ProvinceRepository;
 import nsv.com.nsvserver.Repository.WardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +25,14 @@ public class AddressService {
 
     DistrictRepository districtRepository;
 
+    AddressRepository addressRepository;
+
     @Autowired
-    public AddressService(ProvinceRepository provinceRepository, WardRepository wardRepository, DistrictRepository districtRepository) {
+    public AddressService(ProvinceRepository provinceRepository, WardRepository wardRepository, DistrictRepository districtRepository, AddressRepository addressRepository) {
         this.provinceRepository = provinceRepository;
         this.wardRepository = wardRepository;
         this.districtRepository = districtRepository;
+        this.addressRepository = addressRepository;
     }
 
     public void addProvince(String provinceName){
@@ -84,5 +90,14 @@ public class AddressService {
 
     public Ward findWardIdAndNameById(Integer wardId) {
         return wardRepository.findWardIdAndNameById(wardId);
+    }
+
+    @Transactional
+    public Address createAddress(String streetAddress, Integer wardId, Integer districtId, Integer provinceId) {
+        Address address = new Address(streetAddress);
+        Ward ward = wardRepository.findById(provinceId).orElseThrow(()->new NotFoundException("Province not found: "+provinceId));
+        address.setWard(ward);
+        addressRepository.save(address);
+        return address;
     }
 }

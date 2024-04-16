@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -30,10 +31,12 @@ public class Profile {
     @Column(name = "gender")
     private String gender;
     @OneToOne(mappedBy = "profile",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Employee employee;
 
-    @OneToMany(mappedBy="profile",cascade = CascadeType.ALL)
-    private List<Address> addresses;
+    @OneToOne(mappedBy="profile",cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Address address;
     public Profile(String name, String phoneNumber, String email, String gender, Employee employee) {
         this.name = name;
         this.phoneNumber = phoneNumber;

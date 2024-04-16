@@ -1,5 +1,7 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,11 +20,13 @@ public class Address {
     private Integer id;
     @Column(name = "name")
     private String name;
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="profile_id", nullable=false)
+    @JsonBackReference
     private Profile profile;
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonManagedReference
     @JoinColumn(name="ward_id", nullable=false)
     private Ward ward;
 
@@ -31,5 +35,9 @@ public class Address {
     }
     public Address(AddressDto dto){
 
+    }
+
+    public Address(String name) {
+        this.name = name;
     }
 }

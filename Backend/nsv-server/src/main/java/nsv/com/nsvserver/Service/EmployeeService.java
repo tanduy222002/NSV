@@ -1,9 +1,10 @@
 package nsv.com.nsvserver.Service;
 
+import nsv.com.nsvserver.Dto.*;
+import nsv.com.nsvserver.Repository.AddressRepository;
+import nsv.com.nsvserver.Repository.ProfileDao;
 import org.springframework.transaction.annotation.Transactional;
-import nsv.com.nsvserver.Dto.EmployeeDto;
 
-import nsv.com.nsvserver.Dto.ProfileDto;
 import nsv.com.nsvserver.Entity.*;
 
 import nsv.com.nsvserver.Exception.NotFoundException;
@@ -25,33 +26,48 @@ public class EmployeeService {
 
     private ProfileRepository profileRepository;
 
+    private AddressService addressService;
+
+    private AddressRepository addressRepository;
+
+    private ProfileDao profileDaoImpl;
+
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ProfileRepository profileRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl) {
         this.employeeRepository = employeeRepository;
         this.profileRepository = profileRepository;
+        this.addressService = addressService;
+        this.addressRepository = addressRepository;
+        this.profileDaoImpl = profileDaoImpl;
     }
 
-
-    public List<EmployeeDto> getAllEmployee(){
-        List<Employee> employeeList = employeeRepository.findAll();
-        List<EmployeeDto> employeeDtoList = new ArrayList<>();
-        for(Employee employee : employeeList){
-            EmployeeDto employeeDto = createEmployeeDto(employee);
-            employeeDtoList.add(employeeDto);
-        }
-        return employeeDtoList;
+    public PageDto getAllEmployeeProfile(Integer page, Integer pageSize){
+        System.out.println("getAllEmployeeProfile");
+        List<Profile> profiles= profileDaoImpl.findAllWithEagerLoading(page, pageSize);
+        List<EmployeeDto> results=profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
+        long totalCount= profileDaoImpl.getTotalCount();
+        return new PageDto(Math.ceil((double)totalCount/pageSize),totalCount,page,results);
     }
 
     @Transactional
-    public void updateEmployeeProfile(Integer id, ProfileDto employeeDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        EmployeeDetail employeeDetail = (EmployeeDetail) authentication.getPrincipal();
-        if(employeeDetail.getEmployee().getId() != id)   {
-            throw new IllegalArgumentException("The employee id is not match employee account");
-        }
-        Profile profile = employeeDetail.getEmployee().getProfile();
-        Profile mergedProfile = new Profile(employeeDto,profile.getId());
+    public void updateEmployeeProfile(Integer id, ProfileDto profileDto) {
+        Employee employee=employeeRepository.findById(id).orElseThrow(()->new NotFoundException("Employee not found"));
+        Profile profile = employee.getProfile();
+        AddressDto addressDtos = profileDto.getAddresses();
+
+        Address address=profile.getAddress();
+        if (address!=null)
+            addressRepository.delete(address);
+        profile.setAddress(null);
+
+        address = addressService.createAddress(
+                addressDtos.getAddress(), addressDtos.getWardId(),
+                addressDtos.getDistrictId(), addressDtos.getProvinceId());
+
+        Profile mergedProfile = new Profile(profileDto,profile.getId());
+        mergedProfile.setAddress(address);
+        address.setProfile(mergedProfile);
         profileRepository.save(mergedProfile);
     }
 
@@ -70,20 +86,21 @@ public class EmployeeService {
     public EmployeeDto getEmployeeById(Integer id){
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
         Employee employee  = employeeOptional.orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
-        return createEmployeeDto(employee);
+        return createEmployeeDto(employee.getProfile());
     }
 
 
 
-    public EmployeeDto createEmployeeDto(Employee employee){
+    public EmployeeDto createEmployeeDto(Profile profile){
         EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setName(employee.getProfile().getName());
-        employeeDto.setPhoneNumber(employee.getProfile().getPhoneNumber());
-        employeeDto.setEmail(employee.getProfile().getEmail());
-        employeeDto.setGender(employee.getProfile().getGender());
-        employeeDto.setStatus(employee.getStatus());
-        employeeDto.setAddresses(employee.getProfile().getAddresses().stream().map(Address::getName).collect(Collectors.toList()));
-        employeeDto.setRoles(employee.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        employeeDto.setName(profile.getName());
+        employeeDto.setPhoneNumber(profile.getPhoneNumber());
+        employeeDto.setEmail(profile.getEmail());
+        employeeDto.setGender(profile.getGender());
+        employeeDto.setStatus(profile.getEmployee().getStatus());
+        Address address = profile.getAddress();
+        employeeDto.setAddresses(address);
+        employeeDto.setRoles(profile.getEmployee().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         return employeeDto;
     }
 
