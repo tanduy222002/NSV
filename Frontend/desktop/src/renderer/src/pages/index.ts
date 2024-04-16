@@ -5,6 +5,7 @@ import ProductPage from './ProductPage';
 import ExportPage from './ExportPage';
 import ImportPage from './ImportPage';
 import EditProductPage from './EditProductPage';
+import ProductLocationDetailPage from './ProductLocationDetailPage';
 import CreateProductPage from './CreateProductPage';
 
 export {
@@ -15,5 +16,6 @@ export {
     CreateProductPage,
     EditProductPage,
     ExportPage,
-    ImportPage
+    ImportPage,
+    ProductLocationDetailPage
 };

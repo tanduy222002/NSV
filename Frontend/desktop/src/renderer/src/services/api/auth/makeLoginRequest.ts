@@ -1,17 +1,23 @@
 import { makeRequest } from '../makeRequest';
 
 type LoginPayload = {
-    userName: string;
+    username: string;
     password: string;
 };
 
-export const makeLoginRequest = async (payload: LoginPayload) => {
+export const makeLoginRequest = async ({
+    username,
+    password
+}: LoginPayload) => {
     let response = undefined;
     try {
         response = await makeRequest({
             url: '/auth/sign-in',
             method: 'post',
-            body: payload
+            body: {
+                user_name: username,
+                password: password
+            }
         });
     } catch (err) {
         console.log('login error: ', err);

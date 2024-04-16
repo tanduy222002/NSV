@@ -4,32 +4,34 @@ import RowAction from './RowAction';
 export enum ColumnType {
     Text = 'Text',
     Button = 'Button',
-    Action = 'Action'
+    Action = 'Action',
+    Image = 'Image'
 }
 
 type Column = {
     title: string;
     sortable: boolean;
-    type: 'Text' | 'Button' | 'Action';
+    type: ColumnType;
 };
 
 type TableViewProps = {
     columns: Column[];
     items: object[];
-    addAction?: () => void;
-    editAction?: () => void;
+    viewAction?: (param: any) => void;
+    editAction?: (param: any) => void;
     deleteAction?: () => void;
 };
 
 const TableView = ({
     columns,
     items,
-    addAction,
+    viewAction,
     editAction,
     deleteAction
 }: TableViewProps) => {
+    console.log('items: ', items);
     return (
-        <table className="w-full h-fit border-collapse">
+        <table className="w-fit min-w-[750px] h-fit border-collapse">
             <tr className="border border-1">
                 {columns.map(({ title, sortable }) => (
                     <th className="px-2 py-2" key={title}>
@@ -51,9 +53,12 @@ const TableView = ({
                             >
                                 {column.type === ColumnType.Text ? (
                                     itemValues[i]
+                                ) : column.type === ColumnType.Image ? (
+                                    <img src={itemValues[i]} />
                                 ) : (
                                     <RowAction
-                                        addAction={addAction}
+                                        id={i}
+                                        viewAction={viewAction}
                                         editAction={editAction}
                                         deleteAction={deleteAction}
                                     />

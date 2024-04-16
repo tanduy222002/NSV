@@ -75,7 +75,7 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="flex items-center">
+        <div className="flex">
             <div className="flex flex-col items-center w-[280px] h-screen py-8 border-r border-gray-200">
                 <div className="flex items-center gap-2 my-8">
                     <div>

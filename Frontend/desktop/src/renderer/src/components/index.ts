@@ -8,10 +8,12 @@ import ConfirmationPopup from './ConfirmationPopup';
 import Loading from './Loading';
 import Wrapper from './Wrapper';
 import InformationPopup from './InfomationPopup';
+import TableSkeleton from './TableSkeleton';
 
 export {
     Button,
     TableView,
+    TableSkeleton,
     Pagination,
     SearchBar,
     ModalProvider,

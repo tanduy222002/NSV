@@ -2,20 +2,33 @@ import fruitSrc from '@renderer/assets/fruit.png';
 import { TiTag } from 'react-icons/ti';
 import { LuWarehouse } from 'react-icons/lu';
 import { FaArrowRight } from 'react-icons/fa6';
+import { cn } from '@renderer/utils/util';
 
 type ProductLineItemProps = {
+    id: number;
     name: string;
     quantity: number;
     location: string;
+    isSelected: boolean;
+    selectLine: (lineId: number) => void;
 };
 
 const ProductLineItem = ({
+    id,
     name,
     quantity,
-    location
+    location,
+    isSelected,
+    selectLine
 }: ProductLineItemProps) => {
     return (
-        <div className="flex gap-3 items-center min-w-[350px] px-5 py-3 border border-[#1C274C] rounded-md">
+        <div
+            className={cn(
+                'flex gap-3 items-center min-w-[350px] px-5 py-3 border border-blue-700 rounded-md cursor-pointer',
+                isSelected ? 'bg-slate-100' : ''
+            )}
+            onClick={() => selectLine(id)}
+        >
             <div className="w-[40px] h-[30px]">
                 <img
                     src={fruitSrc}
@@ -31,11 +44,11 @@ const ProductLineItem = ({
                         {name}: {quantity} kg
                     </p>
                 </div>
-                <div className="flex items-center gap-1 font-semibold">
+                <div className="flex items-center gap-1 font-semibold mb-1">
                     <LuWarehouse />
                     <p>{location}</p>
                 </div>
-                <div className="curser-pointer font-semibold text-[#7C8DB5] flex items-center gap-1 ml-auto w-fit cursor-pointer">
+                <div className="curser-pointer font-semibold text-slate-300 hover:text-slate-400 text-sm flex items-center gap-1 ml-auto w-fit cursor-pointer">
                     <FaArrowRight />
                     Chi tiết
                 </div>

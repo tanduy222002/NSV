@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { FaEdit } from 'react-icons/fa';
-import { MdOutlineAddBox } from 'react-icons/md';
+import { CgDetailsMore } from 'react-icons/cg';
 import { TiDeleteOutline } from 'react-icons/ti';
 
 type RowActionProps = {
-    addAction?: () => void;
-    editAction?: () => void;
+    id: string | number;
+    viewAction?: (param: string | number) => void;
+    editAction?: (param: string | number) => void;
     deleteAction?: () => void;
 };
 
-const RowAction = ({ addAction, editAction, deleteAction }: RowActionProps) => {
+const RowAction = ({
+    id,
+    viewAction,
+    editAction,
+    deleteAction
+}: RowActionProps) => {
     const [display, setDisplay] = useState(false);
 
     const toggleRowMenu = () => setDisplay((prev) => !prev);
@@ -25,25 +31,29 @@ const RowAction = ({ addAction, editAction, deleteAction }: RowActionProps) => {
             {display && (
                 <div className="absolute top-5 left-[40px] min-w-[120px] overflow-hidden rounded-md border bg-white border-gray-200">
                     <div
-                        onClick={addAction}
+                        onClick={() => {
+                            console.log('view fn: ', viewAction);
+
+                            return viewAction && viewAction(id);
+                        }}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 text-[#00B087]"
                     >
-                        <p>Thêm mới</p>
-                        <MdOutlineAddBox />
+                        <CgDetailsMore />
+                        <p>Chi tiết</p>
                     </div>
                     <div
-                        onClick={editAction}
+                        onClick={() => editAction && editAction(id)}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 text-[#F78F1E]"
                     >
-                        <p>Chỉnh sửa</p>
                         <FaEdit />
+                        <p>Chỉnh sửa</p>
                     </div>
                     <div
                         onClick={deleteAction}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 text-[#DF0404]"
                     >
-                        <p>Xóa</p>
                         <TiDeleteOutline />
+                        <p>Xóa</p>
                     </div>
                 </div>
             )}

@@ -5,12 +5,14 @@ import RenewPasswordForm from './features/auth/RenewPasswordForm';
 import ForgotPasswordForm from './features/auth/ForgotPasswordForm';
 import RenewSuccess from './features/auth/RenewSuccess';
 import HomePage from './pages/HomePage';
+import { ProductOverview } from './features/product';
 import {
     AuthPage,
     ProductPage,
     WareHousePage,
     ExportPage,
     ImportPage,
+    ProductLocationDetailPage,
     CreateProductPage,
     EditProductPage
 } from './pages';
@@ -58,6 +60,15 @@ function App(): JSX.Element {
                                 <Route
                                     path="/product"
                                     element={<ProductPage />}
+                                >
+                                    <Route
+                                        path=":productId"
+                                        element={<ProductOverview />}
+                                    />
+                                </Route>
+                                <Route
+                                    path="/product/:productId/line/:lineId"
+                                    element={<ProductLocationDetailPage />}
                                 />
                                 <Route
                                     path="/product/create"
