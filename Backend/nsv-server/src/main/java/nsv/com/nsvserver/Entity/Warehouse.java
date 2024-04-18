@@ -29,13 +29,13 @@ public class Warehouse {
     private String type;
 
     @Column(name = "capacity",nullable = false)
-    private Double capacity;
+    private Double capacity=0.0;
 
     @Column(name = "containing",nullable = false)
-    private Double containing;
+    private Double containing=0.0;
 
     @Column(name = "status")
-    private String status;
+    private String status="Hoạt động";
 
     @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "map_id", referencedColumnName = "id")

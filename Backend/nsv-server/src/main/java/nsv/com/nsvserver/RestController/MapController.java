@@ -8,6 +8,7 @@ import nsv.com.nsvserver.Service.MapService;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class MapController {
     }
 
     @PostMapping("")
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> addMap(@Valid @RequestBody CreateMapDto mapDto){
         String message = mapService.createMap(mapDto);
         Map<String, String> responseData = new HashMap<>();
