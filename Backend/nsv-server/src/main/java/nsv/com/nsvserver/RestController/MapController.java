@@ -8,10 +8,7 @@ import nsv.com.nsvserver.Service.MapService;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +25,16 @@ public class MapController {
         this.mapService = mapService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> addMap(@Valid @RequestBody CreateMapDto mapDto){
         String message = mapService.createMap(mapDto);
         Map<String, String> responseData = new HashMap<>();
         responseData.put("message", message);
         return ResponseEntity.ok(responseData);
+    }
+    @GetMapping("/{mapId}")
+    public ResponseEntity<?> getMapDetail(@Valid @PathVariable Integer mapId){
+        nsv.com.nsvserver.Entity.Map map = mapService.getMapById(mapId);
+        return ResponseEntity.ok(map);
     }
 }

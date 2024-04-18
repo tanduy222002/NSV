@@ -1,5 +1,7 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -27,11 +29,13 @@ public class Map {
     private String name;
 
 
+    @JsonIgnore
     @OneToMany(mappedBy="map",cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Warehouse> warehouses;
 
 
     @OrderBy("yPosition ASC")
+    @JsonManagedReference
     @OneToMany(mappedBy="map",cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Row> row;
 

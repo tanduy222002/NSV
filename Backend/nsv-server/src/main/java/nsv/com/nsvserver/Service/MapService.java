@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.CreateMapDto;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class MapService {
 
     MapRepository mapRepository;
 
+
     @Autowired
     public MapService(ProvinceRepository provinceRepository, WardRepository wardRepository, DistrictRepository districtRepository, AddressRepository addressRepository, MapRepository mapRepository) {
         this.provinceRepository = provinceRepository;
@@ -36,6 +38,8 @@ public class MapService {
         currentMap.setName(mapDto.getName());
         List<Row> rows=mapDto.getRowDtos().parallelStream().map(rowDto->{
             Row row =new Row();
+            row.setName(rowDto.getName());
+            System.out.println(row.getName());
             row.setYPosition(rowDto.getYPosition());
 
             List<Slot> slots=rowDto.getSlotDtos().parallelStream().map(slotDto->{
@@ -57,4 +61,7 @@ public class MapService {
     }
 
 
+    public Map getMapById(Integer mapId) {
+        return mapRepository.findById(mapId).orElseThrow(()->new NotFoundException("Map not found with id:"));
+    }
 }
