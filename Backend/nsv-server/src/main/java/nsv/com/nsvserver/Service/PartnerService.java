@@ -46,7 +46,7 @@ public class PartnerService {
 
     }
 
-//    public List<Partner> searchPartnerByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
-//
-//    }
+    public List<Partner> searchPartnerByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
+        return new ArrayList<Partner>();
+    }
 }
