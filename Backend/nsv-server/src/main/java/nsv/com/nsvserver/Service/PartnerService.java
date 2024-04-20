@@ -45,4 +45,8 @@ public class PartnerService {
         partnerRepository.save(partner);
 
     }
+
+//    public List<Partner> searchPartnerByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
+//
+//    }
 }

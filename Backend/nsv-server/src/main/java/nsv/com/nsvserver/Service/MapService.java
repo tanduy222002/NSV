@@ -46,6 +46,7 @@ public class MapService {
                 Slot slot =new Slot();
                 slot.setName(slotDto.getName());
                 slot.setDescription(slotDto.getDescription());
+                slot.setCapacity(slotDto.getCapacity());
                 slot.setXPosition(slotDto.getXPosition());
                 slot.setRow(row);
                 return slot;
