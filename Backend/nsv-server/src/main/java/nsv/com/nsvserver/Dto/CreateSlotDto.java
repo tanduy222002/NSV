@@ -19,8 +19,9 @@ import java.util.List;
 public class CreateSlotDto {
 
     private String name;
-    @Schema(hidden = true)
-    private Double capacity = 0.0;
+
+    @NotNull(message = "capacity is mandatory")
+    private Double capacity;
     @Schema(hidden = true)
     private Double containing=0.0;
     @Schema(hidden = true)

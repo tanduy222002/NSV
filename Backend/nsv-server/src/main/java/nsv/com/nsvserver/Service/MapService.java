@@ -1,6 +1,7 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.CreateMapDto;
+import nsv.com.nsvserver.Dto.PageDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
@@ -39,7 +40,6 @@ public class MapService {
         List<Row> rows=mapDto.getRowDtos().parallelStream().map(rowDto->{
             Row row =new Row();
             row.setName(rowDto.getName());
-            System.out.println(row.getName());
             row.setYPosition(rowDto.getYPosition());
 
             List<Slot> slots=rowDto.getSlotDtos().parallelStream().map(slotDto->{
@@ -64,5 +64,9 @@ public class MapService {
 
     public Map getMapById(Integer mapId) {
         return mapRepository.findById(mapId).orElseThrow(()->new NotFoundException("Map not found with id:"));
+    }
+
+    public PageDto searchMapByFilterAndPagination(Integer pageIndex, Integer pageSize, String name){
+        return new PageDto();
     }
 }
