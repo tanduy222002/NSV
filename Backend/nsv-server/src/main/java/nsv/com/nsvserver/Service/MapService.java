@@ -1,7 +1,9 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.CreateMapDto;
+import nsv.com.nsvserver.Dto.MapWithIdAndNameDto;
 import nsv.com.nsvserver.Dto.PageDto;
+import nsv.com.nsvserver.Dto.SearchPartnerDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
@@ -23,14 +25,19 @@ public class MapService {
 
     MapRepository mapRepository;
 
+    MapDao mapDaoImpl;
+
 
     @Autowired
-    public MapService(ProvinceRepository provinceRepository, WardRepository wardRepository, DistrictRepository districtRepository, AddressRepository addressRepository, MapRepository mapRepository) {
+    public MapService(ProvinceRepository provinceRepository, WardRepository wardRepository,
+                      DistrictRepository districtRepository, AddressRepository addressRepository,
+                      MapRepository mapRepository, MapDao mapDaoImpl) {
         this.provinceRepository = provinceRepository;
         this.wardRepository = wardRepository;
         this.districtRepository = districtRepository;
         this.addressRepository = addressRepository;
         this.mapRepository = mapRepository;
+        this.mapDaoImpl = mapDaoImpl;
     }
 
     @Transactional
@@ -67,6 +74,8 @@ public class MapService {
     }
 
     public PageDto searchMapByFilterAndPagination(Integer pageIndex, Integer pageSize, String name){
-        return new PageDto();
+        List<MapWithIdAndNameDto> maps= mapDaoImpl.getMapIdAndNameWithFilterAndPagination(pageIndex,pageSize,name);
+        long count= mapDaoImpl.countTotalHasName(name);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,maps);
     }
 }
