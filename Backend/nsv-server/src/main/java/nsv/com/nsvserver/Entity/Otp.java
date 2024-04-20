@@ -29,7 +29,7 @@ public class Otp {
     }
     @OneToOne(cascade = {CascadeType.DETACH,
             CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH,
-    })
+    },fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id",referencedColumnName = "id")
     private Employee employee;
 

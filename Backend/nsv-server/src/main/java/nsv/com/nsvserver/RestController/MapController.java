@@ -39,8 +39,8 @@ public class MapController {
     }
     @GetMapping("/{mapId}")
     public ResponseEntity<?> getMapDetail(@Valid @PathVariable Integer mapId){
-        nsv.com.nsvserver.Entity.Map map = mapService.getMapById(mapId);
-        return ResponseEntity.ok(map);
+        CreateMapDto mapDto = mapService.getMapById(mapId);
+        return ResponseEntity.ok(mapDto);
     }
     @Operation(summary = "Get list of map by name")
     @GetMapping("/search")
