@@ -34,6 +34,7 @@ public class Profile {
     @JsonManagedReference
     private Employee employee;
 
+
     @OneToOne(mappedBy="profile",cascade = CascadeType.ALL)
     @JsonManagedReference
     private Address address;

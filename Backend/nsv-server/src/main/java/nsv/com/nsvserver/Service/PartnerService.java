@@ -1,10 +1,10 @@
 package nsv.com.nsvserver.Service;
 
-import nsv.com.nsvserver.Dto.AddressDto;
-import nsv.com.nsvserver.Dto.CreatePartnerDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.Partner;
 import nsv.com.nsvserver.Entity.Profile;
+import nsv.com.nsvserver.Repository.PartnerDao;
 import nsv.com.nsvserver.Repository.PartnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PartnerService {
@@ -19,10 +20,13 @@ public class PartnerService {
 
     AddressService addressService;
 
+    PartnerDao partnerDaoImpl;
+
     @Autowired
-    public PartnerService(PartnerRepository partnerRepository, AddressService addressService) {
+    public PartnerService(PartnerRepository partnerRepository, AddressService addressService, PartnerDao partnerDaoImpl) {
         this.partnerRepository = partnerRepository;
         this.addressService = addressService;
+        this.partnerDaoImpl = partnerDaoImpl;
     }
 
     @Transactional
@@ -46,7 +50,9 @@ public class PartnerService {
 
     }
 
-    public List<Partner> searchPartnerByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
-        return new ArrayList<Partner>();
+    public PageDto searchPartnerByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
+        List<SearchPartnerDto> partners= partnerDaoImpl.searchWithFilterAndPagination(pageIndex,pageSize,name,phone);
+        long count=partnerDaoImpl.countSearchWithFilter(name,phone);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,partners);
     }
 }

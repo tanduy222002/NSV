@@ -44,10 +44,10 @@ public class EmployeeService {
 
     public PageDto getAllEmployeeProfile(Integer page, Integer pageSize){
         System.out.println("getAllEmployeeProfile");
-        List<Profile> profiles= profileDaoImpl.findAllWithEagerLoading(page, pageSize);
-        List<EmployeeDto> results=profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
-        long totalCount= profileDaoImpl.getTotalCount();
-        return new PageDto(Math.ceil((double)totalCount/pageSize),totalCount,page,results);
+        List<Profile> profiles = profileDaoImpl.findAllWithEagerLoading(page, pageSize);
+        List<EmployeeDto> results = profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
+        long totalCount = profileDaoImpl.getTotalCount();
+        return new PageDto(Math.ceil((double) totalCount / pageSize), totalCount, page, results);
     }
 
     @Transactional
