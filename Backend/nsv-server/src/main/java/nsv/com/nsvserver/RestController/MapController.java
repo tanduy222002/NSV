@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -41,6 +42,7 @@ public class MapController {
         nsv.com.nsvserver.Entity.Map map = mapService.getMapById(mapId);
         return ResponseEntity.ok(map);
     }
+    @Operation(summary = "Get list of map by name")
     @GetMapping("/search")
     public ResponseEntity<?> searchMapByFilterAndPagination(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
                                                             @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
