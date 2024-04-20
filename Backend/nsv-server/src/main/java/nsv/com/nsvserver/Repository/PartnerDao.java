@@ -1,12 +1,14 @@
 package nsv.com.nsvserver.Repository;
 
+import nsv.com.nsvserver.Dto.SearchPartnerDto;
 import nsv.com.nsvserver.Entity.Profile;
 
 import java.util.List;
 
 public interface PartnerDao {
 
-//    public List<Profile> searchWithFilterAndPagination(Integer page, Integer pageSize);
+    public List<SearchPartnerDto> searchWithFilterAndPagination(Integer page, Integer pageSize, String name, String phone);
 
-    public long getTotalCount();
+    public long countSearchWithFilter(String name, String phone);
+
 }

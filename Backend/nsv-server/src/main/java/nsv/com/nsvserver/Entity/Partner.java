@@ -33,7 +33,7 @@ public class Partner {
 
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 

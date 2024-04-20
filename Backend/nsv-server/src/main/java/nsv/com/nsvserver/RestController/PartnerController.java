@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.CreatePartnerDto;
+import nsv.com.nsvserver.Dto.PageDto;
 import nsv.com.nsvserver.Entity.Partner;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,9 @@ public class PartnerController {
     @GetMapping("/search")
     public ResponseEntity<?> getPartner(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
                                         @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
-                                        @RequestParam String name, @RequestParam(required = false) String phone
+                                        @RequestParam(required = false) String name, @RequestParam(required = false) String phone
     ){
-        List<Partner> partners =partnerService.searchPartnerByFilterAndPagination(pageIndex,pageSize,name,phone);
-        Map<String, String> responseData = new HashMap<>();
-        responseData.put("message", "partner successfully added");
-        return ResponseEntity.ok(responseData);
+        PageDto partners =partnerService.searchPartnerByFilterAndPagination(pageIndex,pageSize,name,phone);
+        return ResponseEntity.ok(partners);
     }
 }
