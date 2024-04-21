@@ -16,8 +16,6 @@ public class CreateRowDto {
     private String name;
     @JsonProperty("y_position")
     private int yPosition;
-    @NotNull(message = "capacity is mandatory")
-    private Double capacity;
     @Valid
     private List<CreateSlotDto> slotDtos;
 

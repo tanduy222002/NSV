@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -19,11 +20,14 @@ import java.util.List;
 public class CreateSlotDto {
 
     private String name;
+
+    @NotNull(message = "capacity is mandatory")
+    private Double capacity;
     @Schema(hidden = true)
-    private Double capacity = 0.0;
-    @Schema(hidden = true)
+    @JsonIgnore
     private Double containing=0.0;
     @Schema(hidden = true)
+    @JsonIgnore
     private String status="Chưa chứa";
 
     private String description;

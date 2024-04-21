@@ -1,6 +1,6 @@
 package nsv.com.nsvserver.Service;
 
-import nsv.com.nsvserver.Dto.CreateMapDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
@@ -22,14 +22,19 @@ public class MapService {
 
     MapRepository mapRepository;
 
+    MapDao mapDaoImpl;
+
 
     @Autowired
-    public MapService(ProvinceRepository provinceRepository, WardRepository wardRepository, DistrictRepository districtRepository, AddressRepository addressRepository, MapRepository mapRepository) {
+    public MapService(ProvinceRepository provinceRepository, WardRepository wardRepository,
+                      DistrictRepository districtRepository, AddressRepository addressRepository,
+                      MapRepository mapRepository, MapDao mapDaoImpl) {
         this.provinceRepository = provinceRepository;
         this.wardRepository = wardRepository;
         this.districtRepository = districtRepository;
         this.addressRepository = addressRepository;
         this.mapRepository = mapRepository;
+        this.mapDaoImpl = mapDaoImpl;
     }
 
     @Transactional
@@ -39,7 +44,6 @@ public class MapService {
         List<Row> rows=mapDto.getRowDtos().parallelStream().map(rowDto->{
             Row row =new Row();
             row.setName(rowDto.getName());
-            System.out.println(row.getName());
             row.setYPosition(rowDto.getYPosition());
 
             List<Slot> slots=rowDto.getSlotDtos().parallelStream().map(slotDto->{
@@ -55,14 +59,41 @@ public class MapService {
             row.setMap(currentMap);
             return row;
         }).collect(Collectors.toList());
-        currentMap.setRow(rows);
+        currentMap.setRows(rows);
 
         mapRepository.save(currentMap);
         return "New map was created with id: "+ currentMap.getId();
     }
 
 
-    public Map getMapById(Integer mapId) {
-        return mapRepository.findById(mapId).orElseThrow(()->new NotFoundException("Map not found with id:"));
+    public CreateMapDto getMapById(Integer mapId) {
+        Map map= mapRepository.findById(mapId).orElseThrow(()->new NotFoundException("Map not found with id:"));
+        CreateMapDto mapDto =new CreateMapDto();
+        mapDto.setName(map.getName());
+        List<CreateRowDto> rowsDto=map.getRows().stream().map(row->{
+            CreateRowDto rowDto =new CreateRowDto();
+            rowDto.setName(row.getName());
+            rowDto.setYPosition(row.getYPosition());
+
+            List<CreateSlotDto> slotsDto=row.getSlots().stream().map(slot->{
+                CreateSlotDto slotDto =new CreateSlotDto();
+                slotDto.setName(slot.getName());
+                slotDto.setDescription(slot.getDescription());
+                slotDto.setCapacity(slot.getCapacity());
+                slotDto.setXPosition(slot.getXPosition());
+                return slotDto;
+            }).collect(Collectors.toList());
+            rowDto.setSlotDtos(slotsDto);
+            return rowDto;
+        }).collect(Collectors.toList());
+        mapDto.setRowDtos(rowsDto);
+
+        return mapDto;
+    }
+
+    public PageDto searchMapByFilterAndPagination(Integer pageIndex, Integer pageSize, String name){
+        List<MapWithIdAndNameDto> maps= mapDaoImpl.getMapIdAndNameWithFilterAndPagination(pageIndex,pageSize,name);
+        long count= mapDaoImpl.countTotalHasName(name);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,maps);
     }
 }
