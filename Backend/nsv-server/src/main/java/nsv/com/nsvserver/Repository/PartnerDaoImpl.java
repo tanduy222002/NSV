@@ -25,7 +25,7 @@ public class PartnerDaoImpl implements PartnerDao{
     @Override
     public List<SearchPartnerDto> searchWithFilterAndPagination(Integer page, Integer pageSize, String name, String phone) {
         StringBuilder queryString = new StringBuilder(
-                "Select New nsv.com.nsvserver.Dto.SearchPartnerDto(p.id, profile.name) FROM Partner p join p.profile as profile WHERE 1=1"
+                "Select New nsv.com.nsvserver.Dto.SearchPartnerDto(p.id, profile.name,profile.phone,profile.) FROM Partner p join p.profile as profile WHERE 1=1"
                 );
 
         if(name!=null){

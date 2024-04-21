@@ -37,6 +37,10 @@ public class Partner {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 
+    @OneToMany(mappedBy = "partner", cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    private List<TransferTicket> transferTickets;
+
+
 
 
 

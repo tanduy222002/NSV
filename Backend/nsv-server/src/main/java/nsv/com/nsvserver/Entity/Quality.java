@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import nsv.com.nsvserver.Dto.QualityCreateDto;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -27,6 +29,8 @@ public class Quality {
     @JsonBackReference
     private Type type;
 
+    @OneToMany(cascade={CascadeType.MERGE, CascadeType.DETACH,CascadeType.PERSIST,CascadeType.REFRESH})
+    private List<Bin> bin;
     public Quality(QualityCreateDto dto) {
         this.name=dto.getName();
         this.description=dto.getDescription();
