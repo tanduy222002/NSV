@@ -15,7 +15,14 @@ public class CreateTransferTicketDto {
     private String name;
     @JsonProperty("provider_id")
     private Integer providerId;
-    private String addressId;
     @JsonProperty("import_date")
     private Date importDate;
+
+    private Double weight;
+
+    private String transporter;
+
+    private Double value;
+
+
 }
