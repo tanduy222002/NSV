@@ -11,5 +11,6 @@ import nsv.com.nsvserver.Entity.Partner;
 public class SearchPartnerDto {
     private Integer ID;
     private String name;
+    private String phone;
 
 }

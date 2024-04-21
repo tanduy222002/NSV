@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Slot",uniqueConstraints = {@UniqueConstraint(columnNames = {"x_position", "row_id"})})
 @Getter
@@ -55,6 +57,14 @@ public class Slot {
     @JoinColumn(name="row_id", nullable=false)
     @JsonBackReference
     private Row row;
+
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(
+            name = "bin_slot",
+            joinColumns = @JoinColumn(name = "bin_id"),
+            inverseJoinColumns = @JoinColumn(name = "slot_id"))
+    private List<Bin> bins;
 
 
     public Slot(String name, String description, Integer xPosition) {

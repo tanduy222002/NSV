@@ -67,12 +67,12 @@ public class AuthExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<?> handleExpiredToken(ExpiredJwtException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-                HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.UNAUTHORIZED.toString(),
                 e.getMessage()),
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.UNAUTHORIZED);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
