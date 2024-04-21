@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,6 +56,10 @@ public class TransferTicket {
     @OneToMany(mappedBy = "transferTicket"
             ,cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Bin> bins;
+
+    @OneToOne(mappedBy = "transferTicket",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Debt debt;
+
 
 
 }
