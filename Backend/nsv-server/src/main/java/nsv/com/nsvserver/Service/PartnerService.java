@@ -38,7 +38,8 @@ public class PartnerService {
         partnerProfile.setPhoneNumber(createPartnerDto.getPhoneNumber());
         AddressDto addressDto = createPartnerDto.getAddress();
         Address address = addressService.createAddress(addressDto.getAddress(),addressDto.getWardId(),addressDto.getDistrictId(), addressDto.getProvinceId());
-        partnerProfile.setAddress(address);
+        address.setProfile(partnerProfile);
+//        partnerProfile.setAddress(address);
 
         Partner partner =new Partner();
         partner.setBankAccount(createPartnerDto.getBankAccount());
