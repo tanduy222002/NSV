@@ -1,9 +1,9 @@
 package nsv.com.nsvserver.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "debt")
 public class Debt {
@@ -36,6 +36,9 @@ public class Debt {
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "transfer_ticket_id", referencedColumnName = "id")
     private TransferTicket transferTicket;
+
+    @OneToMany(mappedBy="debt",cascade = CascadeType.ALL)
+    private List<PaymentHistory> paymentHistories;
 
 
 }
