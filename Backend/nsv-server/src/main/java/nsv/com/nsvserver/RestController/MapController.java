@@ -50,4 +50,13 @@ public class MapController {
         PageDto result = mapService.searchMapByFilterAndPagination(pageIndex, pageSize, name);
         return ResponseEntity.ok(result);
     }
+    @Operation(summary = "Get slot in map")
+    @GetMapping("/{mapId}/slots")
+    public ResponseEntity<?> getSlotsInMapByFilterAndPagination(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                                            @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+                                                            @RequestParam(required = false) String name,
+                                                            @PathVariable Integer mapId){
+        PageDto result = mapService.getSlotInMapByFilterAndPagination(pageIndex, pageSize, name,mapId);
+        return ResponseEntity.ok(result);
+    }
 }

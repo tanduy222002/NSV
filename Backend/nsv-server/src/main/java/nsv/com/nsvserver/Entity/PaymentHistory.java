@@ -34,7 +34,7 @@ public class PaymentHistory {
     private String note;
 
 
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name="debt_id", nullable=false)
     private Debt debt;
 
