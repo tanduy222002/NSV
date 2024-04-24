@@ -1,4 +1,7 @@
 package nsv.com.nsvserver.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import nsv.com.nsvserver.Entity.Employee;
 import nsv.com.nsvserver.Entity.EmployeeDetail;
@@ -25,5 +28,16 @@ public class EmployeeDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("The user name is not found: " + userName);
         }
         return new EmployeeDetail(employee);
+    }
+
+    public static Employee getCurrentUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof EmployeeDetail) {
+            EmployeeDetail employeeDetail= (EmployeeDetail) authentication.getPrincipal();
+            return employeeDetail.getEmployee();
+        }
+
+        return null;
     }
 }

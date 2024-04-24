@@ -2,22 +2,27 @@ package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateBinDto {
     @JsonProperty("quality_id")
-    private String qualityId;
+    private Integer qualityId;
     @JsonProperty("package_type")
     private String packageType;
     private Integer count;
     private Double weight;
     @JsonProperty("slot_id")
-    private String slotId;
+    private List<Integer> slotId;
+    @NotNull(message = "price of product is mandatory")
+    private Double price;
+    private String note;
 }

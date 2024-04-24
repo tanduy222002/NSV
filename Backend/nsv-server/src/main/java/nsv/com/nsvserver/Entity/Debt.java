@@ -1,10 +1,12 @@
 package nsv.com.nsvserver.Entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
 @Entity(name = "debt")
 public class Debt {
     @Id
@@ -22,7 +24,7 @@ public class Debt {
     private String note;
 
     @Column(name = "is_paid")
-    private Boolean isPaid;
+    private Boolean isPaid = false;
 
     @Column(name = "create_date")
     private Date createDate;
@@ -31,7 +33,7 @@ public class Debt {
     private Date dueDate;
 
     @Column(name = "unit")
-    private String unit= "unit";
+    private String unit= "VND";
 
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "transfer_ticket_id", referencedColumnName = "id")

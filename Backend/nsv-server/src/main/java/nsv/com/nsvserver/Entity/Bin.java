@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,14 +19,14 @@ public class Bin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+//    @Column(name = "name")
+//    private String name;
 
     @Column(name = "weight")
-    private Double weight;
+    private Double weight=0.0;
 
     @Column(name = "left_weight")
-    private Double leftWeight;
+    private Double leftWeight=0.0;
 
     @Column(name = "package_type")
     private String packageType;
@@ -48,16 +49,19 @@ public class Bin {
     @Column(name = "document")
     private String document;
 
-    @Column(name = "status")
-    private String status;
+//    @Column(name = "status")
+//    private String status;
 
     @Column(name = "QR")
     private String qr;
 
 
 
-
-    @ManyToMany(mappedBy = "bins",cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(
+            name = "bin_slot",
+            joinColumns = @JoinColumn(name = "bin_id"),
+            inverseJoinColumns = @JoinColumn(name = "slot_id"))
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Slot> slots;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
@@ -70,6 +74,18 @@ public class Bin {
     @JoinColumn(name = "transfer_ticket_id", referencedColumnName = "id")
     private TransferTicket transferTicket;
 
-
+    public void addSlot(Slot slot) {
+        if(this.slots==null){
+            this.slots = new ArrayList<>();
+            this.slots.add(slot);
+            if(slot.getBins()!=null){
+                slot.getBins().add(this);
+            } else{
+                List<Bin> bins = new ArrayList<>();
+                bins.add(this);
+                slot.setBins(bins);
+            }
+        }
+    }
 
 }

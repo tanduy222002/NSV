@@ -24,7 +24,7 @@ public class Quality {
     @Column(name = "note")
     private String description;
 
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name="type_id", nullable=false)
     @JsonBackReference
     private Type type;
