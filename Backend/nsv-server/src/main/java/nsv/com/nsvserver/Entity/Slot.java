@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -59,11 +61,8 @@ public class Slot {
     private Row row;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(
-            name = "bin_slot",
-            joinColumns = @JoinColumn(name = "bin_id"),
-            inverseJoinColumns = @JoinColumn(name = "slot_id"))
+    @ManyToMany(mappedBy = "slots",cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+
     private List<Bin> bins;
 
 
@@ -73,4 +72,16 @@ public class Slot {
         this.description = description;
         this.xPosition = xPosition;
     }
+
+    public void addBin(Bin bin) {
+        if (this.bins == null){
+            this.bins = new ArrayList<Bin>();
+            this.bins.add(bin);
+        }
+        else{
+            this.bins.add(bin);
+        }
+    }
+
+
 }

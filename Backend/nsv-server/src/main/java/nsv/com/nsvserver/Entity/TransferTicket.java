@@ -40,6 +40,9 @@ public class TransferTicket {
     @Column(name = "approved_date")
     private Date approvedDate;
 
+    @Column(name = "transport_date")
+    private Date transportDate;
+
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "create_employee_id", referencedColumnName = "id")
     private Employee createEmployee;
@@ -59,6 +62,11 @@ public class TransferTicket {
 
     @OneToOne(mappedBy = "transferTicket",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Debt debt;
+
+    public void addDebt(Debt debt){
+        this.debt=debt;
+        debt.setTransferTicket(this);
+    }
 
 
 
