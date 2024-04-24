@@ -1,3 +1,3 @@
-import CreateImportOrderFormController from './CreateExportOrderFormController';
+import CreatExportOrderForm from './CreateExportOrderForm';
 
-export { CreateImportOrderFormController };
+export { CreatExportOrderForm };

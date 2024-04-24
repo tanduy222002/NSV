@@ -7,6 +7,10 @@ import ImportPage from './ImportPage';
 import EditProductPage from './EditProductPage';
 import ProductLocationDetailPage from './ProductLocationDetailPage';
 import CreateProductPage from './CreateProductPage';
+import CreateExportTicketPage from './CreateExportTicketPage';
+import CreateWarehousePage from './CreateWarehousePage';
+import CreateWarehouseMapPage from './CreateWarehouseMapPage';
+import PartnerPage from './PartnerPage';
 
 export {
     AuthPage,
@@ -16,6 +20,10 @@ export {
     CreateProductPage,
     EditProductPage,
     ExportPage,
+    CreateExportTicketPage,
     ImportPage,
-    ProductLocationDetailPage
+    CreateWarehousePage,
+    ProductLocationDetailPage,
+    CreateWarehouseMapPage,
+    PartnerPage
 };

@@ -1,11 +1,11 @@
 import ExportFormFirstStep from './ExportFormFirstStep';
 import ExportFormSecondStep from './ExportFormSecondStep';
-import ExportFomFilterStep from './ExportFomFilterStep';
+import ExportFormFilterStep from './ExportFormFilterStep';
 import FormProgress from './FormProgress';
 
 export {
     FormProgress,
     ExportFormFirstStep,
     ExportFormSecondStep,
-    ExportFomFilterStep
+    ExportFormFilterStep
 };

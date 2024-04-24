@@ -15,7 +15,7 @@ type HttpAuthRequest = HttpRequest & {
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.RENDERER_VITE_SERVER,
-    timeout: 1000
+    timeout: 10000
 });
 
 export const makeRequest = ({ method, url, params, body }: HttpRequest) => {

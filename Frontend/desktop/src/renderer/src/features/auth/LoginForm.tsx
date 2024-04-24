@@ -56,6 +56,7 @@ const LoginForm = () => {
             username,
             password
         });
+        console.log('response: ', response);
 
         if (response?.status === 401) {
             setError({

@@ -1,7 +1,7 @@
 import FilterSection from './FilterSection';
 import { FaSearch } from 'react-icons/fa';
 
-const ExportFomFilterStep = () => {
+const ExportFormFilterStep = () => {
     return (
         <div className="grid grid-cols-3 gap-4">
             <div className="flex flex-col gap-4">
@@ -55,4 +55,4 @@ const ExportFomFilterStep = () => {
     );
 };
 
-export default ExportFomFilterStep;
+export default ExportFormFilterStep;

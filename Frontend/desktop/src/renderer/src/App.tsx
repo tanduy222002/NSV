@@ -11,10 +11,14 @@ import {
     ProductPage,
     WareHousePage,
     ExportPage,
+    CreateExportTicketPage,
     ImportPage,
+    CreateWarehousePage,
+    CreateWarehouseMapPage,
     ProductLocationDetailPage,
     CreateProductPage,
-    EditProductPage
+    EditProductPage,
+    PartnerPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -58,6 +62,14 @@ function App(): JSX.Element {
                                     element={<WareHousePage />}
                                 />
                                 <Route
+                                    path="/warehouse/create"
+                                    element={<CreateWarehousePage />}
+                                />
+                                <Route
+                                    path="/warehouse/map/create"
+                                    element={<CreateWarehouseMapPage />}
+                                />
+                                <Route
                                     path="/product"
                                     element={<ProductPage />}
                                 >
@@ -83,8 +95,16 @@ function App(): JSX.Element {
                                     element={<ExportPage />}
                                 />
                                 <Route
+                                    path="/export/create"
+                                    element={<CreateExportTicketPage />}
+                                />
+                                <Route
                                     path="/import"
                                     element={<ImportPage />}
+                                />
+                                <Route
+                                    path="/partner"
+                                    element={<PartnerPage />}
                                 />
                             </Route>
                         </Routes>

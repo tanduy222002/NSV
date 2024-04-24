@@ -2,16 +2,13 @@ import {
     TableView,
     Pagination,
     SearchBar,
-    ConfirmationPopup
+    ConfirmationPopup,
+    UserInfo
 } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
-import { GoBell } from 'react-icons/go';
-import { useAppSelector, usePopup } from '@renderer/hooks';
-import { ModalProvider } from '@renderer/components';
-import {
-    CreateRackingLayoutFormController,
-    CreateWarehouseFormController
-} from '@renderer/features/wms';
+import { usePopup } from '@renderer/hooks';
+import { Button } from '@renderer/components';
+import { useNavigate } from 'react-router-dom';
 
 const warehouseTableColumns = [
     { title: 'ID', sortable: true, type: ColumnType.Text },
@@ -43,9 +40,10 @@ const items = [
 ];
 
 const WareHousePage = () => {
+    const navigate = useNavigate();
+    const goToCreateMapPage = () => navigate('/warehouse/map/create');
+    const goToCreateWarehousePage = () => navigate('/warehouse/create');
     const { showPopup, show, hide } = usePopup();
-
-    const user = useAppSelector((state) => state.auth.value);
 
     return (
         <div className="flex-1 h-screen px-8 py-6 relative">
@@ -59,18 +57,19 @@ const WareHousePage = () => {
             )}
             <div className="flex justify-between items-center w-full mb-6">
                 <h1 className="text-2xl font-semibold">Quản lý kho hàng</h1>
-                <div className="flex items-center gap-2">
-                    <GoBell />
-                    <div>{user?.username}</div>
-                </div>
+                <UserInfo />
             </div>
             <div className="flex items-center gap-4">
-                <ModalProvider>
-                    <CreateWarehouseFormController />
-                </ModalProvider>
-                <ModalProvider>
-                    <CreateRackingLayoutFormController />
-                </ModalProvider>
+                <Button
+                    text="Tạo sơ đồ kho"
+                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    action={goToCreateMapPage}
+                />
+                <Button
+                    text="Tạo kho mới"
+                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    action={goToCreateWarehousePage}
+                />
             </div>
             <SearchBar className="mt-6 ml-auto" placeHolder="Tìm kiếm..." />
             <div className="flex flex-col gap-4 mt-6">

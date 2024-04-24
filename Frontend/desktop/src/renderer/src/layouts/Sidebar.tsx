@@ -44,7 +44,7 @@ const firstSectionItems = [
     {
         title: 'Khách hàng',
         icon: <RiUserSettingsLine />,
-        path: '/customer'
+        path: '/partner'
     }
 ];
 

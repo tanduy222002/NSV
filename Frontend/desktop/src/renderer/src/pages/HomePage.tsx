@@ -7,7 +7,6 @@ const HomePage = () => {
     const user = useAppSelector((state) => state.auth.value);
 
     useEffect(() => {
-        console.log('user: ', user);
         if (!user) navigate('/auth/login');
     }, []);
 

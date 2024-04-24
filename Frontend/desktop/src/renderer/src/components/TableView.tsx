@@ -13,7 +13,6 @@ type Column = {
     sortable: boolean;
     type: ColumnType;
 };
-
 type TableViewProps = {
     columns: Column[];
     items: object[];
@@ -29,7 +28,6 @@ const TableView = ({
     editAction,
     deleteAction
 }: TableViewProps) => {
-    console.log('items: ', items);
     return (
         <table className="w-fit min-w-[750px] h-fit border-collapse">
             <tr className="border border-1">
