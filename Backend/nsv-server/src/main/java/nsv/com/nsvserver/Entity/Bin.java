@@ -34,6 +34,9 @@ public class Bin {
     @Column(name = "unit")
     private String unit="Kg";
 
+    @Column(name = "status")
+    private String status="PENDING";
+
     @Column(name = "amount")
     private Integer amount;
 
@@ -44,7 +47,7 @@ public class Bin {
     private Date importDate;
 
     @Column(name = "expired_date")
-    private Date exppiredDate;
+    private Date expiredDate;
 
     @Column(name = "document")
     private String document;
