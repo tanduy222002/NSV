@@ -25,13 +25,16 @@ public class TransferTicketService {
 
     EmployeeRepository employeeRepository;
 
+    TicketDao ticketDaoImpl;
+
     @Autowired
-    public TransferTicketService(QualityRepository qualityRepository, SlotRepository slotRepository, TransferTicketRepository transferTicketRepository, PartnerRepository partnerRepository, EmployeeRepository employeeRepository) {
+    public TransferTicketService(QualityRepository qualityRepository, SlotRepository slotRepository, TransferTicketRepository transferTicketRepository, PartnerRepository partnerRepository, EmployeeRepository employeeRepository, TicketDao ticketDaoImpl) {
         this.qualityRepository = qualityRepository;
         this.slotRepository = slotRepository;
         this.transferTicketRepository = transferTicketRepository;
         this.partnerRepository = partnerRepository;
         this.employeeRepository = employeeRepository;
+        this.ticketDaoImpl = ticketDaoImpl;
     }
 
     @Transactional
@@ -87,5 +90,22 @@ public class TransferTicketService {
         transferTicketRepository.save(transferTicket);
         return "New Import Transfer Ticket created with id: " + transferTicket.getId();
 
+    }
+
+    @Transactional
+    public void approveTicketStatus(Integer id) {
+        TransferTicket transferTicket = ticketDaoImpl.fetchWithBinAndSlot(id);
+        transferTicket.setStatue("APPROVED");
+        transferTicket.getBins().parallelStream().forEach(bin->{
+            bin.setStatus("APPROVED");
+            bin.getSlots().parallelStream().forEach(slot -> {
+            slot.setStatus("CONTAINING");
+            });
+        });
+        Employee employee = EmployeeDetailService.getCurrentUserDetails();
+        employee= employeeRepository.findById(employee.getId()).orElseThrow(()->new NotFoundException("No employee found"));
+        transferTicket.setApprovedEmployee(employee);
+        transferTicket.setApprovedDate(new Date());
+        transferTicketRepository.save(transferTicket);
     }
 }

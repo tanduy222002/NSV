@@ -1,5 +1,7 @@
 package nsv.com.nsvserver.RestController;
 
+import io.swagger.v3.oas.annotations.OpenAPI31;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -25,6 +27,7 @@ public class PartnerController {
     }
 
     @PostMapping("")
+    @Operation(description = "Create a new partner")
     public ResponseEntity<?> addPartner(@RequestBody @Valid CreatePartnerDto createPartnerDto){
         partnerService.createPartner(createPartnerDto);
         Map<String, String> responseData = new HashMap<>();
@@ -33,6 +36,7 @@ public class PartnerController {
     }
 
     @GetMapping("/search")
+    @Operation(description = "get partners with filter(name,phone) and pagination")
     public ResponseEntity<?> getPartner(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
                                         @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
                                         @RequestParam(required = false) String name, @RequestParam(required = false) String phone

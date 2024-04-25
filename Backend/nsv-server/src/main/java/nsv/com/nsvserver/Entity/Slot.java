@@ -45,7 +45,7 @@ public class Slot {
 
     @Schema(hidden = true)
     @Column(name = "status", nullable = false)
-    private String status="Chưa chứa";
+    private String status="EMPTY";
 
     @Column(name = "description", nullable = false)
     private String description;
