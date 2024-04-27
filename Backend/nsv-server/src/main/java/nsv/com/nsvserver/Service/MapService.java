@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class MapService {
     @Transactional
     public String createMap(CreateMapDto mapDto){
         Map currentMap =new Map();
+        if(mapRepository.existsByName(mapDto.getName())){
+            throw new ExistsException("Map with name: "+mapDto.getName()+" already exists");
+        }
         currentMap.setName(mapDto.getName());
         List<Row> rows=mapDto.getRowDtos().parallelStream().map(rowDto->{
             Row row =new Row();
