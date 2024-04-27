@@ -1,8 +1,6 @@
 package nsv.com.nsvserver.Service;
 
-import nsv.com.nsvserver.Dto.CreateMapDto;
-import nsv.com.nsvserver.Dto.CreateWarehouseDto;
-import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
@@ -57,4 +55,28 @@ public class WarehouseService {
         return (List<StatisticOfProductInWarehouseDto>) warehouseDaoImpl.getStatisticsOfProductInWarehouse(warehouseId);
     }
 
+    public MapInWareHouseDto getWarehouseDetail(Integer id) {
+        Map map= mapRepository.findById(id).orElseThrow(()->new NotFoundException("Map not found with id:"));
+        MapInWareHouseDto mapDto =new MapInWareHouseDto();
+        mapDto.setMapName(map.getName());
+        List<RowInMapDto> rowsDto=map.getRows().stream().map(row->{
+            RowInMapDto rowDto =new RowInMapDto();
+            rowDto.setName(row.getName());
+            rowDto.setYPosition(row.getYPosition());
+
+            List<SlotInRowDto> slotsDto=row.getSlots().parallelStream().map(slot->{
+                SlotInRowDto slotDto =new SlotInRowDto();
+                slotDto.setName(slot.getName());
+                slotDto.setDescription(slot.getDescription());
+                slotDto.setCapacity(slot.getCapacity());
+                slotDto.setXPosition(slot.getXPosition());
+                slotDto.setStatus(slot.getStatus());
+                return slotDto;
+            }).collect(Collectors.toList());
+            rowDto.setSlots(slotsDto);
+            return rowDto;
+        }).collect(Collectors.toList());
+        mapDto.setRows(rowsDto);
+        return mapDto;
+    }
 }

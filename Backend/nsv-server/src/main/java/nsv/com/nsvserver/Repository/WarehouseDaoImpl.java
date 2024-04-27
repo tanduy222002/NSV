@@ -1,14 +1,18 @@
 package nsv.com.nsvserver.Repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Dto.StatisticOfTypeAndQuality;
-import nsv.com.nsvserver.Entity.TransferTicket;
+import nsv.com.nsvserver.Entity.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -22,11 +26,12 @@ public class WarehouseDaoImpl implements WarehouseDao {
 
     @Override
     public List<StatisticOfProductInWarehouseDto> getStatisticsOfProductInWarehouse(Integer warehouseId) {
-        String queryString = "select p.name,p.image,t.name,t.image,q.name,sum(b.weight) from Product p join p.types as t " +
+        String queryString = "select p.name,p.image,t.name,t.image,q.name,sum(distinct b.weight) from Product p join p.types as t " +
                 "join t.qualities as q join q.bin as b join " +
                 "b.slots as s join s.row as r " +
                 "join r.map as m join m.warehouses as w " +
-                "on w.id =: warehouseId group by p.name,p.image,t.name,t.image,q.name";
+                "on w.id =: warehouseId " +
+                "group by p.name,p.image,t.name,t.image,q.name";
 
         TypedQuery<Object[]> query = entityManager.createQuery(queryString,Object[].class);
         query.setParameter("warehouseId",warehouseId);
@@ -55,5 +60,13 @@ public class WarehouseDaoImpl implements WarehouseDao {
 
         return productInfoMap.values().parallelStream().collect(Collectors.toList());
 
+    }
+
+
+    @Override
+    public Slot fetchSlot(Integer Id) {
+        Query query = entityManager.createQuery("select s from Slot s join s.warehouse as w Where w.id = :warehouseId");
+        query.setParameter("warehouseId",Id);
+        return (Slot) query.getResultList();
     }
 }

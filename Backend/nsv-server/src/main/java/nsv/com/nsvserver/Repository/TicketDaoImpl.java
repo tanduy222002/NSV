@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import nsv.com.nsvserver.Entity.Profile;
 import nsv.com.nsvserver.Entity.TransferTicket;
 import org.springframework.data.annotation.Persistent;
@@ -21,7 +22,8 @@ public class TicketDaoImpl implements TicketDao{
 
     @Override
     public TransferTicket fetchWithBinAndSlot(Integer Id) {
-        TransferTicket transferTicket = entityManager.createQuery("select t from TransferTicket t join t.bins as b join b.slots", TransferTicket.class).getSingleResult();
-        return transferTicket;
+        Query query = entityManager.createQuery("select t from TransferTicket t join t.bins as b join b.slots Where t.id = :ticketId");
+        query.setParameter("ticketId",Id);
+        return (TransferTicket) query.getSingleResult();
     }
 }

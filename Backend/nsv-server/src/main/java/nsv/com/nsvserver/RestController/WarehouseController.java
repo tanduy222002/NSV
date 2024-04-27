@@ -51,10 +51,16 @@ public class WarehouseController {
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/{id}/statistics")
+    @GetMapping("/{id}/products/statistics")
     @Operation(summary = "Get statistics of product in warehouse")
     public ResponseEntity<?> getStatistic(@PathVariable Integer id)  {
         List<StatisticOfProductInWarehouseDto> data=warehouseService.getStatisticOfProductInWarehouse(id);
         return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get detail in warehouse")
+    public ResponseEntity<?> getSlotsInWarehouse(@PathVariable Integer id)  {
+        return ResponseEntity.ok(warehouseService.getWarehouseDetail(id));
     }
 }
