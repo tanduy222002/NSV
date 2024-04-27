@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
+import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -47,6 +48,13 @@ public class WarehouseController {
         ObjectMapper objectMapper = new ObjectMapper();
         ClassPathResource resource = new ClassPathResource("static/warehouse_status.json");
         List<String> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<String>>() {});
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/{id}/statistics")
+    @Operation(summary = "Get statistics of product in warehouse")
+    public ResponseEntity<?> getStatistic(@PathVariable Integer id)  {
+        List<StatisticOfProductInWarehouseDto> data=warehouseService.getStatisticOfProductInWarehouse(id);
         return ResponseEntity.ok(data);
     }
 }

@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.CreateMapDto;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
+import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
@@ -20,13 +21,15 @@ public class WarehouseService {
 
     MapRepository mapRepository;
 
+    WarehouseDao warehouseDaoImpl;
+
     @Autowired
-    public WarehouseService(WarehouseRepository warehouseRepository, AddressService addressService, MapRepository mapRepository) {
+    public WarehouseService(WarehouseRepository warehouseRepository, AddressService addressService, MapRepository mapRepository, WarehouseDao warehouseDaoImpl) {
         this.warehouseRepository = warehouseRepository;
         this.addressService = addressService;
         this.mapRepository = mapRepository;
+        this.warehouseDaoImpl = warehouseDaoImpl;
     }
-
 
     @Transactional
     public String createWarehouse(CreateWarehouseDto warehouseDto){
@@ -46,6 +49,12 @@ public class WarehouseService {
 
         warehouseRepository.save(warehouse);
         return "New ware house created with id: "+warehouse.getId();
+    }
+    public List<StatisticOfProductInWarehouseDto> getStatisticOfProductInWarehouse(Integer warehouseId){
+        if(!warehouseRepository.existsById(warehouseId)){
+            throw new NotFoundException("Warehouse not found with id: " + warehouseId);
+        }
+        return (List<StatisticOfProductInWarehouseDto>) warehouseDaoImpl.getStatisticsOfProductInWarehouse(warehouseId);
     }
 
 }

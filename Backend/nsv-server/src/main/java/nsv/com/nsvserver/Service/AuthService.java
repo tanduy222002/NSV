@@ -51,13 +51,10 @@ public class AuthService {
     }
 
     public AuthResponseDto authenticateUser (String userName, String password){
-        System.out.println("authenticateUser");
-        System.out.println(userName);
-        System.out.println(password);
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userName, password));
 
-        System.out.println(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         EmployeeDetail employeeDetail = (EmployeeDetail) authentication.getPrincipal();
@@ -71,7 +68,7 @@ public class AuthService {
         List<String> roles = employee.getRoles().stream()
                 .map(item -> item.getName())
                 .collect(Collectors.toList());
-        return new AuthResponseDto(employee.getId(),jwt,roles,"Create successfully",employee.getRefreshToken().getToken());
+        return new AuthResponseDto(employee.getId(),jwt,roles,"Login successfully",employee.getRefreshToken().getToken());
     }
     @Transactional
     public AuthResponseDto signUp(SignUpRequestDto signUpRequestDto){

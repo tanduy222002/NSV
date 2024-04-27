@@ -7,6 +7,7 @@ import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Product;
 import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Entity.Type;
+import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.ProductExistsException;
 import nsv.com.nsvserver.Exception.UploadImageException;
@@ -71,6 +72,9 @@ public class ProductService {
     public void createNewProduct(String name, String variety, String base64Img) throws Exception {
 
             Product product= new Product();
+            if(productRepository.existsByName(name)){
+                throw new ExistsException("Product with name: "+name+" already exists");
+            }
             product.setName(name);
             product.setVariety(variety);
             String imgUrl = imageService.upLoadImageWithBase64(base64Img);
