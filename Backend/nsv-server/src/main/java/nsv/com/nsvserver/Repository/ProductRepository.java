@@ -22,4 +22,5 @@ import java.util.Map;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
+    boolean existsByName(String name);
 }

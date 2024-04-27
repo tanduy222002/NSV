@@ -16,7 +16,6 @@ public class NsvServerApplication {
 	@Value("${server.port}")
 	private String port;
 
-	WarehouseDao warehouseDaoImpl;
 
 
 	public static void main(String[] args) {
@@ -28,6 +27,7 @@ public class NsvServerApplication {
 	public CommandLineRunner commandLineRunner(String[] args) {
 		return runner->{
 			System.out.println("System is running on port: "+port);
+
 
 		};
 	}
