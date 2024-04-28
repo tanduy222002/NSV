@@ -20,6 +20,10 @@ public class CreateBinDto {
     private String packageType;
     @NotNull
     private double weight;
+
+    @NotNull
+    private List<BinWithSlotDto> binWithSlot;
+
     @NotNull(message = "price of product is mandatory")
     private double price;
     private String note;

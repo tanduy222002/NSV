@@ -171,6 +171,16 @@ public class AuthExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleSlotOverContainingException(SlotOverContaining e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<?> handleRefreshTokenExpiredException(RefreshTokenExpiredException e) {
@@ -216,15 +226,15 @@ public class AuthExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ResponseEntity<?> handleDefaultException(Exception e) {
-//        System.out.println(e.getClass().getName());
-//        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-//                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-//                e.getMessage()),
-//                HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleDefaultException(Exception e) {
+        System.out.println(e.getClass().getName());
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }

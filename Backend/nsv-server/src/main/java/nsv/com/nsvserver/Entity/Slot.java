@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Slot",uniqueConstraints = {@UniqueConstraint(columnNames = {"x_position", "row_id"})})
@@ -61,8 +62,8 @@ public class Slot {
     private Row row;
 
 
-    @ManyToMany(mappedBy = "slots",cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    private List<Bin> bins;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "slot")
+    private List<BinSlot> binSlot;
 
 
     public Slot(String name, String description, Integer xPosition) {
@@ -71,16 +72,15 @@ public class Slot {
         this.description = description;
         this.xPosition = xPosition;
     }
-
-    public void addBin(Bin bin) {
-        if (this.bins == null){
-            this.bins = new ArrayList<Bin>();
-            this.bins.add(bin);
-        }
-        else{
-            this.bins.add(bin);
+    public void addBinSlot(BinSlot binSlot){
+        if(this.binSlot==null){
+            this.binSlot = new ArrayList<>();
+            this.binSlot.add(binSlot);
+        }else{
+            this.binSlot.add(binSlot);
         }
     }
+
 
 
 }
