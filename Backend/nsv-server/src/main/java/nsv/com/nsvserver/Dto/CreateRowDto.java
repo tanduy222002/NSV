@@ -13,7 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRowDto {
+    @NotNull(message = "row name is mandatory")
     private String name;
+    @NotNull(message = "y_position is mandatory")
     @JsonProperty("y_position")
     private int yPosition;
     @Valid

@@ -17,16 +17,17 @@ import nsv.com.nsvserver.Entity.Map;
 public class CreateWarehouseDto {
 
     @NotBlank(message = "name is mandatory")
-    @Schema(name = "Kho 1")
+    @Schema(example = "Kho 1")
     private String name;
 
     @NotBlank(message = "type is mandatory")
-    @Schema(name = "Kho lạnh")
+    @Schema(example = "Kho lạnh")
     private String type;
 
     @NotNull(message = "mapId is mandatory")
     private Integer mapId;
 
     @Valid
+    @NotNull(message = "Warehouse address is mandatory")
     private AddressDto address;
 }

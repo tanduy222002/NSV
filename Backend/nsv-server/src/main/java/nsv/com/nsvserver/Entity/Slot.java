@@ -62,7 +62,6 @@ public class Slot {
 
 
     @ManyToMany(mappedBy = "slots",cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-
     private List<Bin> bins;
 
 

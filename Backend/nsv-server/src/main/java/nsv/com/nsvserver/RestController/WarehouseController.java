@@ -42,11 +42,21 @@ public class WarehouseController {
     }
 
 
-    @GetMapping("/variety")
-    @Operation(summary = "Get variety of products")
-    public ResponseEntity<?> getVariety() throws IOException {
+    @GetMapping("/status")
+    @Operation(summary = "Get status type of warehouse ")
+    public ResponseEntity<?> getStatus() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ClassPathResource resource = new ClassPathResource("static/warehouse_status.json");
+        List<String> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<String>>() {});
+        return ResponseEntity.ok(data);
+    }
+
+
+    @GetMapping("/types")
+    @Operation(summary = "Get types of warehouse ")
+    public ResponseEntity<?> getTypes() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClassPathResource resource = new ClassPathResource("static/warehouse_type.json");
         List<String> data = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<String>>() {});
         return ResponseEntity.ok(data);
     }

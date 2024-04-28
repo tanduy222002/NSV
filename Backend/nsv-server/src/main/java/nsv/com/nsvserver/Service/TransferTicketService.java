@@ -67,19 +67,18 @@ public class TransferTicketService {
             Quality quality = qualityRepository.findById(binDto.getQualityId()).orElseThrow(()->new NotFoundException("Quality does not exist"));
             bin.setQuality(quality);
             bin.setTransferTicket(transferTicket);
-            bin.setAmount(binDto.getCount());
             bin.setWeight(binDto.getWeight());
             bin.setDocument(binDto.getNote());
             bin.setImportDate(importDate);
             bin.setPrice(binDto.getPrice());
             bin.setPackageType(binDto.getPackageType());
 
-            List<Slot> slots=binDto.getSlotId().stream().map(slotId -> {
-                Slot slot = slotRepository.findById(slotId).orElseThrow(()->new NotFoundException("Slot does not exist"));
-                slot.addBin(bin);
-                return slot;
-            }).collect(Collectors.toList());
-            bin.setSlots(slots);
+//            List<Slot> slots=binDto.getSlotId().stream().map(slotId -> {
+//                Slot slot = slotRepository.findById(slotId).orElseThrow(()->new NotFoundException("Slot does not exist"));
+//                slot.addBin(bin);
+//                return slot;
+//            }).collect(Collectors.toList());
+//            bin.setSlots(slots);
             return bin;
 
         }).collect(Collectors.toList());
@@ -91,6 +90,7 @@ public class TransferTicketService {
         return "New Import Transfer Ticket created with id: " + transferTicket.getId();
 
     }
+
 
     @Transactional
     public void approveTicketStatus(Integer id) {

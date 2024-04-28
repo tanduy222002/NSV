@@ -4,6 +4,7 @@ package nsv.com.nsvserver.ExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.persistence.NoResultException;
 import nsv.com.nsvserver.Dto.ErrorResponseDto;
 import nsv.com.nsvserver.Exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -177,6 +178,15 @@ public class AuthExceptionHandler {
                 HttpStatus.FORBIDDEN.toString(),
                 e.getMessage()),
                 HttpStatus.FORBIDDEN);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> handleNoResultException(NoResultException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.NOT_FOUND.toString(),
+                e.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
