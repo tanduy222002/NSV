@@ -6,13 +6,11 @@ import jakarta.persistence.TypedQuery;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Dto.StatisticOfTypeAndQuality;
 import nsv.com.nsvserver.Entity.Slot;
+import nsv.com.nsvserver.Entity.Warehouse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -68,5 +66,14 @@ public class WarehouseDaoImpl implements WarehouseDao {
         Query query = entityManager.createQuery("select s from Slot s join s.warehouse as w Where w.id = :warehouseId");
         query.setParameter("warehouseId",Id);
         return (Slot) query.getResultList();
+    }
+
+    @Override
+    public Warehouse getMapDetail(Integer warehouseId) {
+        Query query = entityManager.createQuery(
+                "select w from Warehouse w join w.map as m join m.rows as r join r.slots as s" +
+                        " Where w.id = :warehouseId");
+        query.setParameter("warehouseId",warehouseId);
+        return (Warehouse) query.getSingleResult();
     }
 }

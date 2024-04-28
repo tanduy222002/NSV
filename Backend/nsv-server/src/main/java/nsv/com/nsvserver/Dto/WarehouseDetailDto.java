@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class WarehouseDetailDto {
     private Integer id;
     private String name;
+    private Double capacity;
+    private Double containing;
     private MapInWareHouseDto map;
 }

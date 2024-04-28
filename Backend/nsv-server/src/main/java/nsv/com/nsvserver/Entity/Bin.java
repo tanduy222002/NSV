@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -19,8 +20,6 @@ public class Bin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @Column(name = "name")
-//    private String name;
 
     @Column(name = "weight")
     private Double weight=0.0;
@@ -60,12 +59,8 @@ public class Bin {
 
 
 
-    @JoinTable(
-            name = "bin_slot",
-            joinColumns = @JoinColumn(name = "bin_id"),
-            inverseJoinColumns = @JoinColumn(name = "slot_id"))
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    private List<Slot> slots;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "bin")
+    private List<BinSlot> binSlot;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "quality_id", referencedColumnName = "id")
@@ -77,18 +72,5 @@ public class Bin {
     @JoinColumn(name = "transfer_ticket_id", referencedColumnName = "id")
     private TransferTicket transferTicket;
 
-    public void addSlot(Slot slot) {
-        if(this.slots==null){
-            this.slots = new ArrayList<>();
-            this.slots.add(slot);
-            if(slot.getBins()!=null){
-                slot.getBins().add(this);
-            } else{
-                List<Bin> bins = new ArrayList<>();
-                bins.add(this);
-                slot.setBins(bins);
-            }
-        }
-    }
 
 }

@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SlotWithBinDto {
+public class BinWithSlotDto {
     @JsonProperty("slot_id")
     private Integer slotId;
-    @JsonProperty("place_taken")
-    private Double takenPlace;
+    private double weight;
+    @JsonProperty("area")
+    private double area;
+
 }

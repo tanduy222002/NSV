@@ -28,13 +28,13 @@ public class Map {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy="map",cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    private List<Warehouse> warehouses;
+    @OneToOne(mappedBy="map",cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    private Warehouse warehouse;
 
 
     @OrderBy("yPosition ASC")
     @JsonManagedReference
-    @OneToMany(mappedBy="map",cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="map",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Row> rows;
     public Map(String name, List<Row> row) {
         System.out.println("construct map");

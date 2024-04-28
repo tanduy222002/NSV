@@ -37,7 +37,7 @@ public class Warehouse {
     @Column(name = "status")
     private String status="Hoạt động";
 
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @OneToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "map_id", referencedColumnName = "id")
     private Map map;
 

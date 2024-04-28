@@ -18,12 +18,12 @@ public class CreateBinDto {
     private Integer qualityId;
     @JsonProperty("package_type")
     private String packageType;
-    private Integer count;
-    @Schema(example = "10")
     @NotNull
     private double weight;
-    @JsonProperty("slot_id")
-    private List<Integer> slotId;
+
+    @NotNull
+    private List<BinWithSlotDto> binWithSlot;
+
     @NotNull(message = "price of product is mandatory")
     private double price;
     private String note;

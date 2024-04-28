@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,12 +39,16 @@ public class WarehouseService {
         Integer mapId=warehouseDto.getMapId();
         Address address=addressService.createAddress(streetAddress, wardId,districtId, provinceId);
         Map map = mapRepository.findById(warehouseDto.getMapId()).orElseThrow(()->new NotFoundException("Map not found with id: "+mapId));
-
+        double totalCapacity = map.getRows().stream()
+                .flatMap(row -> row.getSlots().stream())
+                .mapToDouble(slot -> slot.getCapacity())
+                .sum();
         Warehouse warehouse=new Warehouse();
         warehouse.setName(warehouseDto.getName());
         warehouse.setType(warehouseDto.getType());
         warehouse.setAddress(address);
         warehouse.setMap(map);
+        warehouse.setCapacity(totalCapacity);
 
         warehouseRepository.save(warehouse);
         return "New ware house created with id: "+warehouse.getId();
@@ -55,15 +60,24 @@ public class WarehouseService {
         return (List<StatisticOfProductInWarehouseDto>) warehouseDaoImpl.getStatisticsOfProductInWarehouse(warehouseId);
     }
 
-    public MapInWareHouseDto getWarehouseDetail(Integer id) {
-        Map map= mapRepository.findById(id).orElseThrow(()->new NotFoundException("Map not found with id:"));
+    public WarehouseDetailDto getWarehouseDetail(Integer id) {
+        Warehouse warehouse= warehouseDaoImpl.getMapDetail(id);
+        if (warehouse == null){
+            throw new NotFoundException("Warehouse not found with id: " + id);
+        }
+        Map map= warehouse.getMap();
+        WarehouseDetailDto warehouseDto = new WarehouseDetailDto();
+        warehouseDto.setName(warehouse.getName());
+        warehouseDto.setId(warehouse.getId());
+        warehouseDto.setCapacity(warehouse.getCapacity());
+
+
         MapInWareHouseDto mapDto =new MapInWareHouseDto();
         mapDto.setMapName(map.getName());
         List<RowInMapDto> rowsDto=map.getRows().stream().map(row->{
             RowInMapDto rowDto =new RowInMapDto();
             rowDto.setName(row.getName());
             rowDto.setYPosition(row.getYPosition());
-
             List<SlotInRowDto> slotsDto=row.getSlots().parallelStream().map(slot->{
                 SlotInRowDto slotDto =new SlotInRowDto();
                 slotDto.setName(slot.getName());
@@ -76,7 +90,13 @@ public class WarehouseService {
             rowDto.setSlots(slotsDto);
             return rowDto;
         }).collect(Collectors.toList());
+
+        double containing=rowsDto.parallelStream().flatMap(rowDto -> rowDto.getSlots().stream()).mapToDouble(slot->slot.getCapacity()).sum();
+
         mapDto.setRows(rowsDto);
-        return mapDto;
+        warehouseDto.setMap(mapDto);
+        warehouseDto.setContaining(containing);
+
+        return warehouseDto;
     }
 }
