@@ -24,11 +24,12 @@ public class WarehouseDaoImpl implements WarehouseDao {
 
     @Override
     public List<StatisticOfProductInWarehouseDto> getStatisticsOfProductInWarehouse(Integer warehouseId) {
-        String queryString = "select p.name,p.image,t.name,t.image,q.name,sum(distinct b.weight) from Product p join p.types as t " +
+        String queryString = "select p.name,p.image,t.name,t.image,q.name,sum(bs.weight) from "+
+                "Product p join p.types as t " +
                 "join t.qualities as q join q.bin as b join " +
-                "b.slots as s join s.row as r " +
-                "join r.map as m join m.warehouses as w " +
-                "on w.id =: warehouseId " +
+                "b.binSlot as bs join bs.slot as s join s.row as r " +
+                "join r.map as m join m.warehouse as w " +
+                "where w.id =: warehouseId " +
                 "group by p.name,p.image,t.name,t.image,q.name";
 
         TypedQuery<Object[]> query = entityManager.createQuery(queryString,Object[].class);
