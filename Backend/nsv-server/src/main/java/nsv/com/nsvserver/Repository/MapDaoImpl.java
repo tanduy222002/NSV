@@ -107,4 +107,22 @@ public class MapDaoImpl implements MapDao {
         Long count = (Long) query.getSingleResult();
         return count;
     }
+
+
+    @Override
+    public List<MapWithIdAndNameDto> getMapIdAndNameWithFilterAndPagination() {
+        StringBuilder queryString = new StringBuilder(
+                "Select New nsv.com.nsvserver.Dto.MapWithIdAndNameDto(m.id, m.name) FROM Map m left join m.warehouse WHERE m.warehouse IS NULL"
+        );
+
+
+
+        Query query = entityManager.createQuery(queryString.toString());
+
+
+        List<MapWithIdAndNameDto> resultList= query.getResultList();
+
+        return resultList;
+
+    }
 }
