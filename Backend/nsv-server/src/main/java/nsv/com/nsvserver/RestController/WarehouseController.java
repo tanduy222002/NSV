@@ -80,4 +80,12 @@ public class WarehouseController {
         warehouseService.getWarehouseNameAndId();
         return ResponseEntity.ok(warehouseService.getWarehouseNameAndId());
     }
+
+    @GetMapping("/{warehouseId}/slots/")
+    @Operation(summary = "Get list of slot in warehouse has: warehouseId")
+    public ResponseEntity<?> getWarehouseSlots(@PathVariable Integer warehouseId)  {
+
+        return ResponseEntity.ok(warehouseService.getWarehouseSlots(warehouseId));
+    }
+
 }
