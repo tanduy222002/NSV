@@ -109,10 +109,12 @@ public class TransferTicketService {
         transferTicket.setStatue("APPROVED");
         transferTicket.getBins().parallelStream().forEach(bin->{
             bin.setStatus("APPROVED");
+
             bin.getBinSlot().stream().forEach(binSlot -> {
             Slot slot = binSlot.getSlot();
             double area= binSlot.getArea();
             slot.setStatus("CONTAINING");
+
             Warehouse warehouse=slot.getRow().getMap().getWarehouse();
             if(slot.getCapacity()-slot.getContaining()<area){
                     throw new SlotOverContaining(area+ " m2 is overload the left capacity of slot: " + slot.getName());
@@ -123,6 +125,7 @@ public class TransferTicketService {
             }
             });
         });
+
         Employee employee = EmployeeDetailService.getCurrentUserDetails();
         employee= employeeRepository.findById(employee.getId()).orElseThrow(()->new NotFoundException("No employee found"));
         transferTicket.setApprovedEmployee(employee);
