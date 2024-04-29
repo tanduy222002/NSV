@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface MapDao {
     List<MapWithIdAndNameDto> getMapIdAndNameWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name);
+
+    List<MapWithIdAndNameDto> getMapIdAndNameWithFilterAndPagination();
     Long countTotalHasName(String name);
 
     Long countTotalSlotInMapWithFilter(String name, Integer mapId);

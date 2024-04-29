@@ -15,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,6 +51,14 @@ public class MapController {
         PageDto result = mapService.searchMapByFilterAndPagination(pageIndex, pageSize, name);
         return ResponseEntity.ok(result);
     }
+
+    @Operation(summary = "Get list of unused map")
+    @GetMapping("/unused")
+    public ResponseEntity<?> searchUnusedMapByFilterAndPagination(){
+        List<?> result = mapService.searchMapByFilterAndPagination();
+        return ResponseEntity.ok(result);
+    }
+
     @Operation(summary = "Get slot in map")
     @GetMapping("/{mapId}/slots")
     public ResponseEntity<?> getSlotsInMapByFilterAndPagination(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,

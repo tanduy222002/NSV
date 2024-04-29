@@ -101,6 +101,12 @@ public class MapService {
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,maps);
     }
 
+    public List<?> searchMapByFilterAndPagination(){
+        List<MapWithIdAndNameDto> maps= mapDaoImpl.getMapIdAndNameWithFilterAndPagination();
+        return maps;
+    }
+
+
     public PageDto getSlotInMapByFilterAndPagination(Integer pageIndex, Integer pageSize, String name, Integer mapId) {
         List<SlotWithIdAndNameDto> slots= mapDaoImpl.getSlotIdAndNameInMapWithFilterAndPagination(pageIndex,pageSize,name,mapId);
         long count= mapDaoImpl.countTotalSlotInMapWithFilter(name,mapId);
