@@ -103,4 +103,8 @@ public class WarehouseService {
     public List<?> getWarehouseNameAndId() {
         return warehouseRepository.getWarehouseNameAndId();
     }
+
+    public List getWarehouseSlots(Integer id) {
+        return warehouseRepository.getWarehouseSlot(id);
+    }
 }
