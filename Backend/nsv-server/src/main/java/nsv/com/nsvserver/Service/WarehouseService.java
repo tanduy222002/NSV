@@ -99,4 +99,8 @@ public class WarehouseService {
 
         return warehouseDto;
     }
+
+    public List<?> getWarehouseNameAndId() {
+        return warehouseRepository.getWarehouseNameAndId();
+    }
 }
