@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.CreateMapResponseDto;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
+import nsv.com.nsvserver.Dto.PageDto;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +82,20 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouseService.getWarehouseNameAndId());
     }
 
-    @GetMapping("/{warehouseId}/slots/")
+    @GetMapping("/search")
+    @Operation(summary = "Get list of warehouse with filter and pagination")
+    public ResponseEntity<PageDto> getWarehouses(
+            @RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+            @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String status)  {
+        return ResponseEntity.ok(
+                warehouseService.getWarehouses(pageIndex, pageSize, name, type, status)
+        );
+    }
+
+    @GetMapping("/{warehouseId}/slots")
     @Operation(summary = "Get list of slot in warehouse has: warehouseId")
     public ResponseEntity<?> getWarehouseSlots(@PathVariable Integer warehouseId)  {
 

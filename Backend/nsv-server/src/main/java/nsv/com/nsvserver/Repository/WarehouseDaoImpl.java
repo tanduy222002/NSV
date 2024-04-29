@@ -3,8 +3,11 @@ package nsv.com.nsvserver.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import nsv.com.nsvserver.Dto.SlotWithIdAndNameDto;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Dto.StatisticOfTypeAndQuality;
+import nsv.com.nsvserver.Dto.WarehouseDto;
 import nsv.com.nsvserver.Entity.Slot;
 import nsv.com.nsvserver.Entity.Warehouse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,83 @@ public class WarehouseDaoImpl implements WarehouseDao {
         Query query = entityManager.createQuery("select s from Slot s join s.warehouse as w Where w.id = :warehouseId");
         query.setParameter("warehouseId",Id);
         return (Slot) query.getResultList();
+    }
+
+    @Override
+    public List<WarehouseDto> getWarehouses(Integer pageIndex, Integer pageSize, String name, String type, String status) {
+        StringBuilder queryString = new StringBuilder(
+                """
+                    select new nsv.com.nsvserver.Dto.WarehouseDto(w.id,w.name,w.type,a,w.containing,w.capacity,w.status)
+                    from Warehouse w join w.address as a join fetch a.ward as wa join fetch wa.district as d join fetch d.province as p WHERE 1=1 """
+        );
+
+
+
+        if(name!=null){
+            queryString.append(" AND w.name LIKE:namePattern");
+        }
+        if(type!=null){
+            queryString.append(" AND w.type LIKE:typePattern");
+        }
+        if(status!=null){
+            queryString.append(" AND w.status LIKE:statusPattern");
+        }
+
+        Query query = entityManager.createQuery(queryString.toString());
+
+        if(name!=null){
+            query.setParameter("namePattern","%"+name+"%");
+        }
+
+        if(type!=null){
+            query.setParameter("typePattern","%"+type+"%");
+        }
+
+        if(status!=null){
+            query.setParameter("statusPattern","%"+status+"%");
+        }
+
+        List<WarehouseDto> resultList= query.setFirstResult((pageIndex-1)*pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+        return resultList;
+    }
+
+    @Override
+    public long countTotalGetWarehouse(Integer pageIndex, Integer pageSize, String name, String type, String status) {
+        StringBuilder queryString = new StringBuilder(
+                """
+                    select COUNT(w.id)
+                    from Warehouse w WHERE 1=1 """
+        );
+
+
+
+        if(name!=null){
+            queryString.append(" AND w.name LIKE:namePattern");
+        }
+        if(type!=null){
+            queryString.append(" AND w.type LIKE:typePattern");
+        }
+        if(status!=null){
+            queryString.append(" AND w.status LIKE:statusPattern");
+        }
+
+        Query query = entityManager.createQuery(queryString.toString());
+
+        if(name!=null){
+            query.setParameter("namePattern","%"+name+"%");
+        }
+
+        if(type!=null){
+            query.setParameter("typePattern","%"+type+"%");
+        }
+
+        if(status!=null){
+            query.setParameter("statusPattern","%"+status+"%");
+        }
+        Long count = (Long) query.getSingleResult();
+        return count;
     }
 
     @Override
