@@ -9,11 +9,17 @@ type ProductListResponse =
       }
     | undefined;
 
-export const makeGetProductListRequest = async (
-    token: string,
-    pageIndex: number = 1,
-    pageSize: number = 10
-): Promise<any> => {
+type GetProductListPayload = {
+    token: string;
+    pageIndex?: number;
+    pageSize?: number;
+};
+
+export const getProductList = async ({
+    token,
+    pageIndex = 1,
+    pageSize = 10
+}: GetProductListPayload): Promise<any> => {
     let response: ProductListResponse = undefined;
     try {
         response = await makeAuthRequest({
@@ -25,8 +31,7 @@ export const makeGetProductListRequest = async (
             },
             token: token
         });
-        console.log('Product: ', response);
-        return response?.content;
+        return response;
     } catch (err) {
         console.log('error: ', err);
     }

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '@renderer/hooks';
-import { makeGetProductListRequest } from '@renderer/services/api';
+import { getProductList } from '@renderer/services/api';
 import { TableView, Button, TableSkeleton } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
 
@@ -36,11 +36,16 @@ const ProductList = () => {
     const goToEditProductPage = () => navigate('/product/edit');
 
     const { getItem } = useLocalStorage('access-token');
-    const jwtToken = getItem();
+    const accessToken = getItem();
 
     const { isLoading, data } = useQuery({
         queryKey: ['products'],
-        queryFn: () => makeGetProductListRequest(jwtToken, 1, 5)
+        queryFn: () =>
+            getProductList({
+                token: accessToken,
+                pageIndex: 1,
+                pageSize: 5
+            })
     });
 
     const goToOverview = (productId: number) => {
@@ -49,26 +54,24 @@ const ProductList = () => {
 
     return (
         <div>
-            <div>
-                <Button
-                    text="Thêm sản phẩm"
-                    className="text-[#008767] border-[#008767] bg-[#16C098] mb-6"
-                    action={goToCreateProductPage}
-                />
-                <div className="flex h-full max-h-screen gap-10">
-                    {isLoading ? (
-                        <TableSkeleton />
-                    ) : data?.length === 0 ? (
-                        <p>Hiện chưa có sản phẩm nào</p>
-                    ) : (
-                        <TableView
-                            columns={productTableConfig}
-                            items={data!}
-                            viewAction={goToOverview}
-                            editAction={goToEditProductPage}
-                        />
-                    )}
-                </div>
+            <Button
+                text="Thêm sản phẩm"
+                className="text-[#008767] border-[#008767] bg-[#16C098] mb-6"
+                action={goToCreateProductPage}
+            />
+            <div className="flex h-full max-h-screen gap-10">
+                {isLoading ? (
+                    <TableSkeleton />
+                ) : data?.length === 0 ? (
+                    <p>Hiện chưa có sản phẩm nào</p>
+                ) : (
+                    <TableView
+                        columns={productTableConfig}
+                        items={data!.content}
+                        viewAction={goToOverview}
+                        editAction={goToEditProductPage}
+                    />
+                )}
             </div>
         </div>
     );

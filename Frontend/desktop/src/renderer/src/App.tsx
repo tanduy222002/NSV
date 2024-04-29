@@ -18,7 +18,8 @@ import {
     ProductLocationDetailPage,
     CreateProductPage,
     EditProductPage,
-    PartnerPage
+    PartnerPage,
+    CreateImportTicketPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -101,6 +102,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/import"
                                     element={<ImportPage />}
+                                />
+                                <Route
+                                    path="/import/create"
+                                    element={<CreateImportTicketPage />}
                                 />
                                 <Route
                                     path="/partner"
