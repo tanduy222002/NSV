@@ -17,6 +17,8 @@ public class SlotInRowDto {
 
     private Double capacity;
 
+    private Double containing;
+
     private String status="EMPTY";
 
     private String description;

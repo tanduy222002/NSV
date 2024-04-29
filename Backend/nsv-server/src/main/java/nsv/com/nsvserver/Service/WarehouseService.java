@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class WarehouseService {
     }
 
     @Transactional
-    public String createWarehouse(CreateWarehouseDto warehouseDto){
+    public CreateMapResponseDto createWarehouse(CreateWarehouseDto warehouseDto){
         Integer wardId=warehouseDto.getAddress().getWardId();
         Integer districtId=warehouseDto.getAddress().getDistrictId();
         Integer provinceId=warehouseDto.getAddress().getProvinceId();
@@ -39,6 +40,9 @@ public class WarehouseService {
         Integer mapId=warehouseDto.getMapId();
         Address address=addressService.createAddress(streetAddress, wardId,districtId, provinceId);
         Map map = mapRepository.findById(warehouseDto.getMapId()).orElseThrow(()->new NotFoundException("Map not found with id: "+mapId));
+        if (map.getWarehouse()!=null){
+            throw new ExistsException("this map is already associate with a exist warehouse");
+        }
         double totalCapacity = map.getRows().stream()
                 .flatMap(row -> row.getSlots().stream())
                 .mapToDouble(slot -> slot.getCapacity())
@@ -51,7 +55,7 @@ public class WarehouseService {
         warehouse.setCapacity(totalCapacity);
 
         warehouseRepository.save(warehouse);
-        return "New ware house created with id: "+warehouse.getId();
+        return new CreateMapResponseDto(warehouse.getId(),"Create new map successfully");
     }
     public List<StatisticOfProductInWarehouseDto> getStatisticOfProductInWarehouse(Integer warehouseId){
         if(!warehouseRepository.existsById(warehouseId)){
@@ -70,7 +74,7 @@ public class WarehouseService {
         warehouseDto.setName(warehouse.getName());
         warehouseDto.setId(warehouse.getId());
         warehouseDto.setCapacity(warehouse.getCapacity());
-
+        warehouseDto.setContaining(warehouse.getContaining());
 
         MapInWareHouseDto mapDto =new MapInWareHouseDto();
         mapDto.setMapName(map.getName());
@@ -85,17 +89,18 @@ public class WarehouseService {
                 slotDto.setCapacity(slot.getCapacity());
                 slotDto.setXPosition(slot.getXPosition());
                 slotDto.setStatus(slot.getStatus());
+                slotDto.setContaining(slot.getContaining());
                 return slotDto;
             }).collect(Collectors.toList());
             rowDto.setSlots(slotsDto);
             return rowDto;
         }).collect(Collectors.toList());
 
-        double containing=rowsDto.parallelStream().flatMap(rowDto -> rowDto.getSlots().stream()).mapToDouble(slot->slot.getCapacity()).sum();
+//        double containing=rowsDto.parallelStream().flatMap(rowDto -> rowDto.getSlots().stream()).mapToDouble(slot->slot.getCapacity()).sum();
 
         mapDto.setRows(rowsDto);
         warehouseDto.setMap(mapDto);
-        warehouseDto.setContaining(containing);
+//        warehouseDto.setContaining(containing);
 
         return warehouseDto;
     }

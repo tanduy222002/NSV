@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import nsv.com.nsvserver.Dto.CreateMapResponseDto;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Service.WarehouseService;
@@ -35,10 +36,8 @@ public class WarehouseController {
     @Operation(summary = "Create new warehouse")
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> createWarehouse(@Valid @RequestBody CreateWarehouseDto dto){
-        String message= warehouseService.createWarehouse(dto);
-        Map<String, String> responseData = new HashMap<>();
-        responseData.put("message", message);
-        return ResponseEntity.ok(responseData);
+        CreateMapResponseDto responseDto = warehouseService.createWarehouse(dto);
+        return ResponseEntity.ok(responseDto);
     }
 
 
