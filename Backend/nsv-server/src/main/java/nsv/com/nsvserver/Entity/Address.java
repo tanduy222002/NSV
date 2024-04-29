@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import nsv.com.nsvserver.Dto.AddressDto;
 @Getter
 @Setter
 @ToString
+
 public class Address {
     @Id
     @Column(name = "id")
@@ -21,6 +23,7 @@ public class Address {
     private Integer id;
     @Column(name = "name")
     private String name;
+
     @OneToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="profile_id", nullable=false)
     @JsonIgnore

@@ -112,4 +112,11 @@ public class WarehouseService {
     public List getWarehouseSlots(Integer id) {
         return warehouseRepository.getWarehouseSlot(id);
     }
+
+    public PageDto getWarehouses(Integer pageIndex, Integer pageSize, String name, String type, String status) {
+        List<WarehouseDto> warehouse = warehouseDaoImpl.getWarehouses(pageIndex, pageSize, name, type, status);
+        long count= warehouseDaoImpl.countTotalGetWarehouse(pageIndex, pageSize, name, type, status);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,warehouse);
+
+    }
 }
