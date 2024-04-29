@@ -113,11 +113,13 @@ public class TransferTicketService {
             Slot slot = binSlot.getSlot();
             double area= binSlot.getArea();
             slot.setStatus("CONTAINING");
+            Warehouse warehouse=slot.getRow().getMap().getWarehouse();
             if(slot.getCapacity()-slot.getContaining()<area){
                     throw new SlotOverContaining(area+ " m2 is overload the left capacity of slot: " + slot.getName());
             }
             else {
                 slot.setContaining(slot.getContaining()+area);
+                warehouse.setContaining(warehouse.getContaining()+binSlot.getArea());
             }
             });
         });
