@@ -2,17 +2,18 @@ import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { BiCategoryAlt } from 'react-icons/bi';
 import { FaRegEdit } from 'react-icons/fa';
+import { FaBraille, FaMapLocationDot } from 'react-icons/fa6';
 import { MdWarehouse, MdLabelImportantOutline } from 'react-icons/md';
 import { useLocalStorage } from '@renderer/hooks';
 import { FormSection } from './components';
+import { createWarehouse } from '@renderer/services/api';
 import {
     AddressPickerController,
     ModalProvider,
     AsyncSelectInput
 } from '@renderer/components';
 import { WarehouseMapPreview } from './components';
-import { FaBraille, FaMapLocationDot } from 'react-icons/fa6';
-import { Button, FormInput } from '@renderer/components';
+import { Button, FormInput, InformationPopup } from '@renderer/components';
 import {
     searchWarehouseMap,
     getWarehouseMap,
@@ -25,7 +26,10 @@ type SelectOption = {
 };
 
 const CreateWarehouseForm = () => {
-    const [address, setAddress] = useState<object | null>(null);
+    const [popupInfo, setPopupInfo] = useState<any>(null);
+    const closePopup = () => setPopupInfo(null);
+
+    const [address, setAddress] = useState<any | null>(null);
     const updateAddress = (address: any) => setAddress(address);
     const [warehouseCategory, setWarehouseCategory] = useState('Chọn loại kho');
     const [warehouseMap, setWarehouseMap] = useState<SelectOption>({
@@ -57,20 +61,48 @@ const CreateWarehouseForm = () => {
         return result;
     };
 
-    const hanldeSubmit = (e) => {
+    const hanldeSubmit = async (e) => {
         e.preventDefault();
         console.log('form submitted');
 
         console.log('address: ', address);
         console.log('name: ', nameRef.current?.value);
+        const warehouseName = nameRef.current!.value;
         console.log('type: ', warehouseCategory);
+        const response = await createWarehouse({
+            token: accessToken,
+            body: {
+                name: warehouseName,
+                type: warehouseCategory,
+                mapId: warehouseMap?.id,
+                address: {
+                    address: address?.address,
+                    wardId: address?.ward?.id,
+                    districtId: address?.district?.id,
+                    provinceId: address?.province?.id
+                }
+            }
+        });
+
+        console.log('response: ', response);
+        if (response) {
+            setPopupInfo({
+                title: 'Thành công',
+                body: 'Kho mới đã được tạo',
+                type: 'success'
+            });
+            alert('Tạo kho mới thành công');
+        }
     };
 
     return (
         <form
-            className="w-full max-w-[900px] h-full relative flex flex-col justify-center bg-white py-5 px-5"
+            className="w-full max-w-[900px] relative flex flex-col justify-center bg-white py-5 px-5"
             onSubmit={hanldeSubmit}
         >
+            {popupInfo && (
+                <InformationPopup {...popupInfo} closeAction={closePopup} />
+            )}
             <FormSection
                 title="Thông tin kho"
                 icon={<FaBraille />}
@@ -87,6 +119,7 @@ const CreateWarehouseForm = () => {
                     />
                     <ModalProvider>
                         <AddressPickerController
+                            address={address}
                             updateAddress={updateAddress}
                         />
                     </ModalProvider>
@@ -116,10 +149,10 @@ const CreateWarehouseForm = () => {
                 layoutClassName="flex flex-col items-center relative"
             >
                 <FaRegEdit className="absolute -top-7 left-[110px] text-[#F78F1E] cursor-pointer" />
-                {isFetching || !data ? (
+                {isFetching ? (
                     <h1>Loading...</h1>
                 ) : (
-                    <WarehouseMapPreview warehouseMap={data} />
+                    data && <WarehouseMapPreview warehouseMap={data} />
                 )}
             </FormSection>
             <Button

@@ -1,10 +1,15 @@
 import { cn } from '@renderer/utils/util';
 import Button from './Button';
 
+enum PopupType {
+    Success = 'success',
+    Error = 'error'
+}
+
 type InformationPopupProps = {
     title: string;
     body: string;
-    type: 'success' | 'error';
+    type: PopupType;
     closeAction: () => void;
 };
 
@@ -24,7 +29,9 @@ const InformationPopup = ({
                 <Button
                     className={cn(
                         'px-2 py-1 border rounded-md text-base font-semibold w-fit text-white',
-                        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                        type === PopupType.Success
+                            ? 'bg-green-500'
+                            : 'bg-red-500'
                     )}
                     text="Xác nhận"
                     action={closeAction}

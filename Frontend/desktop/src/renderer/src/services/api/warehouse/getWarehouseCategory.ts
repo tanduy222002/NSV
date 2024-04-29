@@ -11,7 +11,7 @@ export const getWarehouseCategory = async ({
     try {
         response = await makeAuthRequest({
             token: token,
-            url: '/warehouses/variety',
+            url: '/warehouses/types',
             method: 'get'
         });
     } catch (err) {
