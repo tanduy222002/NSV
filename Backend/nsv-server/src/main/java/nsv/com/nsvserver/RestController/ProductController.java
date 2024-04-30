@@ -120,4 +120,10 @@ public class ProductController {
         return ResponseEntity.ok("New product with types and qualities is added successfully");
     }
 
+    @GetMapping("/{productId}/quality_with_type")
+    @Operation(summary = "Get quality combine type of products")
+    public List<QualityInTypeDto> getQualityCombineType(@PathVariable Integer productId){
+       return productService.getQualityCombineType(productId);
+    }
+
 }

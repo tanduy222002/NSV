@@ -138,6 +138,24 @@ public class ProductService {
 
 
     }
+    public List<QualityInTypeDto> getQualityCombineType(Integer productId){
+//        Product product=productRepository.findWithEagerQualityAndType(productId).orElseThrow(
+//                ()-> new NotFoundException("Product not found with id " + productId)
+//        );
+//        List<QualityInTypeDto> dtos = product.getTypes().parallelStream().map(type ->{
+//
+//
+//           List<QualityInTypeDto> list= type.getQualities().stream().map(quality -> {
+//                QualityInTypeDto dto=new QualityInTypeDto();
+//                dto.setQualityId(quality.getId());
+//                dto.setName(type.getName()+" "+quality.getName());
+//                return dto;
+//            }).collect(Collectors.toList());
+//
+//        }).collect(Collectors.toList());
+//        return dtos;
+        return new ArrayList<>();
+    }
 
 
 

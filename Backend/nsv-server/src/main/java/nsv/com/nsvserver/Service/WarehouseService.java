@@ -90,6 +90,7 @@ public class WarehouseService {
                 slotDto.setXPosition(slot.getXPosition());
                 slotDto.setStatus(slot.getStatus());
                 slotDto.setContaining(slot.getContaining());
+                slotDto.setId(slot.getId());
                 return slotDto;
             }).collect(Collectors.toList());
             rowDto.setSlots(slotsDto);
