@@ -157,4 +157,6 @@ public class WarehouseDaoImpl implements WarehouseDao {
         query.setParameter("warehouseId",warehouseId);
         return (Warehouse) query.getSingleResult();
     }
+
+
 }
