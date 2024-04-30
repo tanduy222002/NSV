@@ -29,7 +29,7 @@ public class Quality {
     @JsonBackReference
     private Type type;
 
-    @OneToMany(mappedBy = "quality",cascade={CascadeType.MERGE, CascadeType.DETACH,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "quality",cascade={CascadeType.MERGE, CascadeType.DETACH,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
     private List<Bin> bin;
     public Quality(QualityCreateDto dto) {
         this.name=dto.getName();

@@ -36,7 +36,7 @@ public class Type {
     @Column(name = "image")
     private String image;
 
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name="product_id", nullable=false)
 //    @JsonBackReference
     private Product product;

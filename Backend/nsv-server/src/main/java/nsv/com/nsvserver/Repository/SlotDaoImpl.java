@@ -31,16 +31,14 @@ public class SlotDaoImpl implements SlotDao {
     @Override
     public List<Bin> getSlotDetail(Integer slotId, Integer pageIndex, Integer pageSize) {
         Query query = entityManager.createQuery(
-                        "select b from Bin b " +
-                        " join b.quality as q join b.transferTicket as tk" +
-                        " join q.type as t join t.product as p"+
-                        " join b.binSlot as bs join bs.slot as s WHERE s.id =:slotId");
-
+                " select b from Bin b " +
+                " join b.binSlot as bs join bs.slot as s on s.id =:slotId"+
+                " join b.quality as q join q.type as t join t.product as p join b.transferTicket as tk");
         query.setParameter("slotId",slotId);
         List<Bin> resultList= query.setFirstResult((pageIndex-1)*pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
-        System.out.println(resultList.get(0));
+
         return resultList;
     }
 
