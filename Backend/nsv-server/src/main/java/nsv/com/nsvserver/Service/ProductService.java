@@ -142,8 +142,8 @@ public class ProductService {
         Product product=productRepository.findWithEagerQualityAndType(productId).orElseThrow(
                 ()-> new NotFoundException("Product not found with id " + productId)
         );
-        List<QualityInTypeDto> dtos = product.getTypes().parallelStream().flatMap(type ->
-                type.getQualities().stream().map(quality -> {
+        List<QualityInTypeDto> dtos = product.getTypes().stream().flatMap(type ->
+                type.getQualities().parallelStream().map(quality -> {
                     QualityInTypeDto dto = new QualityInTypeDto();
                     dto.setQualityId(quality.getId());
                     dto.setName(type.getName() + " " + quality.getName());
