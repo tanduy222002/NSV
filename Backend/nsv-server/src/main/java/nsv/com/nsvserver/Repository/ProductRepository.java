@@ -25,6 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 
     boolean existsByName(String name);
 
-    @Query("From Product p left join p.types as t left join t.qualities WHERE p.id=:productId")
+    @Query("From Product p join p.types as t join t.qualities WHERE p.id=:productId")
     Optional<Product> findWithEagerQualityAndType(@Param("productId") Integer productId);
 }
