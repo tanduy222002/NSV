@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SlotInRowDto {
+    @Schema(hidden = true)
+    private Integer id;
 
     private String name;
 

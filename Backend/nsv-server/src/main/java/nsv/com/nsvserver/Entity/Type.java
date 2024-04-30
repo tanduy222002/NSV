@@ -43,7 +43,7 @@ public class Type {
 
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY,mappedBy="type",cascade = CascadeType.ALL)
-    private List<Quality> qualities = new ArrayList<>();
+    private List<Quality> qualities;
 
     public void addQuality(Quality quality) {
         if (this.qualities==null){

@@ -18,9 +18,13 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
     boolean existsByName(String name);
+
+    @Query("From Product p left join p.types as t left join t.qualities WHERE p.id=:productId")
+    Optional<Product> findWithEagerQualityAndType(@Param("productId") Integer productId);
 }
