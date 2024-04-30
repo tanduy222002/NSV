@@ -10,6 +10,7 @@ import nsv.com.nsvserver.Dto.CreateMapResponseDto;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
 import nsv.com.nsvserver.Dto.PageDto;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
+import nsv.com.nsvserver.Service.SlotService;
 import nsv.com.nsvserver.Service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -28,10 +29,12 @@ import java.util.Map;
 public class WarehouseController {
 
     WarehouseService warehouseService;
+    SlotService slotService;
 
     @Autowired
-    public WarehouseController(WarehouseService warehouseService) {
+    public WarehouseController(WarehouseService warehouseService, SlotService slotService) {
         this.warehouseService = warehouseService;
+        this.slotService = slotService;
     }
 
     @PostMapping("")
@@ -100,6 +103,14 @@ public class WarehouseController {
     public ResponseEntity<?> getWarehouseSlots(@PathVariable Integer warehouseId)  {
 
         return ResponseEntity.ok(warehouseService.getWarehouseSlots(warehouseId));
+    }
+
+    @GetMapping("/{warehouseId}/slots/{slotId}/bins")
+    @Operation(summary = "Get bins in slot located in warehouse")
+    public ResponseEntity<?> getBinInSlotInWarehouse(@PathVariable Integer warehouseId, @PathVariable Integer slotId,
+                                                     @RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                                     @RequestParam(defaultValue = "5") @Min(1) Integer pageSize)  {
+        return ResponseEntity.ok(slotService.getSlotDetail(slotId, pageSize, pageIndex));
     }
 
 }

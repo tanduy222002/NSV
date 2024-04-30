@@ -16,4 +16,5 @@ public interface WarehouseDao {
     public List<WarehouseDto> getWarehouses(Integer pageIndex, Integer pageSize, String name, String type, String status);
 
     long countTotalGetWarehouse(Integer pageIndex, Integer pageSize, String name, String type, String status);
+
 }
