@@ -1,4 +1,4 @@
-package nsv.com.nsvserver.Anotation;
+package nsv.com.nsvserver.Annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
