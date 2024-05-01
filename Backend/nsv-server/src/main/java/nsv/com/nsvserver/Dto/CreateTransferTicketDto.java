@@ -22,13 +22,13 @@ public class CreateTransferTicketDto {
 //    @JsonProperty("transport_date")
 //    private Date transportDate;
 
-    private Double weight;
+//    private Double weight;
 
     private String transporter;
 
     private String description;
 
-    private Double value;
+//    private Double value;
 
     private CreateDebtDto debtDto;
 
