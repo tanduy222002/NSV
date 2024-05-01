@@ -182,6 +182,15 @@ public class AuthExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleBinWeightMismtachException(BinWeightMismatchException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<?> handleRefreshTokenExpiredException(RefreshTokenExpiredException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),

@@ -8,6 +8,7 @@ import nsv.com.nsvserver.Service.TransferTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/transfer_ticket")
 @SecurityRequirement(name = "bearerAuth")
+@Validated
 public class TransferTicketController {
 
     TransferTicketService transferTicketService;

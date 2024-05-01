@@ -5,6 +5,7 @@ import nsv.com.nsvserver.Dto.CreateBinDto;
 import nsv.com.nsvserver.Dto.CreateDebtDto;
 import nsv.com.nsvserver.Dto.CreateTransferTicketDto;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.BinWeightMismatchException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.SlotOverContaining;
 import nsv.com.nsvserver.Repository.*;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,17 +68,19 @@ public class TransferTicketService {
             debt.setName(createDebtDto.getName());
             transferTicket.addDebt(debt);
         }
+
         List<Bin> bins=binDtos.stream().map(binDto->{
             Bin bin = new Bin();
             Quality quality = qualityRepository.findById(binDto.getQualityId()).orElseThrow(()->new NotFoundException("Quality does not exist"));
             bin.setQuality(quality);
             bin.setTransferTicket(transferTicket);
-            bin.setWeight(binDto.getWeight());
             bin.setDocument(binDto.getNote());
             bin.setImportDate(importDate);
             bin.setPrice(binDto.getPrice());
             bin.setPackageType(binDto.getPackageType());
             List<BinSlot> binslots =new ArrayList<>();
+
+            AtomicReference<Double> binWeight = new AtomicReference<>(0.0);
             binDto.getBinWithSlot().stream().forEach(slotWithBin -> {
                 BinSlot binSlot = new BinSlot();
                 Integer slotId=slotWithBin.getSlotId();
@@ -88,13 +93,21 @@ public class TransferTicketService {
                 binSlot.setWeight(slotWithBin.getWeight());
                 binSlot.setArea(slotWithBin.getArea());
                 binSlot.setBin(bin);
+                binWeight.updateAndGet(v -> v + slotWithBin.getWeight());
                 binslots.add(binSlot);
 
             });
             bin.setBinSlot(binslots);
+            if(binDto.getWeight()!=binWeight.get()) {
+                throw new BinWeightMismatchException();
+            }else{
+                bin.setWeight(binDto.getWeight());
+            }
+
             return bin;
 
         }).collect(Collectors.toList());
+
         transferTicket.setBins(bins);
         Partner partner = partnerRepository.findById(createTransferTicketDto.getProviderId()).orElseThrow(()->new NotFoundException("Partner does not exist"));
         transferTicket.setPartner(partner);
