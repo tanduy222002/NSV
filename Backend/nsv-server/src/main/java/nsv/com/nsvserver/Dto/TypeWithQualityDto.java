@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import nsv.com.nsvserver.Anotation.Base64Img;
+import nsv.com.nsvserver.Annotation.Base64Img;
 
 import java.util.List;
 

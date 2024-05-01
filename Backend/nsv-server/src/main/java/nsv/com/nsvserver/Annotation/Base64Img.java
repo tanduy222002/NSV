@@ -1,17 +1,17 @@
-package nsv.com.nsvserver.Anotation;
+package nsv.com.nsvserver.Annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import nsv.com.nsvserver.Validator.ValidEmailValidator;
+import nsv.com.nsvserver.Validator.Base64ImgValidator;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = ValidEmailValidator.class)
+@Constraint(validatedBy = Base64ImgValidator.class)
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ValidEmail {
-    String message() default "This is a invalid email";
+public @interface Base64Img {
+    String message() default "image must start with prefix: 'data:image/jpeg;base64,' or 'data:image/png;base64,' ";
 
     Class<?>[] groups() default {};
 

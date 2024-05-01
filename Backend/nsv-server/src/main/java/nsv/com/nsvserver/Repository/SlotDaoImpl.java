@@ -50,4 +50,50 @@ public class SlotDaoImpl implements SlotDao {
         long count = (long) query.getSingleResult();
         return count;
     }
+
+
+    @Override
+    public List<StatisticOfProductInWarehouseDto> getStatisticsOfProductInSlot(Integer slotId) {
+        String queryString = "select p.name,p.image,t.name,t.image,q.name,sum(bs.weight) from "+
+                "Product p join p.types as t " +
+                "join t.qualities as q join q.bin as b join " +
+                "b.binSlot as bs join bs.slot as s on s.id =: slotId " +
+                "group by p.name,p.image,t.name,t.image,q.name";
+
+        TypedQuery<Object[]> query = entityManager.createQuery(queryString,Object[].class);
+        query.setParameter("slotId",slotId);
+        List<Object[]> result = query.getResultList();
+
+
+        Map<String, StatisticOfProductInWarehouseDto> productInfoMap = Collections.synchronizedMap(new HashMap<>());
+
+        result.parallelStream().forEach(row->{
+            String productName = (String) row[0];
+            String productImg = (String) row[1];
+            String typeName = (String) row[2];
+            String typeImg = (String) row[3];
+            String qualityName = (String) row[4];
+            Double weight = (Double) row[5];
+
+            productInfoMap.computeIfAbsent(productName,
+                    key -> new StatisticOfProductInWarehouseDto(productName,productImg)
+            );
+            StatisticOfTypeAndQuality typeAndQuality = new StatisticOfTypeAndQuality();
+            typeAndQuality.setName(typeName+" "+qualityName);
+            typeAndQuality.setTypeImg(typeImg);
+            typeAndQuality.setWeight(weight);
+            productInfoMap.get(productName).addType(typeAndQuality);
+        });
+
+        return productInfoMap.values().parallelStream().collect(Collectors.toList());
+
+    }
+
+    @Override
+    public Slot getSlotContainingAndCapacityById(Integer slotId) {
+        Query query = entityManager.createQuery(
+                "select new nsv.com.nsvserver.Entity.Slot(s.id,s.name,s.capacity,s.containing) from Slot s WHERE s.id =: slotId" );
+        query.setParameter("slotId",slotId);
+        return (Slot) query.getSingleResult();
+    }
 }

@@ -81,6 +81,10 @@ public class Slot {
         }
     }
 
-
-
+    public Slot(Integer id, String name, Double capacity, Double containing) {
+        this.id = id;
+        this.name = name;
+        this.capacity = capacity;
+        this.containing = containing;
+    }
 }

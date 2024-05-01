@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import nsv.com.nsvserver.Annotation.TraceTime;
 import nsv.com.nsvserver.Dto.CreateMapResponseDto;
 import nsv.com.nsvserver.Dto.CreateWarehouseDto;
 import nsv.com.nsvserver.Dto.PageDto;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/warehouses")
@@ -76,6 +78,13 @@ public class WarehouseController {
     @Operation(summary = "Get detail in warehouse")
     public ResponseEntity<?> getSlotsInWarehouse(@PathVariable Integer id)  {
         return ResponseEntity.ok(warehouseService.getWarehouseDetail(id));
+    }
+
+    @TraceTime
+    @GetMapping("/{warehouseId}/slots/{slotId}/statistics")
+    @Operation(summary = "Get statistics in warehouse slot has id = :slotId ")
+    public ResponseEntity<?> getSlotsInWarehouse(@PathVariable Integer warehouseId, @PathVariable Integer slotId) throws InterruptedException, ExecutionException {
+        return ResponseEntity.ok(slotService.getQualityStatisticInSlot(slotId));
     }
 
     @GetMapping("/name_and_id")

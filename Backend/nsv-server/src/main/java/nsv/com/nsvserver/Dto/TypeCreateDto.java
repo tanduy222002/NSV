@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import nsv.com.nsvserver.Anotation.Base64Img;
+import nsv.com.nsvserver.Annotation.Base64Img;
 
 
 @Getter

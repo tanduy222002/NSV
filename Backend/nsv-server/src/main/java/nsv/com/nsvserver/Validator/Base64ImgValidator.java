@@ -2,8 +2,7 @@ package nsv.com.nsvserver.Validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import nsv.com.nsvserver.Anotation.Base64Img;
-import nsv.com.nsvserver.Anotation.StrongPassword;
+import nsv.com.nsvserver.Annotation.Base64Img;
 
 public class Base64ImgValidator implements ConstraintValidator<Base64Img, String> {
 
