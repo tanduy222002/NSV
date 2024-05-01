@@ -1,9 +1,7 @@
 package nsv.com.nsvserver.Service;
 
 import jakarta.transaction.Transactional;
-import nsv.com.nsvserver.Dto.CreateBinDto;
-import nsv.com.nsvserver.Dto.CreateDebtDto;
-import nsv.com.nsvserver.Dto.CreateTransferTicketDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.BinWeightMismatchException;
 import nsv.com.nsvserver.Exception.NotFoundException;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -54,7 +51,7 @@ public class TransferTicketService {
         transferTicket.setName(createTransferTicketDto.getName());
         transferTicket.setDescription(createTransferTicketDto.getDescription());
         transferTicket.setCreateDate(new Date());
-        transferTicket.setStatue("PENDING");
+        transferTicket.setStatus("PENDING");
         transferTicket.setCreateEmployee(employee);
         Date importDate = createTransferTicketDto.getImportDate();
         transferTicket.setTransportDate(importDate);
@@ -119,7 +116,7 @@ public class TransferTicketService {
     @Transactional
     public void approveTicketStatus(Integer id) {
         TransferTicket transferTicket = ticketDaoImpl.fetchWithBinAndSlot(id);
-        transferTicket.setStatue("APPROVED");
+        transferTicket.setStatus("APPROVED");
         transferTicket.getBins().parallelStream().forEach(bin->{
             bin.setStatus("APPROVED");
 
@@ -144,5 +141,41 @@ public class TransferTicketService {
         transferTicket.setApprovedEmployee(employee);
         transferTicket.setApprovedDate(new Date());
         transferTicketRepository.save(transferTicket);
+    }
+
+    public PageDto getTransferTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status) {
+        List<TransferTicket> ticket = ticketDaoImpl.getTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status);
+
+        List<TransferTicketWithBinDto> transferTicketWithBinDtos = ticket.stream().map(transferTicket -> {
+            TransferTicketWithBinDto dto = new TransferTicketWithBinDto();
+            dto.setId(transferTicket.getId());
+            dto.setName(transferTicket.getName());
+            dto.setImportDate(transferTicket.getCreateDate());
+            dto.setStatus(dto.getStatus());
+            dto.setDescription(dto.getDescription());
+            AtomicReference<Double> totalWeight= new AtomicReference<>(0.0);
+            List<BinDto> binDtos=transferTicket.getBins().stream().map(bin->{
+                BinDto binDto = new BinDto();
+                binDto.setId(bin.getId());
+                binDto.setPackaged(bin.getPackageType());
+                Quality quality = bin.getQuality();
+                Type productType = quality.getType();
+                Product product = productType.getProduct();
+
+                binDto.setProduct(product.getName());
+                binDto.setQualityWithType(productType.getName()+" "+quality.getName());
+                binDto.setProductImg(product.getImage());
+                binDto.setQualityId(quality.getId());
+                binDto.setWeight(bin.getWeight());
+                totalWeight.updateAndGet(v ->  v + bin.getWeight());
+                return binDto;
+            }).collect(Collectors.toList());
+            dto.setWeight(totalWeight.get());
+            dto.setBins(binDtos);
+            return dto;
+        }).collect(Collectors.toList());
+
+        long count= ticketDaoImpl.countTotalTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,transferTicketWithBinDtos);
     }
 }
