@@ -29,7 +29,7 @@ public class TransferTicket {
     private String description;
 
     @Column(name = "status")
-    private String statue;
+    private String status;
 
     @Column(name = "qr")
     private String qr;

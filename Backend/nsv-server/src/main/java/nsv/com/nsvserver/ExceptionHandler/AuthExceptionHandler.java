@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.persistence.NoResultException;
+import jakarta.validation.ConstraintViolationException;
 import nsv.com.nsvserver.Dto.ErrorResponseDto;
 import nsv.com.nsvserver.Exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,6 +37,15 @@ public class AuthExceptionHandler {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.BAD_REQUEST.toString(),
                 details.get(0)),
+                HttpStatus.BAD_REQUEST);
+
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleConstraintValidationException(ConstraintViolationException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
                 HttpStatus.BAD_REQUEST);
 
     }
