@@ -12,6 +12,9 @@ import { getDistricts } from './address/getDistricts';
 import { getWards } from './address/getWards';
 import { searchPartner } from './partner/searchPartner';
 import { createWarehouse } from './warehouse/createWarehouse';
+import { getWarehouseDetail } from './warehouse/getWarehouseDetail';
+import { getProductCategory } from './product/getProductCategory';
+import { createImportTicket } from './import/createImportTicket';
 
 export {
     makeLoginRequest,
@@ -27,5 +30,8 @@ export {
     getProvinces,
     getDistricts,
     getWards,
-    searchPartner
+    searchPartner,
+    getWarehouseDetail,
+    getProductCategory,
+    createImportTicket
 };

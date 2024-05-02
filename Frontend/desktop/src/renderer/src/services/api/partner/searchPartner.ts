@@ -15,7 +15,9 @@ const mapResponse = (response: any) => {
             id: item?.id,
             name: item?.name,
             phone: item?.phone,
-            address: `${item?.address?.name}, ${item?.address?.ward?.name}, ${item?.address?.ward?.district?.name}, ${item?.address?.ward?.district?.province?.name}`
+            address:
+                item?.address &&
+                `${item?.address?.name}, ${item?.address?.ward?.name}, ${item?.address?.ward?.district?.name}, ${item?.address?.ward?.district?.province?.name}`
         }))
     };
 };

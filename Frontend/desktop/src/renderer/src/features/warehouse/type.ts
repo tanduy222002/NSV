@@ -2,6 +2,8 @@ export type MapSlot = {
     name: string;
     capacity: number;
     description: string;
+    status: string;
+    curentLoad: number;
 };
 
 export type MapRow = {

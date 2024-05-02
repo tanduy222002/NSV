@@ -47,7 +47,7 @@ const AsyncSelectInput = ({
             }}
         >
             {/* selected option */}
-            <div className="relative flex items-center justify-between bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            <div className="relative flex items-center justify-between bg-gray-50 border border-sky-800 text-gray-900 text-sm rounded-lg  w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 <div className="bg-gray-50 flex items-center gap-2 absolute px-2 -top-3 left-2">
                     {icon}
                     <p className="text-sm font-semibold text-sky-800">

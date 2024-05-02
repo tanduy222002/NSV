@@ -28,14 +28,38 @@ const ExportFormSecondStep = ({ goToStep }: ExportFormSecondStepProps) => {
                 />
                 <div className="flex items-center justify-center gap-10 w-full">
                     <div className="flex flex-col gap-4 flex-1">
-                        <FormInput name="Lô xuất" icon={<TbPackageExport />} />
-                        <FormInput name="Sản phẩm" icon={<GiFruitBowl />} />
-                        <FormInput name="Loại hàng" icon={<BiCategory />} />
+                        <FormInput
+                            name="Lô xuất"
+                            label="Lô xuất"
+                            icon={<TbPackageExport />}
+                        />
+                        <FormInput
+                            name="Sản phẩm"
+                            icon={<GiFruitBowl />}
+                            label="Sản phẩm"
+                        />
+                        <FormInput
+                            name="Loại hàng"
+                            icon={<BiCategory />}
+                            label="Loại hàng"
+                        />
                     </div>
                     <div className="flex flex-col gap-4 flex-1">
-                        <FormInput name="Quy cách" icon={<BiPackage />} />
-                        <FormInput name="Số lượng" icon={<LiaWpforms />} />
-                        <FormInput name="Khối lượng" icon={<FaWeightScale />} />
+                        <FormInput
+                            name="Quy cách"
+                            icon={<BiPackage />}
+                            label="Quy cách"
+                        />
+                        <FormInput
+                            name="Số lượng"
+                            icon={<LiaWpforms />}
+                            label="Số lượng"
+                        />
+                        <FormInput
+                            name="Khối lượng"
+                            icon={<FaWeightScale />}
+                            label="Khối lượng"
+                        />
                     </div>
                 </div>
                 <Button

@@ -8,10 +8,11 @@ type FormInputProps = {
     onChange?: any;
     bg?: string;
     icon?: ReactNode;
+    defaultValue?: string | number;
 };
 
 const FormInput = (
-    { name, label, icon, value, bg, onChange }: FormInputProps,
+    { name, label, icon, value, bg, onChange, defaultValue }: FormInputProps,
     ref
 ) => {
     return (
@@ -36,6 +37,7 @@ const FormInput = (
                 onChange={onChange}
                 value={value}
                 ref={ref}
+                defaultValue={defaultValue}
                 className={cn('w-full outline-none', bg)}
             />
         </div>

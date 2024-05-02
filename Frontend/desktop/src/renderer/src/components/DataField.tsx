@@ -4,11 +4,18 @@ import { ReactNode } from 'react';
 type DataFieldProps = {
     icon?: ReactNode;
     name: string;
-    value?: string;
+    value?: string | number;
+    defaultValue: string | number;
     disabled: boolean;
 };
 
-const DataField = ({ icon, name, value = ' 1', disabled }: DataFieldProps) => {
+const DataField = ({
+    icon,
+    name,
+    value,
+    defaultValue,
+    disabled
+}: DataFieldProps) => {
     return (
         <div
             className={cn(
@@ -16,11 +23,16 @@ const DataField = ({ icon, name, value = ' 1', disabled }: DataFieldProps) => {
                 disabled ? 'bg-gray-50' : 'bg-white'
             )}
         >
-            <div className="absolute -top-3 left-4 text-[#7C8DB5] flex items-center gap-1 px-2">
+            <div
+                className={cn(
+                    'absolute -top-3 left-4 text-[#7C8DB5] flex items-center gap-1 px-2',
+                    disabled ? 'bg-gray-50' : 'bg-white'
+                )}
+            >
                 {icon}
                 <p className="text-sm font-semibold text-sky-800">{name}</p>
             </div>
-            <p>{value}</p>
+            <p>{value ?? defaultValue}</p>
         </div>
     );
 };

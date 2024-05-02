@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { FaPenNib, FaRegFileAlt } from 'react-icons/fa';
 import { FaUserGear } from 'react-icons/fa6';
 import { BiPhoneCall } from 'react-icons/bi';
@@ -5,7 +6,6 @@ import { CiLocationOn } from 'react-icons/ci';
 import { useLocalStorage } from '@renderer/hooks';
 import { CiDollar } from 'react-icons/ci';
 import { CiDeliveryTruck } from 'react-icons/ci';
-
 import {
     Button,
     FormInput,
@@ -17,32 +17,48 @@ import {
 import { DatePicker } from '@renderer/components';
 import { searchPartner } from '@renderer/services/api';
 import { ImportFormStep } from './type';
-import { useState } from 'react';
+import { ImportTicket } from '@renderer/types/import';
+import { DebtOption } from '@renderer/types/import';
 
 type ImportFormFirstStepProps = {
+    importTicket: ImportTicket;
+    updateImportTicket: (value: ImportTicket) => void;
     goToStep: (step: ImportFormStep) => void;
 };
 
-enum DebtOption {
-    Yes = 'Có',
-    No = 'Không'
-}
-
-const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
-    const [debt, setDebt] = useState<DebtOption>(DebtOption.No);
+const ImportFormFirstStep = ({
+    importTicket,
+    updateImportTicket,
+    goToStep
+}: ImportFormFirstStepProps) => {
+    const ticketNameRef = useRef<HTMLInputElement>(null);
+    const transportRef = useRef<HTMLInputElement>(null);
+    const costRef = useRef<HTMLInputElement>(null);
+    const debtRef = useRef<HTMLInputElement>(null);
+    const descriptionRef = useRef<HTMLInputElement>(null);
+    const [debtOption, setDebtOption] = useState<DebtOption>(DebtOption.No);
+    const [partner, setPartner] = useState<any>(importTicket?.provider_id);
     const [importDate, setImportDate] = useState({
+        startDate: importTicket?.import_date,
+        endDate: importTicket?.import_date
+    });
+    const updateImportDate = (newValue) => {
+        console.log('new date value:', newValue);
+        setImportDate(newValue);
+    };
+    const [dueDate, setDueDate] = useState({
         startDate: null,
         endDate: null
     });
-    const updateImportDate = (newValue) => {
-        console.log('newValue:', newValue);
-        setImportDate(newValue);
+    const updateDueDate = (newValue) => {
+        console.log('new date value:', newValue);
+        setDueDate(newValue);
     };
-
-    const [partner, setPartner] = useState<any>(null);
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
+
+    console.log('import ticket: ', importTicket);
 
     const searchPartnerCallback = async () => {
         const response = await searchPartner({
@@ -52,6 +68,34 @@ const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
         });
         console.log('partners: ', response);
         return response?.content;
+    };
+
+    const handleFirstStep = () => {
+        const newImportTicketValue: ImportTicket = {
+            ...importTicket,
+            name: ticketNameRef?.current?.value ?? '',
+            provider_id: partner?.id,
+            transporter: transportRef?.current?.value ?? '',
+            description: descriptionRef?.current?.value ?? '',
+            import_date: importDate?.startDate ?? String(Date.now()),
+            provider_detail: { ...partner },
+            value: costRef?.current ? Number(costRef?.current?.value) : 0
+        };
+        if (debtOption === DebtOption.Yes) {
+            newImportTicketValue.debtDto = {
+                name: '',
+                value: debtRef?.current?.value
+                    ? Number(debtRef?.current?.value)
+                    : 0,
+                description: descriptionRef?.current?.value ?? '',
+                unit: 'VND',
+                due_date: dueDate.startDate ?? String(Date.now())
+            };
+        }
+
+        console.log('form 1st step value: ', newImportTicketValue);
+        updateImportTicket(newImportTicketValue);
+        goToStep(ImportFormStep.Second);
     };
 
     return (
@@ -64,29 +108,38 @@ const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
                         name="Tên phiếu"
                         icon={<FaPenNib />}
                         bg="bg-white"
+                        ref={ticketNameRef}
+                        defaultValue={importTicket?.name}
                     />
-                    <FormInput
-                        label="Nhà cung cấp"
-                        name="Nhà cung cấp"
-                        icon={<FaUserGear />}
-                        bg="bg-white"
-                    />
-                    {/* <AsyncSelectInput
+                    <AsyncSelectInput
                         label="partners"
                         placeHolder="Đối tác"
+                        icon={<FaUserGear />}
                         asyncSelectorCallback={searchPartnerCallback}
-                        selectedValue={'Chọn đối tác'}
+                        selectedValue={
+                            partner?.name ?? importTicket?.provider_detail?.name
+                        }
                         onSelect={setPartner}
-                    /> */}
+                    />
                     <DataField
                         name="Liên hệ"
+                        value={
+                            partner?.phone ??
+                            importTicket?.provider_detail?.phone
+                        }
+                        defaultValue="Liên hệ"
                         icon={<BiPhoneCall />}
-                        disabled={true}
+                        disabled={!importTicket?.provider_id}
                     />
                     <DataField
                         name="Địa chỉ"
+                        defaultValue="Địa chỉ"
                         icon={<CiLocationOn />}
-                        disabled={true}
+                        disabled={!importTicket?.provider_id}
+                        value={
+                            partner?.address ??
+                            importTicket?.provider_detail?.address
+                        }
                     />
                     <DatePicker
                         name="Ngày nhập kho"
@@ -94,8 +147,6 @@ const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
                         onChange={updateImportDate}
                         value={importDate}
                     />
-                    {/* <FormInput name="Ngày xuất" icon={<MdOutlineDateRange />} /> */}
-                    {/* <FormInput name="Khối lượng" icon={<FaWeightScale />} /> */}
                 </div>
                 <div className="flex flex-col gap-4 flex-1">
                     <FormInput
@@ -103,39 +154,45 @@ const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
                         name="Vận chuyển"
                         icon={<CiDeliveryTruck />}
                         bg="bg-white"
+                        ref={transportRef}
+                        defaultValue={importTicket?.transporter}
                     />
                     <FormInput
                         label="Giá trị"
                         name="Giá trị"
                         icon={<CiDollar />}
                         bg="bg-white"
+                        ref={costRef}
+                        defaultValue={importTicket?.value}
                     />
                     <SelectInput
                         placeHolder="Công nợ"
                         icon={<CiDollar />}
-                        selectedValue={debt}
-                        onSelect={setDebt}
+                        selectedValue={debtOption}
+                        onSelect={setDebtOption}
                         values={[DebtOption.Yes, DebtOption.No]}
                     />
-                    {debt === DebtOption.Yes && (
+                    {debtOption === DebtOption.Yes && (
                         <>
                             <FormInput
                                 label="Tiền nợ"
                                 name="Tiền nợ"
                                 icon={<CiDollar />}
                                 bg="bg-white"
+                                ref={debtRef}
                             />
                             <DatePicker
                                 name="Ngày đáo hạn"
                                 placeHolder="Đáo hạn"
-                                onChange={updateImportDate}
-                                value={importDate}
+                                onChange={updateDueDate}
+                                value={dueDate}
                             />
                             <TextAreaInput
                                 label="Mô tả"
                                 name="Mô tả"
                                 icon={<FaRegFileAlt />}
                                 bg="bg-white"
+                                ref={descriptionRef}
                             />
                         </>
                     )}
@@ -145,7 +202,7 @@ const ImportFormFirstStep = ({ goToStep }: ImportFormFirstStepProps) => {
                 <Button
                     className="text-[#008767] border-[#008767] bg-[#16C098]"
                     text="Tiếp theo"
-                    action={() => goToStep(ImportFormStep.Second)}
+                    action={handleFirstStep}
                 />
             </div>
         </div>
