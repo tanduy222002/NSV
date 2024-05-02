@@ -36,12 +36,15 @@ public class ProductService {
 
     private TypeRepository typeRepository;
 
+    private ProductDao productDaoImpl;
+
     @Autowired
-    public ProductService(ProductRepository productRepository, QualityRepository qualityRepository, ImageService imageService, TypeRepository typeRepository) {
+    public ProductService(ProductRepository productRepository, QualityRepository qualityRepository, ImageService imageService, TypeRepository typeRepository, ProductDao productDaoImpl) {
         this.productRepository = productRepository;
         this.qualityRepository = qualityRepository;
         this.imageService = imageService;
         this.typeRepository = typeRepository;
+        this.productDaoImpl = productDaoImpl;
     }
 
     public Product getProductById(Integer id) {
@@ -151,6 +154,14 @@ public class ProductService {
                 })
         ).collect(Collectors.toList());
         return dtos;
+    }
+
+    public List<TypeDto> getTypeInProduct( Integer productId){
+        return productDaoImpl.getTypesInProductByProductId(productId);
+    }
+
+    public List<QualityDto> getQualitiesInType( Integer typeId){
+        return productDaoImpl.getQualitiesInTypeByTypeId(typeId);
     }
 
 

@@ -55,7 +55,7 @@ public class WarehouseService {
         warehouse.setCapacity(totalCapacity);
 
         warehouseRepository.save(warehouse);
-        return new CreateMapResponseDto(warehouse.getId(),"Create new map successfully");
+        return new CreateMapResponseDto(warehouse.getId(),"Create new warehouse successfully");
     }
     public List<StatisticOfProductInWarehouseDto> getStatisticOfProductInWarehouse(Integer warehouseId){
         if(!warehouseRepository.existsById(warehouseId)){
