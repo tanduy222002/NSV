@@ -126,4 +126,16 @@ public class ProductController {
        return productService.getQualityCombineType(productId);
     }
 
+    @GetMapping("/{productId}/types")
+    @Operation(summary = "Get types of products")
+    public List<TypeDto> getTypesInProduct(@PathVariable Integer productId){
+        return productService.getTypeInProduct(productId);
+    }
+
+    @GetMapping("/{productId}/type/{typeId}/qualities")
+    @Operation(summary = "Get qualities of type")
+    public List<QualityDto> getQualitiesInType(@PathVariable Integer productId,@PathVariable Integer typeId){
+        return productService.getQualitiesInType(typeId);
+    }
+
 }
