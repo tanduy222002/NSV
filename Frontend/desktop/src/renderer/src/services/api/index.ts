@@ -15,6 +15,7 @@ import { createWarehouse } from './warehouse/createWarehouse';
 import { getWarehouseDetail } from './warehouse/getWarehouseDetail';
 import { getProductCategory } from './product/getProductCategory';
 import { createImportTicket } from './import/createImportTicket';
+import { searchImportTicket } from './import/searchImportTicket';
 
 export {
     makeLoginRequest,
@@ -33,5 +34,6 @@ export {
     searchPartner,
     getWarehouseDetail,
     getProductCategory,
-    createImportTicket
+    createImportTicket,
+    searchImportTicket
 };

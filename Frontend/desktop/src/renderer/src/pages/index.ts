@@ -12,6 +12,7 @@ import CreateWarehousePage from './CreateWarehousePage';
 import CreateWarehouseMapPage from './CreateWarehouseMapPage';
 import PartnerPage from './PartnerPage';
 import CreateImportTicketPage from './CreateImportTicketPage';
+import ImportTicketDetailPage from './ImportTicketDetailPage';
 
 export {
     AuthPage,
@@ -27,5 +28,6 @@ export {
     ProductLocationDetailPage,
     CreateWarehouseMapPage,
     PartnerPage,
-    CreateImportTicketPage
+    CreateImportTicketPage,
+    ImportTicketDetailPage
 };

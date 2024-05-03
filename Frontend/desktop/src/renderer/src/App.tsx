@@ -19,7 +19,8 @@ import {
     CreateProductPage,
     EditProductPage,
     PartnerPage,
-    CreateImportTicketPage
+    CreateImportTicketPage,
+    ImportTicketDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -102,6 +103,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/import"
                                     element={<ImportPage />}
+                                />
+                                <Route
+                                    path="/import/:id"
+                                    element={<ImportTicketDetailPage />}
                                 />
                                 <Route
                                     path="/import/create"

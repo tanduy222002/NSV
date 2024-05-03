@@ -1,5 +1,12 @@
 import { Partner } from './partner';
 
+export enum TicketStatus {
+    Approved = 'APPROVED',
+    Pending = 'PENDING',
+    Rejected = 'REJECTED',
+    All = 'ALL'
+}
+
 export type BinWithSlot = {
     weight: number;
     slot_id: number;
