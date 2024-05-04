@@ -100,6 +100,7 @@ public class TransferTicketService {
                 throw new BinWeightMismatchException();
             }else{
                 bin.setWeight(binDto.getWeight());
+                bin.setLeftWeight(binDto.getWeight());
             }
 
             return bin;

@@ -42,17 +42,17 @@ public class BinService {
 
 
         List<ImportBinInSlot> dto = new ArrayList<ImportBinInSlot>();
-        bins.stream().forEach(bin -> {
+        bins.parallelStream().forEach(bin -> {
             Quality quality = bin.getQuality();
             Type type=quality.getType();
             Product product = type.getProduct();
             String qualityWithType= type.getName()+" "+quality.getName();
-            SearchBinDto binDto = new SearchBinDto(
+            BinDto binDto = new BinDto(
                     bin.getId(), product.getName(), product.getImage(), quality.getId(), qualityWithType,
                     bin.getWeight(),bin.getPackageType() );
 
-            List<ImportBinInSlot> importBinInSlots= bin.getBinSlot().stream()
-                            .filter(binSlot-> warehouseId==null||binSlot.getSlot().getRow().getMap().getWarehouse().getId().equals(warehouseId)).parallel()
+            List<ImportBinInSlot> importBinInSlots= bin.getBinSlot().parallelStream()
+                            .filter(binSlot-> warehouseId==null||binSlot.getSlot().getRow().getMap().getWarehouse().getId().equals(warehouseId))
                             .map(binSlot->{
                 Slot currSlot=binSlot.getSlot();
                 ImportBinInSlot binInSlotDto = new ImportBinInSlot();
