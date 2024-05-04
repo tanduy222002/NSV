@@ -42,6 +42,17 @@ public class AuthExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleTicketStatusMismatchException(TicketStatusMismatchException e) {
+
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<?> handleConstraintValidationException(ConstraintViolationException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.BAD_REQUEST.toString(),
