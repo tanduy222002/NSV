@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImportBinInSlot {
+    @JsonProperty("slot_id")
     private Integer slotId;
     @JsonProperty("slot_name")
     private String slotName;
@@ -21,7 +22,7 @@ public class ImportBinInSlot {
     private Double takenWeight =0.0;
     @JsonProperty("taken_area")
     private Double takenArea =0.0;
-    private SearchBinDto bin;
+    private BinDto bin;
 
 
 }

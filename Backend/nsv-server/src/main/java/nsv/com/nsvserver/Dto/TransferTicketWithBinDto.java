@@ -1,4 +1,4 @@
-package nsv.com.nsvserver.Entity;
+package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
