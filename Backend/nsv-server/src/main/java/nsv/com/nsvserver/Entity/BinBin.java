@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "Bin_Slot")
-public class BinSlot {
+@Table(name = "Bin_Bin")
+public class BinBin {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +17,13 @@ public class BinSlot {
     @Column(name = "weight")
     private Double weight;
 
-    @Column(name = "area")
-    private Double area;
-
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "import_bin_id",referencedColumnName = "id")
+    private Bin importBin;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name = "bin_id",referencedColumnName = "id")
-    private Bin bin;
+    @JoinColumn(name = "export_bin_id",referencedColumnName = "id")
+    private Bin exportBin;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinColumn(name = "slot_id",referencedColumnName = "id")
-    private Slot slot;
+
 }

@@ -25,7 +25,7 @@ public class Bin {
     private Double weight=0.0;
 
     @Column(name = "left_weight")
-    private Double leftWeight=0.0;
+    private Double leftWeight=weight;
 
     @Column(name = "package_type")
     private String packageType;
@@ -73,4 +73,14 @@ public class Bin {
     private TransferTicket transferTicket;
 
 
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "importBin")
+    private List<BinBin> importBins;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "exportBin")
+    private List<BinBin> exportBins;
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+        this.leftWeight = weight;
+    }
 }
