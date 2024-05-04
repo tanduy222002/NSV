@@ -6,6 +6,7 @@ import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.BinWeightMismatchException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.SlotOverContaining;
+import nsv.com.nsvserver.Exception.TicketStatusMismatchException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,9 @@ public class TransferTicketService {
     @Transactional
     public void approveTicketStatus(Integer id) {
         TransferTicket transferTicket = ticketDaoImpl.fetchWithBinAndSlot(id);
+        if(transferTicket.getStatus().equals("APPROVED")) {
+            throw new TicketStatusMismatchException();
+        }
         transferTicket.setStatus("APPROVED");
         transferTicket.getBins().parallelStream().forEach(bin->{
             bin.setStatus("APPROVED");
