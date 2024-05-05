@@ -42,5 +42,6 @@ public class Product {
         this.name=dto.getName();
         this.image=dto.getImage();
         this.variety=dto.getVariety();
+        this.types =new ArrayList<>();
     }
 }

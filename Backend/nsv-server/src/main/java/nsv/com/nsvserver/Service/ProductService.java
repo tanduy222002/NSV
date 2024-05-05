@@ -114,6 +114,10 @@ public class ProductService {
     }
     @Transactional
     public void createProductQualityType(ProductTypeQualityDto dto) throws Exception {
+        String productName = dto.getProductCreateDto().getName();
+        if(productRepository.existsByName(productName)){
+            throw new ExistsException("Product with name: "+productName+" already exists");
+        }
         Product product =new Product(dto.getProductCreateDto());
         product.setImage(imageService.upLoadImageWithBase64(dto.getProductCreateDto().getImage()));
         List<Type> type=dto.getTypeWithQualityListDto().stream().map(
