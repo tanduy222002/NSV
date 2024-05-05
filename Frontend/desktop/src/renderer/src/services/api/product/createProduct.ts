@@ -13,7 +13,7 @@ export const createProduct = async ({
     let response = undefined;
     try {
         response = await makeAuthRequest({
-            url: `/products/`,
+            url: `/products/products/types/qualities`,
             method: 'post',
             token: token,
             body: {
