@@ -12,5 +12,5 @@ public interface BinDao {
     long countTotalBinWithFilterAndPagination(Integer pageIndex, Integer pageSize, Integer warehouseId,
                                               Integer productId, Integer typeId, Integer qualityId,
                                               Integer minWeight, Integer maxWeight);
-    Optional<Bin> findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId);
+    Bin findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId);
 }

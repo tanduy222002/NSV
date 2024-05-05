@@ -178,7 +178,7 @@ public class BinDaoImpl implements BinDao {
     }
 
     @Override
-    public Optional<Bin> findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId) {
+    public Bin findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId) {
         StringBuilder queryString = new StringBuilder(
                 """
                 SELECT b FROM Bin b join fetch b.binSlot as bs join fetch bs.slot as s 
@@ -189,7 +189,7 @@ public class BinDaoImpl implements BinDao {
             query.setParameter("slotId",slotId);
             query.setParameter("binId",binId);
 
-        return (Optional<Bin>) query.getSingleResult();
+        return (Bin) query.getSingleResult();
 
 
     }

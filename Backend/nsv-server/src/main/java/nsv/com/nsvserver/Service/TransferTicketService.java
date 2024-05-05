@@ -232,7 +232,11 @@ public class TransferTicketService {
                 Integer binId = slotWithImportBin.getBin().getId();
                 double takenArea = slotWithImportBin.getTakenArea();
                 double takenWeight = slotWithImportBin.getTakenWeight();
-                Bin importBin = binDaoImpl.findBinInSlotBySlotIdAndBinId(binId,slotId).orElseThrow(()->new NotFoundException("Slot: "+slotId+" does not contains bin: "+binId));
+                Bin importBin = binDaoImpl.findBinInSlotBySlotIdAndBinId(binId,slotId);
+                if(importBin == null){
+                    throw new NotFoundException("Slot: "+slotId+" does not contains bin: "+binId);
+                }
+
                 BinSlot binSlot=importBin.getBinSlot().get(0);
                 Slot containingSlot=binSlot.getSlot();
 
@@ -241,8 +245,7 @@ public class TransferTicketService {
                 }
 
                 double importBinAreaInSlot=binSlot.getArea();
-                binSlot.setWeight(binSlot.getWeight()-takenWeight);
-                binSlot.setArea(importBinAreaInSlot-takenArea);
+
                 binWeight.updateAndGet(v -> v + takenWeight);
 
                 binBin.setImportBin(importBin);
