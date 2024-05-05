@@ -1,5 +1,8 @@
+import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import {
     TableView,
+    TableSkeleton,
     Pagination,
     SearchBar,
     ConfirmationPopup,
@@ -8,7 +11,9 @@ import {
 import { ColumnType } from '@renderer/components/TableView';
 import { usePopup } from '@renderer/hooks';
 import { Button } from '@renderer/components';
-import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '@renderer/hooks';
+import { searchWarehouse } from '@renderer/services/api';
+import { Warehouse } from '@renderer/types/warehouse';
 
 const warehouseTableColumns = [
     { title: 'ID', sortable: true, type: ColumnType.Text },
@@ -16,34 +21,41 @@ const warehouseTableColumns = [
     { title: 'Loại kho', sortable: false, type: ColumnType.Text },
     { title: 'Địa điểm', sortable: false, type: ColumnType.Text },
     { title: 'Sức chứa hiện tại', sortable: true, type: ColumnType.Text },
-    { title: 'Trạng thái', sortable: false, type: ColumnType.Button },
-    { title: 'Thao tác', sortable: true, type: ColumnType.Action }
-];
-
-const items = [
-    {
-        ID: 1,
-        name: 'Kho hàng 01',
-        type: 'Kho hàng lạnh',
-        address: 'Tân thới, Phong điền, Cần Thơ',
-        capacity: '5000/20000',
-        status: 'Hoạt động'
-    },
-    {
-        ID: 2,
-        name: 'Kho hàng 01',
-        type: 'Kho hàng lạnh',
-        address: 'Tân thới, Phong điền, Cần Thơ',
-        capacity: '5000/20000',
-        status: 'Hoạt động'
-    }
+    { title: 'Trạng thái', sortable: false, type: ColumnType.Text },
+    { title: 'Thao tác', sortable: false, type: ColumnType.Action }
 ];
 
 const WareHousePage = () => {
     const navigate = useNavigate();
     const goToCreateMapPage = () => navigate('/warehouse/map/create');
     const goToCreateWarehousePage = () => navigate('/warehouse/create');
+    const goToWarehouseDetailPage = (id: number) =>
+        navigate(`/warehouse/${id}`);
     const { showPopup, show, hide } = usePopup();
+
+    const { getItem } = useLocalStorage('access-token');
+    const accessToken = getItem();
+
+    const { data, isFetching } = useQuery({
+        queryKey: ['warehouse'],
+        queryFn: () =>
+            searchWarehouse({
+                token: accessToken,
+                pageIndex: 1
+            })
+    });
+
+    const mapWarehouseTable = (warehouses: Warehouse[]) =>
+        warehouses?.map((warehouse) => ({
+            id: warehouse?.id,
+            name: warehouse?.name,
+            type: warehouse?.type,
+            address: warehouse?.address_string,
+            capacity: warehouse?.current_capacity,
+            status: warehouse?.status
+        }));
+
+    if (!isFetching) console.log('data: ', data);
 
     return (
         <div className="flex-1 h-screen px-8 py-6 relative">
@@ -73,12 +85,19 @@ const WareHousePage = () => {
             </div>
             <SearchBar className="mt-6 ml-auto" placeHolder="Tìm kiếm..." />
             <div className="flex flex-col gap-4 mt-6">
-                <TableView
-                    columns={warehouseTableColumns}
-                    items={items}
-                    deleteAction={show}
-                />
-                <Pagination maxPage={5} currentPage={1} />
+                {isFetching ? (
+                    <TableSkeleton />
+                ) : (
+                    <>
+                        <TableView
+                            columns={warehouseTableColumns}
+                            items={mapWarehouseTable(data?.content)}
+                            deleteAction={show}
+                            viewAction={goToWarehouseDetailPage}
+                        />
+                        <Pagination maxPage={5} currentPage={1} />
+                    </>
+                )}
             </div>
         </div>
     );

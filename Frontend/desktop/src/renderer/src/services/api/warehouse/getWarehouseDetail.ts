@@ -18,18 +18,20 @@ export const getWarehouseDetail = async ({
         });
         console.log('before map: ', warehouseDetail);
         response = {
-            name: warehouseDetail?.name,
-            rows: warehouseDetail?.map?.rows?.map((row) => ({
-                name: row?.name,
-                slots: row?.slots?.map((slot) => ({
-                    id: slot?.id,
-                    name: slot?.name,
-                    capacity: slot?.capacity,
-                    status: slot?.status,
-                    currentLoad: slot?.containing,
-                    description: slot?.description
+            ...warehouseDetail,
+            map: {
+                rows: warehouseDetail?.map?.rows?.map((row) => ({
+                    name: row?.name,
+                    slots: row?.slots?.map((slot) => ({
+                        id: slot?.id,
+                        name: slot?.name,
+                        capacity: slot?.capacity,
+                        status: slot?.status,
+                        currentLoad: slot?.containing,
+                        description: slot?.description
+                    }))
                 }))
-            }))
+            }
         };
         console.log('response: ', response);
         return response;

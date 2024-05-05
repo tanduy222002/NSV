@@ -20,7 +20,8 @@ import {
     EditProductPage,
     PartnerPage,
     CreateImportTicketPage,
-    ImportTicketDetailPage
+    ImportTicketDetailPage,
+    WarehouseDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -62,6 +63,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/warehouse"
                                     element={<WareHousePage />}
+                                />
+                                <Route
+                                    path="/warehouse/:id"
+                                    element={<WarehouseDetailPage />}
                                 />
                                 <Route
                                     path="/warehouse/create"

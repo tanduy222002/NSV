@@ -31,11 +31,7 @@ const RowAction = ({
             {display && (
                 <div className="absolute top-5 left-[40px] min-w-[120px] overflow-hidden rounded-md border bg-white border-gray-200">
                     <div
-                        onClick={() => {
-                            console.log('view fn: ', viewAction);
-
-                            return viewAction && viewAction(id);
-                        }}
+                        onClick={() => viewAction && viewAction(id)}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 text-[#00B087]"
                     >
                         <CgDetailsMore />

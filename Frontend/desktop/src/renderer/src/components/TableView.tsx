@@ -55,7 +55,7 @@ const TableView = ({
                                     <img src={itemValues[i]} />
                                 ) : (
                                     <RowAction
-                                        id={i}
+                                        id={itemValues?.[0] ?? i}
                                         viewAction={viewAction}
                                         editAction={editAction}
                                         deleteAction={deleteAction}
