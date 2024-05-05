@@ -45,8 +45,8 @@ public class Bin {
     @Column(name = "import_date")
     private Date importDate;
 
-    @Column(name = "expired_date")
-    private Date expiredDate;
+    @Column(name = "export_date")
+    private Date exportDate;
 
     @Column(name = "document")
     private String document;

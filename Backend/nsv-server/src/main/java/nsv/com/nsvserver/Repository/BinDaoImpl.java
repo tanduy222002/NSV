@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BinDaoImpl implements BinDao {
@@ -24,30 +25,7 @@ public class BinDaoImpl implements BinDao {
     @Override
     @TraceTime
     public List<Bin> findWithFilterAndPagination(Integer pageIndex, Integer pageSize, Integer warehouseId, Integer productId, Integer typeId, Integer qualityId, Integer minWeight, Integer maxWeight) {
-//        StringBuilder queryString = new StringBuilder(
-//                """
-//                SELECT b FROM Bin b join b.binSlot as bs join bs.slot as s join fetch b.quality as q"""
-//        );
-//
-//        if(qualityId!=null){
-//            queryString.append(" on q.id=:qualityId");
-//        }
-//        queryString.append(" join s.row as r join r.map as m join m.warehouse as w");
-//
-//        if(warehouseId!=null){
-//            queryString.append("  on w.id=:warehouseId");
-//        }
-//
-//        queryString.append(" join q.type as t");
-//
-//        if(typeId!=null){
-//            queryString.append(" on t.id=:typeId");
-//        }
-//
-//        queryString.append(" join t.product as p");
-//
-//        if(productId!=null){
-//            queryString.append(" on p.id=:productId");
+
 //        }
         StringBuilder queryString = new StringBuilder(
                 """
@@ -199,5 +177,20 @@ public class BinDaoImpl implements BinDao {
         return (Long) query.getSingleResult();
     }
 
+    @Override
+    public Optional<Bin> findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId) {
+        StringBuilder queryString = new StringBuilder(
+                """
+                SELECT b FROM Bin b join fetch b.binSlot as bs join fetch bs.slot as s 
+                join fetch b.quality as q join fetch q.type as t join fetch t.product as p WHERE b.status = 'APPROVED'
+                AND s.id=:slotId AND b.id=:binId"""
+        );
+        Query query = entityManager.createQuery(queryString.toString());
+            query.setParameter("slotId",slotId);
+            query.setParameter("binId",binId);
 
+        return (Optional<Bin>) query.getSingleResult();
+
+
+    }
 }

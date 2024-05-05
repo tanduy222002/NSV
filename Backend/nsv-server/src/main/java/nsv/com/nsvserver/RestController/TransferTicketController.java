@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import nsv.com.nsvserver.Dto.CreateExportTransferTicketDto;
 import nsv.com.nsvserver.Dto.CreateTransferTicketDto;
 import nsv.com.nsvserver.Service.TransferTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,16 @@ public class TransferTicketController {
         return ResponseEntity.ok(
                 transferTicketService.getTransferTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status)
         );
+    }
+
+
+    @PostMapping("/exports_tickets")
+    @Operation(summary = "Create export ticket")
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
+    public ResponseEntity<?> createExportTicket(@Valid @RequestBody CreateExportTransferTicketDto dto){
+        String message= transferTicketService.createExportTicket(dto);
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("message", message);
+        return ResponseEntity.ok(responseData);
     }
 }

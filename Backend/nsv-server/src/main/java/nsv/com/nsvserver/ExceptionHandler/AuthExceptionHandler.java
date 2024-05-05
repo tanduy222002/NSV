@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -195,7 +194,7 @@ public class AuthExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> handleSlotOverContainingException(SlotOverContaining e) {
+    public ResponseEntity<?> handleSlotOverContainingException(SlotAreaMismatchException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.BAD_REQUEST.toString(),
                 e.getMessage()),
