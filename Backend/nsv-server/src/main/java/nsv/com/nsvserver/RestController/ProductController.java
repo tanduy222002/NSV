@@ -109,7 +109,7 @@ public class ProductController {
     }
 
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
-    @PostMapping("/products/types/qualities")
+    @PostMapping("/types/qualities")
     @Operation(summary = "Create a new product with type and quality")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Create type for product successfully"),
