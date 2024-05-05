@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -126,7 +127,7 @@ public class TransferTicketService {
             throw new TicketStatusMismatchException();
         }
         transferTicket.setStatus("APPROVED");
-        transferTicket.getBins().parallelStream().forEach(bin->{
+        transferTicket.getBins().stream().forEach(bin->{
             bin.setStatus("APPROVED");
 
             bin.getBinSlot().stream().forEach(binSlot -> {
@@ -156,39 +157,41 @@ public class TransferTicketService {
     public PageDto getTransferTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status) {
         List<TransferTicket> ticket = ticketDaoImpl.getTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status);
 
-        List<TransferTicketWithBinDto> transferTicketWithBinDtos = ticket.stream().map(transferTicket -> {
-            TransferTicketWithBinDto dto = new TransferTicketWithBinDto();
+        List<TransferTicketDto> transferTicketWithBinDtos = ticket.stream().map(transferTicket -> {
+            TransferTicketDto dto = new TransferTicketDto();
             dto.setId(transferTicket.getId());
             dto.setName(transferTicket.getName());
-            dto.setImportDate(transferTicket.getCreateDate());
-            dto.setStatus(dto.getStatus());
-            dto.setDescription(dto.getDescription());
+            dto.setTransferDate(transferTicket.getCreateDate());
+            dto.setDescription(transferTicket.getDescription());
+            dto.setStatus(transferTicket.getStatus());
+
+            Set<String> productNames= new HashSet<>();
             AtomicReference<Double> totalWeight= new AtomicReference<>(0.0);
-            List<BinDto> binDtos=transferTicket.getBins().stream().map(bin->{
-                BinDto binDto = new BinDto();
-                binDto.setId(bin.getId());
-                binDto.setPackaged(bin.getPackageType());
+                transferTicket.getBins().stream().forEach(bin->{
                 Quality quality = bin.getQuality();
                 Type productType = quality.getType();
                 Product product = productType.getProduct();
-
-                binDto.setProduct(product.getName());
-                binDto.setQualityWithType(productType.getName()+" "+quality.getName());
-                binDto.setProductImg(product.getImage());
-                binDto.setQualityId(quality.getId());
-                binDto.setWeight(bin.getWeight());
+                if(!productNames.contains(product.getName())){
+                    productNames.add(product.getName());
+                }
                 totalWeight.updateAndGet(v ->  v + bin.getWeight());
-                return binDto;
-            }).collect(Collectors.toList());
+            });
+
             dto.setWeight(totalWeight.get());
-            dto.setBins(binDtos);
+            dto.setNumberOfProducts(productNames.size());
+            dto.setProduct(productNames.toString());
             return dto;
         }).collect(Collectors.toList());
 
         long count= ticketDaoImpl.countTotalTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status);
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,transferTicketWithBinDtos);
     }
+
+
+
+
     @Transactional
+    @TraceTime
     public String createExportTicket(CreateExportTransferTicketDto exportTicketDto){
         
         List<CreateExportBinDto> exportBinsDto = exportTicketDto.getExportBinDto();
@@ -216,7 +219,8 @@ public class TransferTicketService {
             transferTicket.addDebt(debt);
         }
 
-        List<Bin> bins=exportBinsDto.stream().map(binDto->{
+        List<Bin> bins=exportBinsDto.parallelStream().map(binDto->{
+
             Bin bin = new Bin();
             Quality quality = qualityRepository.findById(binDto.getQualityId()).orElseThrow(()->new NotFoundException("Quality does not exist"));
             bin.setQuality(quality);
@@ -225,36 +229,50 @@ public class TransferTicketService {
             bin.setExportDate(exportDate);
             bin.setPrice(binDto.getPrice());
             bin.setPackageType(binDto.getPackageType());
+
             List<BinBin> binBins =new ArrayList<>();
 
             AtomicReference<Double> binWeight = new AtomicReference<>(0.0);
+
             binDto.getImportBinWithSlot().stream().forEach(slotWithImportBin -> {
                 BinBin binBin = new BinBin();
                 Integer slotId=slotWithImportBin.getSlotId();
                 Integer binId = slotWithImportBin.getBin().getId();
                 double takenArea = slotWithImportBin.getTakenArea();
                 double takenWeight = slotWithImportBin.getTakenWeight();
-                Bin importBin = binDaoImpl.findBinInSlotBySlotIdAndBinId(binId,slotId);
+
+                BinSlot binSlot= binDaoImpl.GetBinSlotBySlotIdAndBinId(binId,slotId);
+
+                Bin importBin = binSlot.getBin();
+
                 if(importBin == null){
                     throw new NotFoundException("Slot: "+slotId+" does not contains bin: "+binId);
                 }
 
-                BinSlot binSlot=importBin.getBinSlot().get(0);
+
+//                BinSlot binSlot= importBin.getBinSlot().get(0);
                 Slot containingSlot=binSlot.getSlot();
+//                System.out.println(containingSlot.getId());
+//                System.out.println(binSlot.getWeight());
 
                 if(binSlot.getArea()<takenArea){
                     throw new SlotAreaMismatchException(takenArea+ " m2 is larger the current area of bin in slot: " + containingSlot.getName());
                 }
 
-                double importBinAreaInSlot=binSlot.getArea();
 
                 binWeight.updateAndGet(v -> v + takenWeight);
 
                 binBin.setImportBin(importBin);
                 binBin.setExportBin(bin);
                 binBin.setWeight(takenWeight);
+                binBin.setImportSlot(containingSlot);
+                binBin.setArea(takenArea);
+
                 binBins.add(binBin);
             });
+
+
+
 
             if(binDto.getWeight()!=binWeight.get()) {
                 throw new BinWeightMismatchException();
@@ -276,5 +294,50 @@ public class TransferTicketService {
         transferTicketRepository.save(transferTicket);
 
         return "New Export Transfer Ticket created with id: " + transferTicket.getId();
+    }
+
+
+    @Transactional
+    public void approveExportTicketStatus(Integer id) {
+        TransferTicket transferTicket = ticketDaoImpl.fetchExportTicket(id);
+//        if(id==40){
+//            return;
+//        }
+        if(!transferTicket.getType().equals("EXPORT"))
+            throw new TicketStatusMismatchException();
+        if(transferTicket.getStatus().equals("APPROVED")) {
+            throw new TicketStatusMismatchException();
+        }
+        transferTicket.setStatus("APPROVED");
+
+        transferTicket.getBins().stream().forEach(bin->{
+            bin.setStatus("APPROVED");
+            bin.getImportBins().stream().forEach(binBin -> {
+                Bin importBin = binBin.getImportBin();
+                if(importBin.getLeftWeight()<binBin.getWeight()){
+                    throw new BinWeightMismatchException();
+                }
+
+                importBin.setLeftWeight(importBin.getLeftWeight()-binBin.getWeight());
+
+                Slot containingSlot = binBin.getImportSlot();
+                double area= binBin.getArea();
+
+                Warehouse warehouse=containingSlot.getRow().getMap().getWarehouse();
+                if(containingSlot.getCapacity()-containingSlot.getContaining()<area){
+                    throw new SlotAreaMismatchException(area+ " m2 is overload the left capacity of slot: " + containingSlot.getName());
+                }
+                else {
+                    containingSlot.setContaining(containingSlot.getContaining()-area);
+                    warehouse.setContaining(warehouse.getContaining()-area);
+                }
+            });
+
+
+        Employee employee = EmployeeDetailService.getCurrentUserDetails();
+        employee= employeeRepository.findById(employee.getId()).orElseThrow(()->new NotFoundException("No employee found"));
+        transferTicket.setApprovedEmployee(employee);
+        transferTicket.setApprovedDate(new Date());
+        transferTicketRepository.save(transferTicket);
     }
 }

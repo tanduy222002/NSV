@@ -1,15 +1,13 @@
 package nsv.com.nsvserver.Repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import nsv.com.nsvserver.Annotation.TraceTime;
 import nsv.com.nsvserver.Entity.Bin;
+import nsv.com.nsvserver.Entity.BinSlot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class BinDaoImpl implements BinDao {
@@ -178,18 +176,35 @@ public class BinDaoImpl implements BinDao {
     }
 
     @Override
+    @TraceTime
     public Bin findBinInSlotBySlotIdAndBinId(Integer binId, Integer slotId) {
         StringBuilder queryString = new StringBuilder(
                 """
-                SELECT b FROM Bin b join fetch b.binSlot as bs join fetch bs.slot as s 
-                join fetch b.quality as q join fetch q.type as t join fetch t.product as p WHERE b.status = 'APPROVED'
-                AND s.id=:slotId AND b.id=:binId"""
+                SELECT b FROM Bin b join fetch b.quality as q join fetch q.type as t join fetch t.product as p
+                 join fetch b.binSlot as bs join fetch bs.slot as s 
+                 WHERE s.id=:slotId AND b.id=:binId AND b.status = 'APPROVED'"""
         );
         Query query = entityManager.createQuery(queryString.toString());
-            query.setParameter("slotId",slotId);
-            query.setParameter("binId",binId);
+        query.setParameter("slotId",slotId);
+        query.setParameter("binId",binId);
+        Bin bin=(Bin) query.getSingleResult();
+        return bin;
 
-        return (Bin) query.getSingleResult();
+
+    }
+
+    @Override
+    public BinSlot GetBinSlotBySlotIdAndBinId(Integer binId, Integer slotId) {
+        StringBuilder queryString = new StringBuilder(
+                """
+                SELECT bs FROM BinSlot as bs join fetch bs.slot as s join fetch bs.bin as b
+                join fetch b.quality as q join fetch q.type as t join fetch t.product as p WHERE s.id=:slotId AND b.id=:binId AND b.status = 'APPROVED'"""
+        );
+        Query query = entityManager.createQuery(queryString.toString());
+        query.setParameter("slotId",slotId);
+        query.setParameter("binId",binId);
+        BinSlot binSlot=(BinSlot) query.getSingleResult();
+        return binSlot;
 
 
     }

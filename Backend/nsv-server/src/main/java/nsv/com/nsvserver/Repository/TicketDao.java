@@ -11,4 +11,6 @@ public interface TicketDao {
     List<TransferTicket> getTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status);
 
     long countTotalTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status);
+
+    TransferTicket fetchExportTicket(Integer Id);
 }
