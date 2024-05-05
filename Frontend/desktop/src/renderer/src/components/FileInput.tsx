@@ -2,18 +2,23 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import { GiFruitBowl } from 'react-icons/gi';
 
 type FileInputProps = {
-    fileSrc?: File | undefined | null;
-    setFileSrc: (fileSrc: File) => void;
+    fileSrc?: string | undefined | null;
+    onChange: (fileSrc: string) => void;
 };
 
-const FileUploadInput = ({ fileSrc, setFileSrc }: FileInputProps) => {
+const FileInput = ({ fileSrc, onChange }: FileInputProps) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file != null) {
-            setFileSrc(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            reader.onload = () => {
+                console.log('called: ', reader);
+                onChange(reader.result as string);
+            };
         }
     };
-    console.log(fileSrc?.path);
 
     return (
         <div className="mx-auto">
@@ -23,7 +28,7 @@ const FileUploadInput = ({ fileSrc, setFileSrc }: FileInputProps) => {
                 <div className="w-fit h-4/5 mx-auto">
                     <img
                         className="fit-cover"
-                        src={fileSrc?.path}
+                        src={fileSrc}
                         alt="preview-image"
                     />
                 </div>
@@ -45,4 +50,4 @@ const FileUploadInput = ({ fileSrc, setFileSrc }: FileInputProps) => {
     );
 };
 
-export default FileUploadInput;
+export default FileInput;

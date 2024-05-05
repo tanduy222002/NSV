@@ -17,6 +17,7 @@ import DataField from './DataField';
 import DatePicker from './DatePicker';
 import SelectInput from './SelectInput';
 import TextAreaInput from './TextAreaInput';
+import FileInput from './FileInput';
 
 export {
     Button,
@@ -37,5 +38,6 @@ export {
     DataField,
     DatePicker,
     SelectInput,
+    FileInput,
     TextAreaInput
 };

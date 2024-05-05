@@ -16,6 +16,8 @@ import { getWarehouseDetail } from './warehouse/getWarehouseDetail';
 import { getProductCategory } from './product/getProductCategory';
 import { createImportTicket } from './import/createImportTicket';
 import { searchImportTicket } from './import/searchImportTicket';
+import { getProductType } from './product/getProductType';
+import { createProduct } from './product/createProduct';
 
 export {
     makeLoginRequest,
@@ -35,5 +37,7 @@ export {
     getWarehouseDetail,
     getProductCategory,
     createImportTicket,
-    searchImportTicket
+    searchImportTicket,
+    getProductType,
+    createProduct
 };
