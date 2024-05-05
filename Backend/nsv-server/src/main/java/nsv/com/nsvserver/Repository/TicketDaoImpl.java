@@ -29,7 +29,9 @@ public class TicketDaoImpl implements TicketDao{
     public List<TransferTicket> getTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status) {
         StringBuilder queryString = new StringBuilder(
                 """
-                SELECT tt FROM TransferTicket tt join tt.bins as b join b.quality as q join q.type as t join t.product as p join b.binSlot as bs join bs.slot as s join s.row as r WHERE 1=1 """
+                SELECT tt FROM TransferTicket tt left join fetch tt.debt as d join fetch tt.bins as b left join b.binSlot as bs left join fetch bs.slot as s left join fetch s.row as r
+                join fetch b.quality as q join fetch q.type as t 
+                join fetch t.product as p WHERE 1=1 """
         );
 
 
@@ -58,6 +60,7 @@ public class TicketDaoImpl implements TicketDao{
             query.setParameter("statusPattern","%"+status+"%");
         }
 
+        System.out.println(pageSize);
         List<TransferTicket> resultList= query.setFirstResult((pageIndex-1)*pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();

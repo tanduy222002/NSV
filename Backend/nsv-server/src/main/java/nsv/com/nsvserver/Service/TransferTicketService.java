@@ -1,6 +1,7 @@
 package nsv.com.nsvserver.Service;
 
 import jakarta.transaction.Transactional;
+import nsv.com.nsvserver.Annotation.TraceTime;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.BinWeightMismatchException;
@@ -151,6 +152,7 @@ public class TransferTicketService {
         transferTicketRepository.save(transferTicket);
     }
 
+    @TraceTime
     public PageDto getTransferTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status) {
         List<TransferTicket> ticket = ticketDaoImpl.getTicketWithFilterAndPagination(pageIndex, pageSize, name, type, status);
 
@@ -250,6 +252,7 @@ public class TransferTicketService {
 
                 binBin.setImportBin(importBin);
                 binBin.setExportBin(bin);
+                binBin.setWeight(takenWeight);
                 binBins.add(binBin);
             });
 
