@@ -304,33 +304,32 @@ public class TransferTicketService {
         transferTicket.setStatus("APPROVED");
 
         transferTicket.getBins().stream().forEach(bin -> {
-            bin.setStatus("APPROVED");
-            bin.getImportBins().stream().forEach(binBin -> {
-                Bin importBin = binBin.getImportBin();
-                if (importBin.getLeftWeight() < binBin.getWeight()) {
-                    throw new BinWeightMismatchException();
-                }
+                    bin.setStatus("APPROVED");
+                    bin.getImportBins().stream().forEach(binBin -> {
+                        Bin importBin = binBin.getImportBin();
+                        if (importBin.getLeftWeight() < binBin.getWeight()) {
+                            throw new BinWeightMismatchException();
+                        }
 
-                importBin.setLeftWeight(importBin.getLeftWeight() - binBin.getWeight());
+                        importBin.setLeftWeight(importBin.getLeftWeight() - binBin.getWeight());
 
-                Slot containingSlot = binBin.getImportSlot();
-                double area = binBin.getArea();
+                        Slot containingSlot = binBin.getImportSlot();
+                        double area = binBin.getArea();
 
-                Warehouse warehouse = containingSlot.getRow().getMap().getWarehouse();
-                if (containingSlot.getCapacity() - containingSlot.getContaining() < area) {
-                    throw new SlotAreaMismatchException(area + " m2 is overload the left capacity of slot: " + containingSlot.getName());
-                } else {
-                    containingSlot.setContaining(containingSlot.getContaining() - area);
-                    warehouse.setContaining(warehouse.getContaining() - area);
-                }
-            });
-
-
+                        Warehouse warehouse = containingSlot.getRow().getMap().getWarehouse();
+                        if (containingSlot.getCapacity() - containingSlot.getContaining() < area) {
+                            throw new SlotAreaMismatchException(area + " m2 is overload the left capacity of slot: " + containingSlot.getName());
+                        } else {
+                            containingSlot.setContaining(containingSlot.getContaining() - area);
+                            warehouse.setContaining(warehouse.getContaining() - area);
+                        }
+                    });
+                });
             Employee employee = EmployeeDetailService.getCurrentUserDetails();
             employee = employeeRepository.findById(employee.getId()).orElseThrow(() -> new NotFoundException("No employee found"));
             transferTicket.setApprovedEmployee(employee);
             transferTicket.setApprovedDate(new Date());
             transferTicketRepository.save(transferTicket);
-        });
+
     }
 }
