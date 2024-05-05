@@ -17,6 +17,9 @@ public class BinBin {
     @Column(name = "weight")
     private Double weight;
 
+    @Column(name = "area")
+    private Double area;
+
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "import_bin_id",referencedColumnName = "id")
     private Bin importBin;
@@ -24,6 +27,12 @@ public class BinBin {
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "export_bin_id",referencedColumnName = "id")
     private Bin exportBin;
+
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "slot_id",referencedColumnName = "id")
+    private Slot importSlot;
+
+
 
 
 }

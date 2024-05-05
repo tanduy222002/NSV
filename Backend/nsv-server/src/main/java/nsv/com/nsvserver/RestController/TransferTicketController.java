@@ -40,11 +40,20 @@ public class TransferTicketController {
         return ResponseEntity.ok(responseData);
     }
 
-    @PutMapping("/{id}/status/approved")
+    @PutMapping("/import_tickets/{id}/status/approve")
     @Operation(summary = "Approve import ticket")
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> approveTicketStatus(@PathVariable Integer id){
         transferTicketService.approveTicketStatus(id);
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("message", "approved for ticket successfully");
+        return ResponseEntity.ok(responseData);
+    }
+    @PutMapping("/export_ticket/{id}/status/approve")
+    @Operation(summary = "Approve export ticket")
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
+    public ResponseEntity<?> approveExportTicketStatus(@PathVariable Integer id){
+        transferTicketService.approveExportTicketStatus(id);
         Map<String, String> responseData = new HashMap<>();
         responseData.put("message", "approved for ticket successfully");
         return ResponseEntity.ok(responseData);

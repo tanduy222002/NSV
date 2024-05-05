@@ -73,11 +73,11 @@ public class Bin {
     private TransferTicket transferTicket;
 
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "importBin")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "exportBin")
     private List<BinBin> importBins;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "exportBin")
-    private List<BinBin> exportBins;
+//    @OneToMany(cascade = CascadeType.ALL,mappedBy = "exportBin")
+//    private List<BinBin> exportBins;
 
     public void setWeight(Double weight) {
         this.weight = weight;
