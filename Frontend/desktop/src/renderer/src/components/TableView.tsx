@@ -28,6 +28,8 @@ const TableView = ({
     editAction,
     deleteAction
 }: TableViewProps) => {
+    if (items.length === 0)
+        return <h2 className="text-sm font-semibold">Chưa có dữ liệu </h2>;
     return (
         <table className="w-fit min-w-[750px] h-fit border-collapse">
             <tr className="border border-1">

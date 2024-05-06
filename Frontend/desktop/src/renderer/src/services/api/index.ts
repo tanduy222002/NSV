@@ -20,6 +20,8 @@ import { getProductType } from './product/getProductType';
 import { createProduct } from './product/createProduct';
 import { searchWarehouse } from './warehouse/searchWarehouse';
 import { getWarehouseStatistic } from './warehouse/getWarehouseStatistic';
+import { getSlotDetail } from './warehouse/getSlotDetail';
+import { getSlotStatistic } from './warehouse/getSlotStatistic';
 
 export {
     makeLoginRequest,
@@ -43,5 +45,7 @@ export {
     getProductType,
     createProduct,
     searchWarehouse,
-    getWarehouseStatistic
+    getWarehouseStatistic,
+    getSlotDetail,
+    getSlotStatistic
 };

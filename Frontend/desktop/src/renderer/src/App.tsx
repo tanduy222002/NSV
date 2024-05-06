@@ -21,7 +21,8 @@ import {
     PartnerPage,
     CreateImportTicketPage,
     ImportTicketDetailPage,
-    WarehouseDetailPage
+    WarehouseDetailPage,
+    WarehouseSlotDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -67,6 +68,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/warehouse/:id"
                                     element={<WarehouseDetailPage />}
+                                />
+                                <Route
+                                    path="/warehouse/:id/slot/:slotId"
+                                    element={<WarehouseSlotDetailPage />}
                                 />
                                 <Route
                                     path="/warehouse/create"

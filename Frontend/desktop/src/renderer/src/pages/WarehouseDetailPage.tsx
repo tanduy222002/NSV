@@ -2,7 +2,7 @@ import { IoChevronBack } from 'react-icons/io5';
 import { LuBookmark } from 'react-icons/lu';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { UserInfo, TableView } from '@renderer/components';
+import { UserInfo, TableView, StatisticSummary } from '@renderer/components';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
 import { WarehouseMapPreview } from '@renderer/features/warehouse/components';
 import {
@@ -42,9 +42,10 @@ const slotTableConfig = [
 
 const WarehouseDetailPage = () => {
     const { id } = useParams();
-    console.log('id: ', id);
     const navigate = useNavigate();
     const goToWarehousePage = () => navigate('/warehouse');
+    const goToWarehouseSlotDetailPage = (slotId: number) =>
+        navigate(`/warehouse/${id}/slot/${slotId}`);
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
@@ -115,20 +116,41 @@ const WarehouseDetailPage = () => {
                         <TableView
                             columns={slotTableConfig}
                             items={mapSlotTable(warehouseDetail?.map.rows)}
+                            viewAction={goToWarehouseSlotDetailPage}
                         />
                     </div>
                     <div className="flex flex-col mb-5">
-                        <h1 className="text-lg text-sky-800 font-semibold">
-                            Tổng quan
-                        </h1>
-                        <div>
-                            <h2>Tổng diện tích{warehouseDetail?.capacity}</h2>
-                            <p>Sử dụng: {warehouseDetail?.containing}</p>
-                            <p>
-                                Còn trống:
-                                {warehouseDetail?.capacity -
-                                    warehouseDetail?.containing}
-                            </p>
+                        <div className="flex items-center gap-3 border border-sky-800 rounded-md px-3 py-2">
+                            <div>
+                                <h1 className="text-lg text-sky-800 font-semibold">
+                                    Tổng quan
+                                </h1>
+                                <div>
+                                    <h2>
+                                        Tổng diện tích:{' '}
+                                        {warehouseDetail?.capacity}
+                                    </h2>
+                                    <p>
+                                        Sử dụng: {warehouseDetail?.containing}
+                                    </p>
+                                    <p>
+                                        Còn trống:{' '}
+                                        {warehouseDetail?.capacity -
+                                            warehouseDetail?.containing}
+                                    </p>
+                                </div>
+                            </div>
+                            <StatisticSummary
+                                sqSize={100}
+                                percentage={
+                                    Math.ceil(
+                                        (warehouseDetail?.containing /
+                                            warehouseDetail?.capacity) *
+                                            100
+                                    ) / 100
+                                }
+                                strokeWidth={10}
+                            />
                         </div>
                         <h1 className="text-lg text-sky-800 font-semibold">
                             Sản phẩm
@@ -167,7 +189,6 @@ const WarehouseDetailPage = () => {
                         ) : (
                             <div>Kho đang trống</div>
                         )}
-                        <div></div>
                     </div>
                 </div>
             )}

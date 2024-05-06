@@ -14,6 +14,7 @@ import PartnerPage from './PartnerPage';
 import CreateImportTicketPage from './CreateImportTicketPage';
 import ImportTicketDetailPage from './ImportTicketDetailPage';
 import WarehouseDetailPage from './WarehouseDetailPage';
+import WarehouseSlotDetailPage from './WarehouseSlotDetailPage';
 
 export {
     AuthPage,
@@ -31,5 +32,6 @@ export {
     PartnerPage,
     CreateImportTicketPage,
     ImportTicketDetailPage,
-    WarehouseDetailPage
+    WarehouseDetailPage,
+    WarehouseSlotDetailPage
 };

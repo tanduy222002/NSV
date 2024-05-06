@@ -18,6 +18,7 @@ import DatePicker from './DatePicker';
 import SelectInput from './SelectInput';
 import TextAreaInput from './TextAreaInput';
 import FileInput from './FileInput';
+import StatisticSummary from './StatisticSummary';
 
 export {
     Button,
@@ -39,5 +40,6 @@ export {
     DatePicker,
     SelectInput,
     FileInput,
-    TextAreaInput
+    TextAreaInput,
+    StatisticSummary
 };
