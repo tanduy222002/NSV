@@ -9,13 +9,14 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class TracingTimeAspect {
     @Around("@annotation(nsv.com.nsvserver.Annotation.TraceTime)")
-    public Object TraceExecutionTimeOnMethod(ProceedingJoinPoint joinPoint){
+    public Object TraceExecutionTimeOnMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         long interTime=System.currentTimeMillis();
         Object result = null;
         try{
             result = joinPoint.proceed();
         } catch( Throwable throwable){
             throwable.printStackTrace();
+            throw throwable;
         }
         long outterTime=System.currentTimeMillis();
 

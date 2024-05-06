@@ -1,7 +1,9 @@
 package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Entity.Bin;
+import nsv.com.nsvserver.Entity.BinBin;
 import nsv.com.nsvserver.Repository.BinDao;
+import nsv.com.nsvserver.Repository.TicketDao;
 import nsv.com.nsvserver.Repository.WarehouseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,10 +26,12 @@ public class NsvServerApplication {
 	private String port;
 
 	BinDao binDaoImpl;
+	TicketDao ticketDaoImpl;
 
 	@Autowired
-	public NsvServerApplication(BinDao binDaoImpl) {
+	public NsvServerApplication(BinDao binDaoImpl, TicketDao ticketDaoImpl) {
 		this.binDaoImpl = binDaoImpl;
+		this.ticketDaoImpl = ticketDaoImpl;
 	}
 
 	public static void main(String[] args) {
@@ -40,11 +44,11 @@ public class NsvServerApplication {
 	public CommandLineRunner commandLineRunner(String[] args) {
 		return runner->{
 			System.out.println("System is running on port: "+port);
-//			List<Integer> slotIDs=Arrays.asList(24,26);
-//			slotIDs.stream().forEach(slotID->{
-//				Bin bin = binDaoImpl.findBinInSlotBySlotIdAndBinId(2,slotID);
-//				System.out.println(bin.getId());
-//			});
+			List<BinBin> binbins=ticketDaoImpl.fetchBinBinByExportBinId(44);
+			binbins.stream().forEach(binbin->{
+				System.out.println(binbin.getId());
+				System.out.println(binbin.getImportBin().getId());
+			});
 
 
 

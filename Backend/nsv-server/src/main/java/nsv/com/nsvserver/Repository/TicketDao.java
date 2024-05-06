@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Repository;
 
+import nsv.com.nsvserver.Entity.BinBin;
 import nsv.com.nsvserver.Entity.TransferTicket;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface TicketDao {
     long countTotalTicketWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String type, String status);
 
     TransferTicket fetchExportTicket(Integer Id);
+
+    List<BinBin> fetchBinBinByExportBinId(Integer Id);
 }
