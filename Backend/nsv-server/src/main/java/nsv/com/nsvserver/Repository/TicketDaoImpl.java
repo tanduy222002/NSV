@@ -3,6 +3,7 @@ package nsv.com.nsvserver.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import nsv.com.nsvserver.Entity.BinBin;
 import nsv.com.nsvserver.Entity.TransferTicket;
 import org.springframework.stereotype.Repository;
 
@@ -106,11 +107,23 @@ public class TicketDaoImpl implements TicketDao{
 
     @Override
     public TransferTicket fetchExportTicket(Integer Id) {
-        Query query = entityManager.createQuery("select t from TransferTicket t join fetch t.bins as b " +
-                "join b.importBins as ib left join fetch ib.importSlot as il join fetch il.row as r join fetch r.map as m " +
-                "join fetch m.warehouse Where t.id = :ticketId");
+        Query query = entityManager.createQuery("select t from TransferTicket t left join fetch t.debt join fetch t.bins as b" +
+                " Where t.id = :ticketId");
+//        "join b.importBins as ib join ib.importSlot as il join il.row as r join  r.map as m " +
+//                "join m.warehouse
         query.setParameter("ticketId",Id);
         return (TransferTicket) query.getSingleResult();
     }
+
+    @Override
+    public List<BinBin> fetchBinBinByExportBinId(Integer Id) {
+        Query query = entityManager.createQuery("select bb From BinBin bb join fetch bb.exportBin as eb join fetch bb.importBin as ib " +
+                "join fetch bb.importSlot as s " +
+                " Where eb.id = :binId ");
+        query.setParameter("binId",Id);
+        return  query.getResultList();
+    }
+
+
 
 }

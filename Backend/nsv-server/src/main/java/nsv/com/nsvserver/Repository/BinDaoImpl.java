@@ -181,7 +181,7 @@ public class BinDaoImpl implements BinDao {
         StringBuilder queryString = new StringBuilder(
                 """
                 SELECT b FROM Bin b join fetch b.quality as q join fetch q.type as t join fetch t.product as p
-                 join fetch b.binSlot as bs join fetch bs.slot as s 
+                 join fetch b.binSlot as bs join fetch bs.slot as s join fetch s.row as r join fetch r.map as m join fetch m.warehouse as w
                  WHERE s.id=:slotId AND b.id=:binId AND b.status = 'APPROVED'"""
         );
         Query query = entityManager.createQuery(queryString.toString());

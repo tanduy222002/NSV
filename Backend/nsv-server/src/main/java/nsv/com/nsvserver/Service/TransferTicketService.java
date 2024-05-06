@@ -295,22 +295,30 @@ public class TransferTicketService {
     @Transactional
     public void approveExportTicketStatus(Integer id) {
         TransferTicket transferTicket = ticketDaoImpl.fetchExportTicket(id);
-
         if (!transferTicket.getType().equals("EXPORT"))
             throw new TicketStatusMismatchException();
         if (transferTicket.getStatus().equals("APPROVED")) {
             throw new TicketStatusMismatchException();
         }
+        System.out.println(transferTicket.getBins().size());
+
         transferTicket.setStatus("APPROVED");
 
         transferTicket.getBins().stream().forEach(bin -> {
                     bin.setStatus("APPROVED");
-                    bin.getImportBins().stream().forEach(binBin -> {
+                    List<BinBin> binBins = ticketDaoImpl.fetchBinBinByExportBinId(bin.getId());
+                    binBins.stream().forEach(binBin -> {
                         Bin importBin = binBin.getImportBin();
+                        System.out.println(binBin.getWeight());
+                        System.out.println(binBin.getArea());
                         if (importBin.getLeftWeight() < binBin.getWeight()) {
                             throw new BinWeightMismatchException();
                         }
 
+                        BinSlot binSlot = binDaoImpl.GetBinSlotBySlotIdAndBinId(importBin.getId(), binBin.getImportSlot().getId());
+                        binSlot.setWeight(binSlot.getWeight()-binBin.getWeight());
+                        binSlot.setArea(binSlot.getArea()-binBin.getArea());
+                        System.out.println(binSlot.getBin().getId()+"  "+binSlot.getSlot().getId());
                         importBin.setLeftWeight(importBin.getLeftWeight() - binBin.getWeight());
 
                         Slot containingSlot = binBin.getImportSlot();
@@ -323,13 +331,14 @@ public class TransferTicketService {
                             containingSlot.setContaining(containingSlot.getContaining() - area);
                             warehouse.setContaining(warehouse.getContaining() - area);
                         }
+
                     });
                 });
             Employee employee = EmployeeDetailService.getCurrentUserDetails();
             employee = employeeRepository.findById(employee.getId()).orElseThrow(() -> new NotFoundException("No employee found"));
             transferTicket.setApprovedEmployee(employee);
             transferTicket.setApprovedDate(new Date());
-            transferTicketRepository.save(transferTicket);
+//            transferTicketRepository.save(transferTicket);
 
     }
 }
