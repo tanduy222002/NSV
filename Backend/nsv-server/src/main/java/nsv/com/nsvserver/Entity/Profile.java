@@ -30,7 +30,7 @@ public class Profile {
     private String email;
     @Column(name = "gender")
     private String gender;
-    @OneToOne(mappedBy = "profile",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "profile",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonManagedReference
     private Employee employee;
 

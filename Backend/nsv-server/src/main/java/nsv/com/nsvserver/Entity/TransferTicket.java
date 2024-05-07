@@ -40,6 +40,9 @@ public class TransferTicket {
     @Column(name = "approved_date")
     private Date approvedDate;
 
+    @Column(name = "transporter")
+    private String transporter;
+
     @Column(name = "transport_date")
     private Date transportDate;
 
