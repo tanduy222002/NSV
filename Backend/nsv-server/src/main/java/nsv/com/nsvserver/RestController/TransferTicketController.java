@@ -75,6 +75,16 @@ public class TransferTicketController {
         );
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "get detail of transfer_ticket")
+    public ResponseEntity<?> getTicketDetail(@PathVariable Integer id)
+    {
+        return ResponseEntity.ok(
+            transferTicketService.getTicketDetail(id)
+        );
+    }
+
+
 
     @PostMapping("/exports_tickets")
     @Operation(summary = "Create export ticket")

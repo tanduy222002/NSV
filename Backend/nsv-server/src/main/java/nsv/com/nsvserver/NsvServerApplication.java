@@ -44,15 +44,6 @@ public class NsvServerApplication {
 	public CommandLineRunner commandLineRunner(String[] args) {
 		return runner->{
 			System.out.println("System is running on port: "+port);
-			List<BinBin> binbins=ticketDaoImpl.fetchBinBinByExportBinId(44);
-			binbins.stream().forEach(binbin->{
-				System.out.println(binbin.getId());
-				System.out.println(binbin.getImportBin().getId());
-			});
-
-
-
-
 		};
 	}
 }

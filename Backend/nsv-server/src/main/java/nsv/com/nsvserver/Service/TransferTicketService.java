@@ -58,6 +58,7 @@ public class TransferTicketService {
         transferTicket.setDescription(importTicketDto.getDescription());
         transferTicket.setCreateDate(new Date());
         transferTicket.setStatus("PENDING");
+        transferTicket.setTransporter(importTicketDto.getTransporter());
         transferTicket.setCreateEmployee(employee);
         Date importDate = importTicketDto.getImportDate();
         transferTicket.setTransportDate(importDate);
@@ -203,6 +204,7 @@ public class TransferTicketService {
         transferTicket.setCreateDate(new Date());
         transferTicket.setStatus("PENDING");
         transferTicket.setCreateEmployee(employee);
+        transferTicket.setTransporter(exportTicketDto.getTransporter());
         Date exportDate = exportTicketDto.getExportDate();
         transferTicket.setTransportDate(exportDate);
 
@@ -341,4 +343,87 @@ public class TransferTicketService {
 //            transferTicketRepository.save(transferTicket);
 
     }
+
+    @Transactional
+    public Object getTicketDetail(Integer id){
+        TransferTicket ticket = ticketDaoImpl.getTicketDetail(id);
+
+        List<?> bins;
+        if(ticket.getType().equals("IMPORT")){
+            bins = getImportBinInTicketDetail(id);
+        }
+        else{
+            bins =null;
+        }
+        TicketDetailDto dto = new TicketDetailDto();
+
+        dto.setId(ticket.getId());
+        dto.setName(ticket.getName());
+        dto.setTransporter(ticket.getTransporter());
+        dto.setCreateDate(ticket.getCreateDate());
+        dto.setApprovedDate(ticket.getApprovedDate());
+        dto.setDescription(ticket.getDescription());
+
+        Debt debt = ticket.getDebt();
+
+
+        DebtDetailDto debtDto= new DebtDetailDto();
+        debtDto.setCreate_date(debt.getCreateDate());
+        debtDto.setDueDate(debt.getDueDate());
+        debtDto.setIsPaid(debt.getIsPaid());
+        debtDto.setDescription(debt.getNote());
+        debtDto.setValue(debt.getAmount());
+        debtDto.setName("Phiếu nợ "+ ticket.getName());
+
+        dto.setDebt(debtDto);
+
+        Partner partner =ticket.getPartner();
+        Profile profile =partner.getProfile();
+        PartnerProfileDto profileDto =new PartnerProfileDto();
+        profileDto.setName(profile.getName());
+        profileDto.setPhone(profile.getPhoneNumber());
+        profileDto.setEmail(profile.getEmail());
+        AddressDetailDto addressDetailDto =new AddressDetailDto(profile.getAddress());
+        profileDto.setAddress(addressDetailDto);
+
+        dto.setPartner(profileDto);
+        dto.setBins(bins);
+        return dto;
+    }
+
+    public List<ImportBinInSlot> getImportBinInTicketDetail(Integer id) {
+        List<Bin> bins = ticketDaoImpl.getImportBinInTicketDetail(id);
+
+        List<ImportBinInSlot> dto = new ArrayList<ImportBinInSlot>();
+        bins.parallelStream().forEach(bin -> {
+            Quality quality = bin.getQuality();
+            Type type=quality.getType();
+            Product product = type.getProduct();
+            String qualityWithType= type.getName()+" "+quality.getName();
+            BinDto binDto = new BinDto(
+                    bin.getId(), product.getName(), product.getImage(), quality.getId(), qualityWithType,
+                    bin.getWeight(),bin.getPackageType() );
+
+            List<ImportBinInSlot> importBinInSlots= bin.getBinSlot().parallelStream()
+                    .map(binSlot->{
+                        Slot currSlot=binSlot.getSlot();
+                        ImportBinInSlot binInSlotDto = new ImportBinInSlot();
+                        Warehouse warehouse= currSlot.getRow().getMap().getWarehouse();
+                        String warehouseName =warehouse.getName();
+                        binInSlotDto.setBin(binDto);
+                        binInSlotDto.setSlotId(currSlot.getId());
+                        binInSlotDto.setSlotName(currSlot.getName());
+                        binInSlotDto.setWarehouseName(warehouseName);
+                        binInSlotDto.setLocation(currSlot.getName()+"/"+warehouseName);
+                        binInSlotDto.setInSlotWeight(binSlot.getWeight());
+                        return binInSlotDto;
+                    }).collect(Collectors.toList());
+            dto.addAll(importBinInSlots);
+        });
+
+
+     return dto;
+
+    }
+
 }

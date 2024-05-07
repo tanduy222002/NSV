@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Repository;
 
+import nsv.com.nsvserver.Entity.Bin;
 import nsv.com.nsvserver.Entity.BinBin;
 import nsv.com.nsvserver.Entity.TransferTicket;
 
@@ -16,4 +17,8 @@ public interface TicketDao {
     TransferTicket fetchExportTicket(Integer Id);
 
     List<BinBin> fetchBinBinByExportBinId(Integer Id);
+
+    List<Bin> getImportBinInTicketDetail(Integer Id);
+
+    TransferTicket getTicketDetail(Integer Id);
 }
