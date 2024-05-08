@@ -3,9 +3,7 @@ package nsv.com.nsvserver.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import nsv.com.nsvserver.Dto.ProductDetailDto;
-import nsv.com.nsvserver.Dto.QualityDto;
-import nsv.com.nsvserver.Dto.TypeDto;
+import nsv.com.nsvserver.Dto.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -62,8 +60,8 @@ public class ProductDaoImpl implements ProductDao{
     public List<ProductDetailDto> getProductDetails(Integer pageIndex, Integer pageSize, String name) {
         StringBuilder queryString = new StringBuilder(
                 """
-                SELECT new nsv.com.nsvserver.Dto.ProductDetailDto(p.id,p.name,p.image,sum(b.leftWeight) ) FROM Product p 
-                join p.types as t join t.qualities as q left join q.bin as b  WHERE 1=1 """
+                SELECT new nsv.com.nsvserver.Dto.ProductDetailDto(p.id,p.name,p.image,sum(bs.weight), count(bs.id) ) FROM Product p 
+                left join p.types as t left join t.qualities as q left join q.bin as b left join b.binSlot as bs WHERE 1=1 AND (bs.weight IS NULL OR bs.weight>0 )"""
         );
         //left join b.binSlot as bs
 
@@ -107,6 +105,21 @@ public class ProductDaoImpl implements ProductDao{
 
 
         return (long) query.getSingleResult();
+
+    }
+
+    @Override
+    public List<ProductTypeWithQualityDetailInSlotDto> getStatisticsOfProduct(Integer productId) {
+        String queryString = "select new nsv.com.nsvserver.Dto.ProductTypeWithQualityDetailInSlotDto(" +
+                "t.name,t.image,q.name,bs.weight,s.id,s.name,w.name) FROM "+
+                "Product p join p.types as t " +
+                "join t.qualities as q join q.bin as b join " +
+                "b.binSlot as bs join bs.slot as s join s.row as r " +
+                "join r.map as m join m.warehouse as w Where p.id =:productId";
+        Query query = entityManager.createQuery(queryString);
+        query.setParameter("productId",productId);
+
+        return query.getResultList();
 
     }
 }
