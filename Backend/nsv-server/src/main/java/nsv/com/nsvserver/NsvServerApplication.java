@@ -3,6 +3,7 @@ package nsv.com.nsvserver;
 import nsv.com.nsvserver.Entity.Bin;
 import nsv.com.nsvserver.Entity.BinBin;
 import nsv.com.nsvserver.Repository.BinDao;
+import nsv.com.nsvserver.Repository.ProductRepository;
 import nsv.com.nsvserver.Repository.TicketDao;
 import nsv.com.nsvserver.Repository.WarehouseDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class NsvServerApplication {
 
 	BinDao binDaoImpl;
 	TicketDao ticketDaoImpl;
+
+	@Autowired
+	ProductRepository productRepository;
 
 	@Autowired
 	public NsvServerApplication(BinDao binDaoImpl, TicketDao ticketDaoImpl) {

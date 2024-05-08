@@ -24,6 +24,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
 
     boolean existsByName(String name);
+    boolean existsByNameIgnoreCase(String name);
 
     @Query("From Product p join p.types as t join t.qualities WHERE p.id=:productId")
     Optional<Product> findWithEagerQualityAndType(@Param("productId") Integer productId);
