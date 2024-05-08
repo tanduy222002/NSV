@@ -45,6 +45,16 @@ public class ProductController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/inventory")
+    @Operation(summary = "Get products with inventory in warehouse")
+    public ResponseEntity<?> getProductDetails(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                           @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+                                           @RequestParam(required = false) String name
+                                           ) {
+        PageDto page= productService.getProductDetailsWithFilterPagination(pageIndex, pageSize,name);
+        return ResponseEntity.ok(page);
+    }
+
     @GetMapping("/{productId}")
     @Operation(summary = "Get product by id")
 

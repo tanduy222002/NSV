@@ -75,7 +75,7 @@ public class ProductService {
     public void createNewProduct(String name, String variety, String base64Img) throws Exception {
 
             Product product= new Product();
-            if(productRepository.existsByName(name)){
+            if(productRepository.existsByNameIgnoreCase(name)){
                 throw new ExistsException("Product with name: "+name+" already exists");
             }
             product.setName(name);
@@ -115,7 +115,7 @@ public class ProductService {
     @Transactional
     public void createProductQualityType(ProductTypeQualityDto dto) throws Exception {
         String productName = dto.getProductCreateDto().getName();
-        if(productRepository.existsByName(productName)){
+        if(productRepository.existsByNameIgnoreCase(productName)){
             throw new ExistsException("Product with name: "+productName+" already exists");
         }
         Product product =new Product(dto.getProductCreateDto());
@@ -168,6 +168,11 @@ public class ProductService {
         return productDaoImpl.getQualitiesInTypeByTypeId(typeId);
     }
 
+    public PageDto getProductDetailsWithFilterPagination(Integer pageIndex,Integer pageSize, String name){
+        List<ProductDetailDto> productDetails = productDaoImpl.getProductDetails(pageIndex, pageSize, name);
+        long count= productDaoImpl.countTotalProductDetailsWithFilterAndPagination(name);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,productDetails);
+    }
 
 
 }
