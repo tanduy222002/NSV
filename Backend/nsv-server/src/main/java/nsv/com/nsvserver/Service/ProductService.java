@@ -174,5 +174,9 @@ public class ProductService {
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,productDetails);
     }
 
+    public List<ProductTypeWithQualityDetailInSlotDto> getProductTypesWithQualityStatisticDetail(Integer productId){
+        return productDaoImpl.getStatisticsOfProduct(productId);
+    }
+
 
 }
