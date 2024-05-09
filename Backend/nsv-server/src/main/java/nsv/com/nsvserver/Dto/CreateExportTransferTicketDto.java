@@ -1,6 +1,8 @@
 package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 public class CreateExportTransferTicketDto {
     private String name;
     @JsonProperty("customer_id")
+    @NotNull(message = "Customer id is mandatory")
     private Integer customerId;
     @JsonProperty("export_date")
     private Date exportDate;
@@ -28,9 +31,9 @@ public class CreateExportTransferTicketDto {
     private String description;
 
 //    private Double value;
-
+    @Valid
     private CreateDebtDto debtDto;
-
+    @Valid
     private List<CreateExportBinDto> exportBinDto;
 
 
