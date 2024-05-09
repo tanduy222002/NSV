@@ -88,7 +88,6 @@ public class TransferTicketController {
 
     @PostMapping("/exports_tickets")
     @Operation(summary = "Create export ticket")
-    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> createExportTicket(@Valid @RequestBody CreateExportTransferTicketDto dto){
         String message= transferTicketService.createExportTicket(dto);
         Map<String, String> responseData = new HashMap<>();
