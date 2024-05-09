@@ -49,7 +49,7 @@ public class TransferTicketController {
         responseData.put("message", "approved for ticket successfully");
         return ResponseEntity.ok(responseData);
     }
-    @PutMapping("/export_ticket/{id}/status/approve")
+    @PutMapping("/export_tickets/{id}/status/approve")
     @Operation(summary = "Approve export ticket")
     @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> approveExportTicketStatus(@PathVariable Integer id){
@@ -86,7 +86,7 @@ public class TransferTicketController {
 
 
 
-    @PostMapping("/exports_tickets")
+    @PostMapping("/export_tickets")
     @Operation(summary = "Create export ticket")
     public ResponseEntity<?> createExportTicket(@Valid @RequestBody CreateExportTransferTicketDto dto){
         String message= transferTicketService.createExportTicket(dto);
