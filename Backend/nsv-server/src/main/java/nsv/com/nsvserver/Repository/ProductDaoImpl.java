@@ -111,7 +111,7 @@ public class ProductDaoImpl implements ProductDao{
     @Override
     public List<ProductTypeWithQualityDetailInSlotDto> getStatisticsOfProduct(Integer productId) {
         String queryString = "select new nsv.com.nsvserver.Dto.ProductTypeWithQualityDetailInSlotDto(" +
-                "t.name,t.image,q.name,bs.weight,s.id,s.name,w.name) FROM "+
+                "t.name,t.image,q.name,bs.weight,s.id,s.name,w.name,w.id) FROM "+
                 "Product p join p.types as t " +
                 "join t.qualities as q join q.bin as b join " +
                 "b.binSlot as bs join bs.slot as s join s.row as r " +

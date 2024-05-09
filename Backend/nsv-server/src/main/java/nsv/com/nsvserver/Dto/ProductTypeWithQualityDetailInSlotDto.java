@@ -19,12 +19,14 @@ public class ProductTypeWithQualityDetailInSlotDto {
     private String slotName;
     @JsonProperty("warehouse_name")
     private String warehouseName;
+    @JsonProperty("warehouse_id")
+    private Integer warehouseId;
 
     private String location;
     @JsonProperty("type_with_quality")
     private String typeWithQuality;
 
-    public ProductTypeWithQualityDetailInSlotDto(String type, String image, String quality, Double weight, Integer slotId, String slotName, String warehouseName) {
+    public ProductTypeWithQualityDetailInSlotDto(String type, String image, String quality, Double weight, Integer slotId, String slotName, String warehouseName, Integer warehouseId) {
         this.type = type;
         this.image = image;
         this.quality = quality;
@@ -34,5 +36,6 @@ public class ProductTypeWithQualityDetailInSlotDto {
         this.warehouseName = warehouseName;
         this.location = slotName+"/"+warehouseName;
         this.typeWithQuality=type+" "+quality;
+        this.warehouseId=warehouseId;
     }
 }
