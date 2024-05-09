@@ -22,6 +22,10 @@ import { searchWarehouse } from './warehouse/searchWarehouse';
 import { getWarehouseStatistic } from './warehouse/getWarehouseStatistic';
 import { getSlotDetail } from './warehouse/getSlotDetail';
 import { getSlotStatistic } from './warehouse/getSlotStatistic';
+import { searchExportTicket } from './export/searchExportTicket';
+import { getWarehouseDropdown } from './warehouse/getWarehouseDropdown';
+import { getAvailableBin } from './export/getAvailableBin';
+import { createExportTicket } from './export/createExportTicket';
 
 export {
     makeLoginRequest,
@@ -47,5 +51,9 @@ export {
     searchWarehouse,
     getWarehouseStatistic,
     getSlotDetail,
-    getSlotStatistic
+    getSlotStatistic,
+    searchExportTicket,
+    getWarehouseDropdown,
+    getAvailableBin,
+    createExportTicket
 };

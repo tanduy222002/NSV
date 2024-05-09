@@ -1,3 +1,3 @@
-import CreatExportOrderForm from './CreateExportOrderForm';
+import CreateExportTicketForm from './CreateExportTicketForm';
 
-export { CreatExportOrderForm };
+export { CreateExportTicketForm };

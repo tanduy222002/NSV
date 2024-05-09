@@ -1,4 +1,4 @@
-import { ExportFormStep } from '../type';
+import { ExportFormStep } from '@renderer/types/export';
 import { cn } from '@renderer/utils/util';
 
 type FormProgressProps = {

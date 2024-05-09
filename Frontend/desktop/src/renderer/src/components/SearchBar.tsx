@@ -15,8 +15,6 @@ const SearchBar = ({
     filterAction,
     filterDisabled = false
 }: SearchBarProps) => {
-    console.log('action: ', filterAction);
-
     return (
         <div
             className={cn(
