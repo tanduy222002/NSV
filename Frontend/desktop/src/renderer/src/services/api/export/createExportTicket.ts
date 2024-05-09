@@ -32,7 +32,9 @@ export const createExportTicket = async ({
                             ...exportBin!.import_bin_with_slot
                         ]
                     }))
-                ]
+                ],
+                customer_id: ticket?.customer_id,
+                export_date: ticket?.export_date
             }
         });
         return response;
