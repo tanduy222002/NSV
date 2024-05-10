@@ -1,17 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from '@renderer/hooks';
-import { getProductList } from '@renderer/services/api';
+import { getProductListStatistic } from '@renderer/services/api';
 import { TableView, Button, TableSkeleton } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
+import { ProductLineItem } from '@renderer/types/product';
 
 const productTableConfig = [
+    {
+        title: '',
+        sortable: false,
+        type: ColumnType.Image
+    },
     {
         title: 'ID',
         sortable: false,
         type: ColumnType.Text
     },
-    // { title: '', sortable: false, type: ColumnType.Image },
     {
         title: 'Tên sản phẩm',
         sortable: true,
@@ -19,6 +24,11 @@ const productTableConfig = [
     },
     {
         title: 'Tồn kho',
+        sortable: false,
+        type: ColumnType.Text
+    },
+    {
+        title: 'Số lô chứa',
         sortable: false,
         type: ColumnType.Text
     },
@@ -34,23 +44,31 @@ const ProductList = () => {
 
     const goToCreateProductPage = () => navigate('/product/create');
     const goToEditProductPage = () => navigate('/product/edit');
+    const goToOverview = (productId: number) => {
+        navigate(`/product/${productId}/location`);
+    };
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
 
-    const { isLoading, data } = useQuery({
+    const { isFetching, data } = useQuery({
         queryKey: ['products'],
         queryFn: () =>
-            getProductList({
+            getProductListStatistic({
                 token: accessToken,
                 pageIndex: 1,
                 pageSize: 5
             })
     });
 
-    const goToOverview = (productId: number) => {
-        navigate(`/product/${productId}`);
-    };
+    const mapProductData = (products: ProductLineItem[]) =>
+        products.map((product) => ({
+            image: product.image,
+            id: product.id,
+            name: product.name,
+            inventory: `${product.inventory} kg`,
+            containingSlots: product.number_of_containing_slot
+        }));
 
     return (
         <div>
@@ -60,14 +78,12 @@ const ProductList = () => {
                 action={goToCreateProductPage}
             />
             <div className="flex h-full max-h-screen gap-10">
-                {isLoading ? (
+                {isFetching ? (
                     <TableSkeleton />
-                ) : data?.length === 0 ? (
-                    <p>Hiện chưa có sản phẩm nào</p>
                 ) : (
                     <TableView
                         columns={productTableConfig}
-                        items={data!.content}
+                        items={mapProductData(data!.content)}
                         viewAction={goToOverview}
                         editAction={goToEditProductPage}
                     />

@@ -18,3 +18,11 @@ export type ProductCategory = {
     upper_temperature_threshold: string;
     qualities: Quality[];
 };
+
+export type ProductLineItem = {
+    id: number;
+    name: string;
+    image: string;
+    inventory: number;
+    number_of_containing_slot: number;
+};

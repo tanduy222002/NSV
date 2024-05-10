@@ -26,6 +26,8 @@ import { searchExportTicket } from './export/searchExportTicket';
 import { getWarehouseDropdown } from './warehouse/getWarehouseDropdown';
 import { getAvailableBin } from './export/getAvailableBin';
 import { createExportTicket } from './export/createExportTicket';
+import { getProductListStatistic } from './product/getProductListStatistic';
+import { getProductLocation } from './product/getProductLocation';
 
 export {
     makeLoginRequest,
@@ -55,5 +57,7 @@ export {
     searchExportTicket,
     getWarehouseDropdown,
     getAvailableBin,
-    createExportTicket
+    createExportTicket,
+    getProductListStatistic,
+    getProductLocation
 };

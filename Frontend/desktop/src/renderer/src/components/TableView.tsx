@@ -13,11 +13,16 @@ type Column = {
     sortable: boolean;
     type: ColumnType;
 };
+
+type TableItem = any & {
+    viewAction?: () => void;
+};
+
 type TableViewProps = {
     columns: Column[];
-    items: object[];
-    viewAction?: (param: any) => void;
-    editAction?: (param: any) => void;
+    items: TableItem[];
+    viewAction?: (param: number | string) => void;
+    editAction?: (param: number | string) => void;
     deleteAction?: () => void;
 };
 
@@ -44,6 +49,9 @@ const TableView = ({
             </tr>
             {items.map((item, i) => {
                 const itemValues = Object.values(item);
+                const [, itemId] = Object.entries(item).filter(
+                    ([key]) => key.toLowerCase() === 'id'
+                )[0];
                 return (
                     <tr key={i} className="border border-1">
                         {columns.map((column, i) => (
@@ -52,13 +60,20 @@ const TableView = ({
                                 key={i}
                             >
                                 {column.type === ColumnType.Text ? (
-                                    itemValues[i]
+                                    (itemValues[i] as string)
                                 ) : column.type === ColumnType.Image ? (
-                                    <img src={itemValues[i]} />
+                                    <div className="w-[40px] h-[40px]">
+                                        <img
+                                            src={itemValues[i] as any}
+                                            className="object-cover"
+                                        />
+                                    </div>
                                 ) : (
                                     <RowAction
-                                        id={itemValues?.[0] ?? i}
-                                        viewAction={viewAction}
+                                        id={itemId as string}
+                                        viewAction={
+                                            item.viewAction ?? viewAction
+                                        }
                                         editAction={editAction}
                                         deleteAction={deleteAction}
                                     />
