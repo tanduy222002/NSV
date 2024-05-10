@@ -26,16 +26,24 @@ public class ProductTypeWithQualityDetailInSlotDto {
     @JsonProperty("type_with_quality")
     private String typeWithQuality;
 
-    public ProductTypeWithQualityDetailInSlotDto(String type, String image, String quality, Double weight, Integer slotId, String slotName, String warehouseName, Integer warehouseId) {
+    @JsonProperty("containing_area")
+    private Double area;
+    @JsonProperty("slot_capacity")
+    private Double slotCapacity;
+
+    public ProductTypeWithQualityDetailInSlotDto(String type, String image, String quality, Double weight, Double area, Integer slotId, String slotName, Double slotCapacity, String warehouseName, Integer warehouseId) {
         this.type = type;
         this.image = image;
         this.quality = quality;
         this.weight = weight;
         this.slotId = slotId;
         this.slotName = slotName;
+        this.area = area;
+        this.slotCapacity=slotCapacity;
         this.warehouseName = warehouseName;
         this.location = slotName+"/"+warehouseName;
         this.typeWithQuality=type+" "+quality;
         this.warehouseId=warehouseId;
+
     }
 }

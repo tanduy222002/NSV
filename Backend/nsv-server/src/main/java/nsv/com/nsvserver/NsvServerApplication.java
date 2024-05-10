@@ -29,8 +29,8 @@ public class NsvServerApplication {
 	BinDao binDaoImpl;
 	TicketDao ticketDaoImpl;
 
-	@Autowired
-	ProductRepository productRepository;
+//	@Autowired
+//	ProductRepository productRepository;
 
 	@Autowired
 	public NsvServerApplication(BinDao binDaoImpl, TicketDao ticketDaoImpl) {
@@ -44,7 +44,6 @@ public class NsvServerApplication {
 
 	}
 	@Bean
-	@Transactional
 	public CommandLineRunner commandLineRunner(String[] args) {
 		return runner->{
 			System.out.println("System is running on port: "+port);
