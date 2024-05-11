@@ -54,4 +54,12 @@ public class PartnerController {
         PageDto partners =partnerService.getPartnersStatisticByFilterAndPagination(pageIndex,pageSize,name,phone);
         return ResponseEntity.ok(partners);
     }
+
+
+    @GetMapping("/{id}")
+    @Operation(description = "get partners with statistics information ")
+    public ResponseEntity<?> getPartnersStatistic(@PathVariable Integer id
+    ){
+        return ResponseEntity.ok(partnerService.getPartnerDetailById(id));
+    }
 }
