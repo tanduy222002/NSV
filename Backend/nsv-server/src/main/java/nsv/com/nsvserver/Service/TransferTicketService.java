@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -349,8 +348,9 @@ public class TransferTicketService {
         TransferTicket ticket = ticketDaoImpl.getTicketDetail(id);
 
         List<?> bins;
+        double[] refTotalWeight =new double[]{0.0};
         if(ticket.getType().equals("IMPORT")){
-            bins = getImportBinInTicketDetail(id);
+            bins = getImportBinInTicketDetail(id,refTotalWeight);
         }
         else{
             bins =null;
@@ -363,6 +363,9 @@ public class TransferTicketService {
         dto.setCreateDate(ticket.getCreateDate());
         dto.setApprovedDate(ticket.getApprovedDate());
         dto.setDescription(ticket.getDescription());
+        dto.setStatus(ticket.getStatus());
+        dto.setValue(ticket.getValue());
+        dto.setWeight(refTotalWeight[0]);
 
         Debt debt = ticket.getDebt();
 
@@ -392,11 +395,14 @@ public class TransferTicketService {
         return dto;
     }
 
-    public List<ImportBinInSlot> getImportBinInTicketDetail(Integer id) {
+
+    public List<ImportBinInSlot> getImportBinInTicketDetail(Integer id, double[] refTotalWeight) {
         List<Bin> bins = ticketDaoImpl.getImportBinInTicketDetail(id);
 
+        AtomicReference<Double> totalWeight = new AtomicReference<>(0.0);
         List<ImportBinInSlot> dto = new ArrayList<ImportBinInSlot>();
         bins.parallelStream().forEach(bin -> {
+            totalWeight.updateAndGet(v -> v + bin.getWeight());
             Quality quality = bin.getQuality();
             Type type=quality.getType();
             Product product = type.getProduct();
@@ -421,7 +427,7 @@ public class TransferTicketService {
                     }).collect(Collectors.toList());
             dto.addAll(importBinInSlots);
         });
-
+       refTotalWeight[0]+=totalWeight.get();
 
      return dto;
 

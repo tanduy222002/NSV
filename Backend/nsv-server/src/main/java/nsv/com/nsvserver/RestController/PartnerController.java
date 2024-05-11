@@ -44,4 +44,14 @@ public class PartnerController {
         PageDto partners =partnerService.searchPartnerByFilterAndPagination(pageIndex,pageSize,name,phone);
         return ResponseEntity.ok(partners);
     }
+
+    @GetMapping("/statistic/search")
+    @Operation(description = "get partners with statistics information ")
+    public ResponseEntity<?> getPartnersStatistic(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                        @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+                                        @RequestParam(required = false) String name, @RequestParam(required = false) String phone
+    ){
+        PageDto partners =partnerService.getPartnersStatisticByFilterAndPagination(pageIndex,pageSize,name,phone);
+        return ResponseEntity.ok(partners);
+    }
 }

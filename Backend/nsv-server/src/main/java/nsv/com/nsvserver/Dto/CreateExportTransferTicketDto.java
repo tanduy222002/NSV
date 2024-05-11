@@ -26,7 +26,7 @@ public class CreateExportTransferTicketDto {
 
 //    private Double weight;
 
-    private String transporter;
+    private String transporter = "Không có";
 
     private String description;
 

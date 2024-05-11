@@ -11,4 +11,7 @@ public interface PartnerDao {
 
     public long countSearchWithFilter(String name, String phone);
 
+    List<SearchPartnerDto> getStatisticWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone);
+
+    long countGetStatisticWithFilter(String name, String phone);
 }
