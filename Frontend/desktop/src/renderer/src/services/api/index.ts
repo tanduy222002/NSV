@@ -30,6 +30,8 @@ import { getProductListStatistic } from './product/getProductListStatistic';
 import { getProductLocation } from './product/getProductLocation';
 import { getImportTicketDetail } from './import/getImportTicketDetail';
 import { approveImportTicket } from './import/approveImportTicket';
+import { getExportTicketDetail } from './export/getExportTicketDetail';
+import { approveExportTicket } from './export/approveExportTicket';
 
 export {
     makeLoginRequest,
@@ -63,5 +65,7 @@ export {
     getProductListStatistic,
     getProductLocation,
     getImportTicketDetail,
-    approveImportTicket
+    approveImportTicket,
+    getExportTicketDetail,
+    approveExportTicket
 };

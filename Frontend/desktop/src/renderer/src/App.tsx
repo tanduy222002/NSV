@@ -21,7 +21,8 @@ import {
     CreateImportTicketPage,
     ImportTicketDetailPage,
     WarehouseDetailPage,
-    WarehouseSlotDetailPage
+    WarehouseSlotDetailPage,
+    ExportTicketDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -103,6 +104,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/export/create"
                                     element={<CreateExportTicketPage />}
+                                />
+                                <Route
+                                    path="/export/:id"
+                                    element={<ExportTicketDetailPage />}
                                 />
                                 <Route
                                     path="/import"

@@ -15,6 +15,7 @@ import CreateImportTicketPage from './CreateImportTicketPage';
 import ImportTicketDetailPage from './ImportTicketDetailPage';
 import WarehouseDetailPage from './WarehouseDetailPage';
 import WarehouseSlotDetailPage from './WarehouseSlotDetailPage';
+import ExportTicketDetailPage from './ExportTicketDetailPage';
 
 export {
     AuthPage,
@@ -33,5 +34,6 @@ export {
     CreateImportTicketPage,
     ImportTicketDetailPage,
     WarehouseDetailPage,
-    WarehouseSlotDetailPage
+    WarehouseSlotDetailPage,
+    ExportTicketDetailPage
 };

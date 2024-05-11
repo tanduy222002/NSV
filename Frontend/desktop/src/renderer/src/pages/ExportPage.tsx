@@ -49,8 +49,8 @@ const exportTicketTableConfig = [
 const ExportPage = () => {
     const navigate = useNavigate();
     const goToCreateExportTicketPage = () => navigate('/export/create');
-    // const goToImportTicketDetailPage = (ticketId: number) =>
-    //     navigate(`/export/${ticketId}`);
+    const goToExportTicketDetailPage = (ticketId: number | string) =>
+        navigate(`/export/${ticketId}`);
 
     const [ticketStatus, setTicketStatus] = useState<TicketStatus>(
         TicketStatus.All
@@ -128,7 +128,7 @@ const ExportPage = () => {
                         <TableView
                             columns={exportTicketTableConfig}
                             items={mapTicket(data?.content)}
-                            // viewAction={goToImportTicketDetailPage}
+                            viewAction={goToExportTicketDetailPage}
                         />
                     )
                 )}
