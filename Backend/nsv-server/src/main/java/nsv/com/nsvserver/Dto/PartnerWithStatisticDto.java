@@ -22,8 +22,6 @@ public class PartnerWithStatisticDto {
     @JsonProperty("address_string")
     private String addressString;
 
-    @JsonProperty("current_debt_amount")
-    private Double debtValue;
 
     @JsonProperty("total_transaction_amount")
     private Double transactionAmount;
@@ -34,13 +32,13 @@ public class PartnerWithStatisticDto {
         this.phone = phone;
     }
 
-    public PartnerWithStatisticDto(Integer ID, String name, String phone, Address address, Double debtValue, Double transactionAmount) {
+    public PartnerWithStatisticDto(Integer ID, String name, String phone, Address address, Double transactionAmount) {
         this.ID = ID;
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.addressString = ConvertUtil.convertAddressToString(address);
-        this.debtValue = debtValue;
+
         this.transactionAmount = transactionAmount;
     }
 }

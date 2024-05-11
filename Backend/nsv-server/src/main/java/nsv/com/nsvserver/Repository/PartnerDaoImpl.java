@@ -84,7 +84,7 @@ public class PartnerDaoImpl implements PartnerDao{
     @Override
     public List<SearchPartnerDto> getStatisticWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
         StringBuilder queryString = new StringBuilder(
-                "Select New nsv.com.nsvserver.Dto.PartnerWithStatisticDto(p.id, profile.name, profile.phoneNumber, a, SUM(debt.amount), SUM(b.weight*b.price) ) FROM Partner p " +
+                "Select New nsv.com.nsvserver.Dto.PartnerWithStatisticDto(p.id, profile.name, profile.phoneNumber, a, SUM(b.weight*b.price) ) FROM Partner p " +
                         "left join p.profile as profile left join profile.address as a left join fetch a.ward as w left join fetch w.district as d left join fetch d.province " +
                         "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED')  "
 
@@ -118,6 +118,31 @@ public class PartnerDaoImpl implements PartnerDao{
 
     @Override
     public long countGetStatisticWithFilter(String name, String phone) {
-        return 0;
+
+        StringBuilder queryString = new StringBuilder(
+                "Select COUNT(p.id) FROM Partner p left join p.profile as profile WHERE 1=1"
+
+
+        );
+
+        if(name!=null){
+            queryString.append(" AND profile.name LIKE:namePattern");
+
+        }
+        if(phone!=null){
+            queryString.append(" AND profile.phoneNumber = :phone");
+
+        }
+        Query query = entityManager.createQuery(queryString.toString());
+
+        if(name!=null){
+            query.setParameter("namePattern","%"+name+"%");
+
+        }
+        if(phone!=null){
+            query.setParameter("phone",phone);
+
+        }
+        return (long) query.getSingleResult();
     }
 }
