@@ -20,5 +20,7 @@ public interface TicketDao {
 
     List<Bin> getImportBinInTicketDetail(Integer Id);
 
+    List<Bin> getExportBinInTicketDetail(Integer Id);
+
     TransferTicket getTicketDetail(Integer Id);
 }

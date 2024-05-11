@@ -49,7 +49,7 @@ public class BinService {
             String qualityWithType= type.getName()+" "+quality.getName();
             BinDto binDto = new BinDto(
                     bin.getId(), product.getName(), product.getImage(), quality.getId(), qualityWithType,
-                    bin.getWeight(),bin.getPackageType() );
+                    bin.getWeight(),bin.getPackageType(),bin.getPrice());
 
             List<ImportBinInSlot> importBinInSlots= bin.getBinSlot().parallelStream()
                             .filter(binSlot-> warehouseId==null||binSlot.getSlot().getRow().getMap().getWarehouse().getId().equals(warehouseId))
