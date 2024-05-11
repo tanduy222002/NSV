@@ -139,7 +139,7 @@ const ImportTicketDetailPage = () => {
                 />
                 <img alt="form-icon" src={warehouseIconSrc} />
                 <h1 className="text-xl font-semibold">
-                    Tạo phiếu nhập {`/ ${data?.name}`}
+                    Phiếu nhập {`/ ${data?.name}`}
                 </h1>
             </div>
             {isFetching ? (
