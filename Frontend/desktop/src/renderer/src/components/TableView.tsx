@@ -3,7 +3,7 @@ import RowAction from './RowAction';
 
 export enum ColumnType {
     Text = 'Text',
-    Button = 'Button',
+    Link = 'Link',
     Action = 'Action',
     Image = 'Image'
 }
@@ -68,7 +68,7 @@ const TableView = ({
                                             className="object-cover"
                                         />
                                     </div>
-                                ) : (
+                                ) : column.type === ColumnType.Action ? (
                                     <RowAction
                                         id={itemId as string}
                                         viewAction={
@@ -77,6 +77,10 @@ const TableView = ({
                                         editAction={editAction}
                                         deleteAction={deleteAction}
                                     />
+                                ) : (
+                                    <div className="flex justify-center">
+                                        {item?.icon}
+                                    </div>
                                 )}
                             </td>
                         ))}
