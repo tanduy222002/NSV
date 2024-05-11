@@ -153,5 +153,17 @@ public class TicketDaoImpl implements TicketDao{
     }
 
 
+    @Override
+    public List<Bin> getExportBinInTicketDetail(Integer Id) {
+        StringBuilder queryString = new StringBuilder(
+                """
+                SELECT b FROM Bin b left join fetch b.importBins as bb join fetch bb.importBin as ib join fetch ib.transferTicket as itt 
+                 left join fetch b.quality as q left join fetch q.type as t left join fetch t.product as p join b.transferTicket as tt  Where tt.id=:ticketId """
+        );
+        Query query = entityManager.createQuery(queryString.toString());
+        query.setParameter("ticketId",Id);
+        return query.getResultList();
+    }
+
 
 }

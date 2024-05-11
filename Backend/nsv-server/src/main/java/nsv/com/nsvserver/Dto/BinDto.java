@@ -19,5 +19,6 @@ public class BinDto {
     private String qualityWithType;
     private Double weight;
     private String packaged;
+    private Double price;
 
 }

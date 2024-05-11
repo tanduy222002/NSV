@@ -10,11 +10,15 @@ import nsv.com.nsvserver.Exception.SlotAreaMismatchException;
 import nsv.com.nsvserver.Exception.TicketStatusMismatchException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static nsv.com.nsvserver.Entity.QBinSlot.binSlot;
 
 @Service
 public class TransferTicketService {
@@ -353,7 +357,7 @@ public class TransferTicketService {
             bins = getImportBinInTicketDetail(id,refTotalWeight);
         }
         else{
-            bins =null;
+            bins = getExportBinInTicketDetail(id,refTotalWeight);
         }
         TicketDetailDto dto = new TicketDetailDto();
 
@@ -411,7 +415,7 @@ public class TransferTicketService {
             String qualityWithType= type.getName()+" "+quality.getName();
             BinDto binDto = new BinDto(
                     bin.getId(), product.getName(), product.getImage(), quality.getId(), qualityWithType,
-                    bin.getWeight(),bin.getPackageType() );
+                    bin.getWeight(),bin.getPackageType(), bin.getPrice() );
 
             List<ImportBinInSlot> importBinInSlots= bin.getBinSlot().parallelStream()
                     .map(binSlot->{
@@ -430,9 +434,62 @@ public class TransferTicketService {
             dto.addAll(importBinInSlots);
         });
        refTotalWeight[0]=totalWeight.get();
-        refTotalWeight[1]=totalValue.get();
+       refTotalWeight[1]=totalValue.get();
 
      return dto;
+
+    }
+
+    public List<ExportBinWithImportBin> getExportBinInTicketDetail(Integer id, double[] refTotalWeight) {
+        List<Bin> bins = ticketDaoImpl.getExportBinInTicketDetail(id);
+
+        AtomicReference<Double> totalWeight = new AtomicReference<>(0.0);
+        AtomicReference<Double> totalValue = new AtomicReference<>(0.0);
+        List<ExportBinWithImportBin> dto = new ArrayList<ExportBinWithImportBin>();
+
+        bins.parallelStream().forEach(bin -> {
+            totalWeight.updateAndGet(v -> v + bin.getWeight());
+            totalValue.updateAndGet(v -> v + bin.getWeight()*bin.getPrice());
+            Quality quality = bin.getQuality();
+            Type type=quality.getType();
+            Product product = type.getProduct();
+            String qualityWithType= type.getName()+" "+quality.getName();
+            BinDto binDto = new BinDto(
+                    bin.getId(), product.getName(), product.getImage(), quality.getId(), qualityWithType,
+                    bin.getWeight(),bin.getPackageType(),bin.getPrice());
+
+            Map<Integer,ExportBinWithImportBin> importsMap = new HashMap<Integer,ExportBinWithImportBin>();
+//            List<ExportBinWithImportBin> exportBinWithImportBins=
+                    bin.getImportBins().stream()
+                    .forEach(binBin->{
+                        Bin importBin=binBin.getImportBin();
+                        ExportBinWithImportBin binWithImport = null;
+                        if(importsMap.containsKey(importBin.getId())) {
+                            binWithImport = importsMap.get(importBin.getId());
+                            binWithImport.setTakenWeight(binWithImport.getTakenWeight()+binBin.getWeight());
+                            binWithImport.setTakenArea(binWithImport.getTakenArea()+binBin.getArea());
+                        } else
+                        {
+                            binWithImport = new ExportBinWithImportBin();
+                            binWithImport.setImportBinId(importBin.getId());
+                            binWithImport.setImportTicketId(importBin.getTransferTicket().getId());
+                            binWithImport.setImportTicketName(importBin.getTransferTicket().getName());
+                            binWithImport.setBin(binDto);
+                            binWithImport.setTakenWeight(binBin.getWeight());
+                            binWithImport.setTakenArea(binBin.getArea());
+                            importsMap.put(importBin.getId(), binWithImport);
+                        }
+
+
+                    });
+                    List<ExportBinWithImportBin> exportBinWithImportBinList = importsMap.values().parallelStream().toList();
+
+            dto.addAll(exportBinWithImportBinList);
+        });
+        refTotalWeight[0]=totalWeight.get();
+        refTotalWeight[1]=totalValue.get();
+
+        return dto;
 
     }
 
