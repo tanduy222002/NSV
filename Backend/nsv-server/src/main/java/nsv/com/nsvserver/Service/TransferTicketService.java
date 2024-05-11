@@ -366,16 +366,17 @@ public class TransferTicketService {
 
         Debt debt = ticket.getDebt();
 
+        if(debt != null) {
+            DebtDetailDto debtDto = new DebtDetailDto();
+            debtDto.setCreate_date(debt.getCreateDate());
+            debtDto.setDueDate(debt.getDueDate());
+            debtDto.setIsPaid(debt.getIsPaid());
+            debtDto.setDescription(debt.getNote());
+            debtDto.setValue(debt.getAmount());
+            debtDto.setName("Phiếu nợ " + ticket.getName());
 
-        DebtDetailDto debtDto= new DebtDetailDto();
-        debtDto.setCreate_date(debt.getCreateDate());
-        debtDto.setDueDate(debt.getDueDate());
-        debtDto.setIsPaid(debt.getIsPaid());
-        debtDto.setDescription(debt.getNote());
-        debtDto.setValue(debt.getAmount());
-        debtDto.setName("Phiếu nợ "+ ticket.getName());
-
-        dto.setDebt(debtDto);
+            dto.setDebt(debtDto);
+        }
 
         Partner partner =ticket.getPartner();
         Profile profile =partner.getProfile();
