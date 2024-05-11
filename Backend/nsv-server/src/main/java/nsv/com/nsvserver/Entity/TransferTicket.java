@@ -31,6 +31,9 @@ public class TransferTicket {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "value")
+    private Double value;
+
     @Column(name = "qr")
     private String qr;
 
