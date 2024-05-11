@@ -22,7 +22,7 @@ public class TicketDaoImpl implements TicketDao{
 
     @Override
     public TransferTicket fetchWithBinAndSlot(Integer Id) {
-        Query query = entityManager.createQuery("select t from TransferTicket t left join fetch t.debt as d join fetch t.bins as b join b.binSlot as bs join fetch bs.slot as s join fetch s.row as r join fetch r.map as m fetch join m.warehouse Where t.id = :ticketId");
+        Query query = entityManager.createQuery("select t from TransferTicket t left join fetch t.debt as d join fetch t.bins as b join b.binSlot as bs join fetch bs.slot as s join fetch s.row as r join fetch r.map as m join fetch m.warehouse Where t.id = :ticketId");
         query.setParameter("ticketId",Id);
         return (TransferTicket) query.getSingleResult();
     }

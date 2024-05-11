@@ -84,9 +84,9 @@ public class PartnerDaoImpl implements PartnerDao{
     @Override
     public List<SearchPartnerDto> getStatisticWithFilterAndPagination(Integer pageIndex, Integer pageSize, String name, String phone) {
         StringBuilder queryString = new StringBuilder(
-                "Select New nsv.com.nsvserver.Dto.PartnerWithStatisticDto(p.id, profile.name,profile.phoneNumber, SUM(d.value),SUM(b.weight*b.price)) FROM Partner p left" +
-                        "join p.profile as profile left join profile.address as a join fetch a.ward as w join fetch w.district as d join fetch d.province " +
-                        "join p.transferTickets as tt left join tt.debt as d join tt.bins as b WHERE tt.status='APPROVED' AND debt.isPaid = FALSE"
+                "Select New nsv.com.nsvserver.Dto.PartnerWithStatisticDto(p.id, profile.name, profile.phoneNumber, a, SUM(debt.amount), SUM(b.weight*b.price) ) FROM Partner p " +
+                        "left join p.profile as profile left join profile.address as a left join fetch a.ward as w left join fetch w.district as d left join fetch d.province " +
+                        "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED')  "
 
 
         );
@@ -99,7 +99,7 @@ public class PartnerDaoImpl implements PartnerDao{
             queryString.append(" AND profile.phoneNumber = :phone");
 
         }
-        queryString.append("GROUP BY p.id");
+        queryString.append(" GROUP BY p.id,profile.name,profile.phoneNumber,a");
         Query query = entityManager.createQuery(queryString.toString());
 
         if(name!=null){
