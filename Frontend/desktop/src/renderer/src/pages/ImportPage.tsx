@@ -49,7 +49,7 @@ const importTicketTableConfig = [
 const ImportPage = () => {
     const navigate = useNavigate();
     const goToCreateImportTicketPage = () => navigate('/import/create');
-    const goToImportTicketDetailPage = (ticketId: number) =>
+    const goToImportTicketDetailPage = (ticketId: number | string) =>
         navigate(`/import/${ticketId}`);
 
     const [ticketStatus, setTicketStatus] = useState<TicketStatus>(
@@ -64,9 +64,9 @@ const ImportPage = () => {
             tickets.map((ticket) => ({
                 id: ticket?.id,
                 name: ticket?.name,
-                productName: ticket?.bins[0]?.product,
                 weight: ticket?.weight,
-                importDate: ticket?.import_date
+                productCount: `${ticket?.product.length} lô hàng`,
+                importDate: ticket?.transfer_date
             })),
         []
     );

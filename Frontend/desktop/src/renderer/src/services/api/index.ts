@@ -28,6 +28,8 @@ import { getAvailableBin } from './export/getAvailableBin';
 import { createExportTicket } from './export/createExportTicket';
 import { getProductListStatistic } from './product/getProductListStatistic';
 import { getProductLocation } from './product/getProductLocation';
+import { getImportTicketDetail } from './import/getImportTicketDetail';
+import { approveImportTicket } from './import/approveImportTicket';
 
 export {
     makeLoginRequest,
@@ -59,5 +61,7 @@ export {
     getAvailableBin,
     createExportTicket,
     getProductListStatistic,
-    getProductLocation
+    getProductLocation,
+    getImportTicketDetail,
+    approveImportTicket
 };

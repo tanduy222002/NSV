@@ -1,15 +1,11 @@
 import { cn } from '@renderer/utils/util';
+import { ResultPopupType } from '@renderer/types/common';
 import Button from './Button';
-
-enum PopupType {
-    Success = 'success',
-    Error = 'error'
-}
 
 type InformationPopupProps = {
     title: string;
     body: string;
-    type: PopupType;
+    popupType: ResultPopupType;
     closeAction: () => void;
 };
 
@@ -17,7 +13,7 @@ const InformationPopup = ({
     title,
     body,
     closeAction,
-    type
+    popupType
 }: InformationPopupProps) => {
     return (
         <div className="absolute inset-0 bg-black/25 bg-blur z-20 flex items-center justify-center">
@@ -29,8 +25,8 @@ const InformationPopup = ({
                 <Button
                     className={cn(
                         'px-2 py-1 border rounded-md text-base font-semibold w-fit text-white',
-                        type === PopupType.Success
-                            ? 'bg-green-500'
+                        popupType === ResultPopupType.Success
+                            ? 'bg-emerald-500'
                             : 'bg-red-500'
                     )}
                     text="Xác nhận"

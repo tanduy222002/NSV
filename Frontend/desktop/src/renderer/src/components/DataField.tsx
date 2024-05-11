@@ -7,6 +7,7 @@ type DataFieldProps = {
     value?: string | number;
     defaultValue: string | number;
     disabled: boolean;
+    textColor?: string;
 };
 
 const DataField = ({
@@ -14,7 +15,8 @@ const DataField = ({
     name,
     value,
     defaultValue,
-    disabled
+    disabled,
+    textColor
 }: DataFieldProps) => {
     return (
         <div
@@ -32,7 +34,9 @@ const DataField = ({
                 {icon}
                 <p className="text-sm font-semibold text-sky-800">{name}</p>
             </div>
-            <p>{value ?? defaultValue}</p>
+            <p className={cn('text-sm font-semibold text-sky-800', textColor)}>
+                {value ?? defaultValue}
+            </p>
         </div>
     );
 };

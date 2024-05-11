@@ -13,7 +13,7 @@ import {
 import { useLocalStorage } from '@renderer/hooks';
 import { searchExportTicket } from '@renderer/services/api';
 
-const importTicketTableConfig = [
+const exportTicketTableConfig = [
     {
         title: 'ID',
         sortable: false,
@@ -126,7 +126,7 @@ const ExportPage = () => {
                 ) : (
                     data?.content.length > 0 && (
                         <TableView
-                            columns={importTicketTableConfig}
+                            columns={exportTicketTableConfig}
                             items={mapTicket(data?.content)}
                             // viewAction={goToImportTicketDetailPage}
                         />
