@@ -3,9 +3,8 @@ package nsv.com.nsvserver.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import nsv.com.nsvserver.Dto.PageDto;
+import nsv.com.nsvserver.Dto.PartnerDetailDto;
 import nsv.com.nsvserver.Dto.SearchPartnerDto;
-import nsv.com.nsvserver.Entity.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -114,6 +113,24 @@ public class PartnerDaoImpl implements PartnerDao{
                 .setMaxResults(pageSize)
                 .getResultList();
         return resultList;
+    }
+
+
+
+    @Override
+    public PartnerDetailDto getPartnerDetailById(Integer id) {
+        StringBuilder queryString = new StringBuilder(
+                "Select New nsv.com.nsvserver.Dto.PartnerDetailDto(p.id, profile.name, profile.phoneNumber, a, partner.bankAccount, partner.taxNumber, partner.faxNumber, COUNT(DISTINCT tt.id), SUM(b.weight*b.price) ) FROM Partner p " +
+                        "left join p.profile as profile left join profile.address as a left join fetch a.ward as w left join fetch w.district as d left join fetch d.province " +
+                        "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id " +
+                        "GROUP BY p.id,profile.name,profile.phoneNumber,a,partner.bankAccount, partner.taxNumber, partner.faxNumber  "
+
+
+        );
+
+       Query query = entityManager.createQuery(queryString.toString());
+       query.setParameter("id",id);
+       return (PartnerDetailDto) query.getSingleResult();
     }
 
     @Override

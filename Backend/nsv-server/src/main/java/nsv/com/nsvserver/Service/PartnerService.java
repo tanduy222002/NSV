@@ -62,4 +62,8 @@ public class PartnerService {
         long count=partnerDaoImpl.countGetStatisticWithFilter(name,phone);
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,partners);
     }
+
+    public PartnerDetailDto getPartnerDetailById(Integer id){
+        return partnerDaoImpl.getPartnerDetailById(id);
+    }
 }
