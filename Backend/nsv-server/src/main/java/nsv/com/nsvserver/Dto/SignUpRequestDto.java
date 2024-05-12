@@ -42,6 +42,6 @@ public class SignUpRequestDto {
     @Schema( example = "tanduy222002@gmail.com", required = true,description = "Email will receive updates, alerts, and important information related to account activity, services...")
     private String email;
 
-    @Schema(example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false,description = "the account will automatically be assigned the default role of \"ROLE_EMPLOYEE\" if no role is specified ")
+    @Schema(hidden = true,example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false,description = "the account will automatically be assigned the default role of \"ROLE_EMPLOYEE\" if no role is specified ")
     private List<String> roles;
 }
