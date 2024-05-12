@@ -5,9 +5,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import nsv.com.nsvserver.Dto.PartnerDetailDto;
 import nsv.com.nsvserver.Dto.SearchPartnerDto;
+import nsv.com.nsvserver.Dto.TransferTicketDto;
+import nsv.com.nsvserver.Entity.TransferTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -120,7 +123,7 @@ public class PartnerDaoImpl implements PartnerDao{
     @Override
     public PartnerDetailDto getPartnerDetailById(Integer id) {
         StringBuilder queryString = new StringBuilder(
-                "Select New nsv.com.nsvserver.Dto.PartnerDetailDto(p.id, profile.name, profile.phoneNumber, a, partner.bankAccount, partner.taxNumber, partner.faxNumber, COUNT(DISTINCT tt.id), SUM(b.weight*b.price) ) FROM Partner p " +
+                "Select New nsv.com.nsvserver.Dto.PartnerDetailDto(p.id, profile.name, profile.phoneNumber, profile.email, a, partner.bankAccount, partner.taxNumber, partner.faxNumber, COUNT(DISTINCT tt.id), SUM(b.weight*b.price) ) FROM Partner p " +
                         "left join p.profile as profile left join profile.address as a left join fetch a.ward as w left join fetch w.district as d left join fetch d.province " +
                         "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id " +
                         "GROUP BY p.id,profile.name,profile.phoneNumber,a,partner.bankAccount, partner.taxNumber, partner.faxNumber  "
@@ -162,4 +165,18 @@ public class PartnerDaoImpl implements PartnerDao{
         }
         return (long) query.getSingleResult();
     }
+
+    @Override
+    public List<TransferTicketDto> getTransactionsOfPartnerById(Integer id, Integer pageIndex, Integer pageSize) {
+        StringBuilder queryString = new StringBuilder(
+                "Select New nsv.com.nsvserver.Dto.TransferTicketDto(tt.id,tt.name,tt.transportDate,tt.description) FROM Partner p " +
+                        "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id " +
+                        "GROUP BY p.id,profile.name,profile.phoneNumber,a,partner.bankAccount, partner.taxNumber, partner.faxNumber  "
+
+
+        );
+        return new ArrayList<>();
+
+    }
+
 }

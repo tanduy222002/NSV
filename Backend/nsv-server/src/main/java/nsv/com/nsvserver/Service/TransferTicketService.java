@@ -488,9 +488,13 @@ public class TransferTicketService {
         });
         refTotalWeight[0]=totalWeight.get();
         refTotalWeight[1]=totalValue.get();
-
         return dto;
-
     }
+
+//    public <T> getTransactionOfPartnerById(Integer id){
+//
+//
+//
+//    }
 
 }

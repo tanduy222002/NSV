@@ -22,4 +22,19 @@ public class TransferTicketDto {
     @JsonProperty("number_of_products")
     private Integer numberOfProducts;
     private String status;
+    private String type;
+    private Double value;
+
+    public TransferTicketDto(Integer id, String name, Date transferDate, String description, double weight, String product, Integer numberOfProducts, String status) {
+        this.id = id;
+        this.name = name;
+        this.transferDate = transferDate;
+        this.description = description;
+        this.weight = weight;
+        this.product = product;
+        this.numberOfProducts = numberOfProducts;
+        this.status = status;
+    }
+
+
 }
