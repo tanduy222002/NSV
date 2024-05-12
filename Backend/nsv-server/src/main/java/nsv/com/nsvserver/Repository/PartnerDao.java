@@ -17,4 +17,7 @@ public interface PartnerDao {
     PartnerDetailDto getPartnerDetailById(Integer id);
 
     long countGetStatisticWithFilter(String name, String phone);
+
+    public List<?> getTransactionsOfPartnerById(Integer id, Integer pageIndex, Integer pageSize);
+
 }

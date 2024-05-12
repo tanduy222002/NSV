@@ -36,6 +36,11 @@ public class PartnerDetailDto {
     @Column(name = "fax_number")
     private String faxNumber;
 
+    @Column(name = "email")
+    private String email;
+
+
+
     @JsonProperty("total_transaction")
     private long totalTransaction;
 
@@ -49,7 +54,7 @@ public class PartnerDetailDto {
         this.phone = phone;
     }
 
-    public PartnerDetailDto(Integer ID, String name, String phone, Address address,  String bankAccount, String taxNumber, String faxNumber, long totalTransaction, Double totalTransactionAmount) {
+    public PartnerDetailDto(Integer ID, String name, String phone, String email, Address address,  String bankAccount, String taxNumber, String faxNumber, long totalTransaction, Double totalTransactionAmount) {
         this.ID = ID;
         this.name = name;
         this.phone = phone;
@@ -57,6 +62,7 @@ public class PartnerDetailDto {
         this.addressString = ConvertUtil.convertAddressToString(address);
         this.bankAccount = bankAccount;
         this.taxNumber=taxNumber;
+        this.email = email;
         this.faxNumber=faxNumber;
         this.totalTransaction=totalTransaction;
         this.totalTransactionAmount=totalTransactionAmount;
