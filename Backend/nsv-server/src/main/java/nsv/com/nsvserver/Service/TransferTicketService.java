@@ -68,7 +68,7 @@ public class TransferTicketService {
 
         if (createDebtDto != null) {
             Debt debt = new Debt();
-            debt.setAmount(createDebtDto.getValue());
+            debt.setAmount(-createDebtDto.getValue());
             debt.setNote(createDebtDto.getDescription());
             debt.setCreateDate(new Date());
             debt.setDueDate(createDebtDto.getDueDate());
