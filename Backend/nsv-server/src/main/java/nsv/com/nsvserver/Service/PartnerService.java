@@ -74,4 +74,12 @@ public class PartnerService {
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,transactions);
     }
 
+
+    public PageDto getPartnerDebtById(Integer pageIndex, Integer pageSize, Integer id, Boolean isPaid){
+        List<DebtDetailDto> debts
+                = partnerDaoImpl.getDebtsOfPartnerById(pageIndex, pageSize, id, isPaid);
+        long count = partnerDaoImpl.countDebtsOfPartnerById(pageIndex, pageSize, id, isPaid);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,debts);
+    }
+
 }

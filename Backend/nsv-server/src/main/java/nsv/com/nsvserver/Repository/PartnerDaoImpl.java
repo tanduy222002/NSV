@@ -3,6 +3,7 @@ package nsv.com.nsvserver.Repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import nsv.com.nsvserver.Dto.DebtDetailDto;
 import nsv.com.nsvserver.Dto.PartnerDetailDto;
 import nsv.com.nsvserver.Dto.SearchPartnerDto;
 import nsv.com.nsvserver.Dto.TransferTicketDto;
@@ -239,6 +240,49 @@ public class PartnerDaoImpl implements PartnerDao{
         query.setParameter("id", id);
 
         return (long)query.getSingleResult();
+    }
+
+    @Override
+    public List<DebtDetailDto> getDebtsOfPartnerById(Integer pageIndex, Integer pageSize, Integer partnerId, Boolean isPaid){
+        StringBuilder queryString = new StringBuilder(
+                " SELECT new nsv.com.nsvserver.Dto.DebtDetailDto(t.name, d.amount, d.createDate, d.dueDate, d.isPaid, d.note, d.unit) " +
+                        "FROM debt d left join d.transferTicket as t join t.partner as p on p.id=:partnerId "
+        );
+
+        if(isPaid!=null){
+            queryString.append(" WHERE d.isPaid=: isPaid");
+        }
+        Query query= entityManager.createQuery(queryString.toString());
+
+        if(isPaid!=null){
+            query.setParameter("isPaid", isPaid);
+        }
+        query.setParameter("partnerId",partnerId);
+
+        return query.setFirstResult((pageIndex-1)*pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    @Override
+    public long countDebtsOfPartnerById(Integer pageIndex, Integer pageSize, Integer partnerId, Boolean isPaid){
+        StringBuilder queryString = new StringBuilder(
+                """
+                SELECT COUNT(d.id) FROM debt d join d.transferTicket as t join t.partner as p on p.id=:partnerId """
+        );
+
+        if(isPaid!=null){
+            queryString.append(" WHERE d.isPaid =:isPaid");
+        }
+        Query query= entityManager.createQuery(queryString.toString());
+
+        if(isPaid!=null){
+            query.setParameter("isPaid", isPaid);
+        }
+
+        query.setParameter("partnerId",partnerId);
+
+        return (long) query.getSingleResult();
     }
 
 }
