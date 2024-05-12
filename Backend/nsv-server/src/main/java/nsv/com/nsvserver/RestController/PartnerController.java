@@ -1,19 +1,16 @@
 package nsv.com.nsvserver.RestController;
 
-import io.swagger.v3.oas.annotations.OpenAPI31;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.CreatePartnerDto;
 import nsv.com.nsvserver.Dto.PageDto;
-import nsv.com.nsvserver.Entity.Partner;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -87,4 +84,12 @@ public class PartnerController {
     {
         return ResponseEntity.ok(partnerService.getPartnerDebtById(pageIndex, pageSize,id, isPaid));
     }
+
+//    @GetMapping("/test")
+//    @Secured({ "ROLE_MANAGER", "ROLE_EMPLOYEE" })
+//    @Operation(description = "get partners with statistics information ")
+//    public ResponseEntity<?> getTest()
+//    {
+//        return ResponseEntity.ok("ok");
+//    }
 }
