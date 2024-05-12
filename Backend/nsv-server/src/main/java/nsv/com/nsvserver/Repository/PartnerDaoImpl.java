@@ -6,11 +6,9 @@ import jakarta.persistence.Query;
 import nsv.com.nsvserver.Dto.PartnerDetailDto;
 import nsv.com.nsvserver.Dto.SearchPartnerDto;
 import nsv.com.nsvserver.Dto.TransferTicketDto;
-import nsv.com.nsvserver.Entity.TransferTicket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -167,16 +165,80 @@ public class PartnerDaoImpl implements PartnerDao{
     }
 
     @Override
-    public List<TransferTicketDto> getTransactionsOfPartnerById(Integer id, Integer pageIndex, Integer pageSize) {
+    public List<TransferTicketDto> getTransactionsOfPartnerById( Integer pageIndex, Integer pageSize, Integer id, String name, Boolean isPaid) {
         StringBuilder queryString = new StringBuilder(
-                "Select New nsv.com.nsvserver.Dto.TransferTicketDto(tt.id,tt.name,tt.transportDate,tt.description) FROM Partner p " +
-                        "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id " +
-                        "GROUP BY p.id,profile.name,profile.phoneNumber,a,partner.bankAccount, partner.taxNumber, partner.faxNumber  "
-
-
+                "Select New nsv.com.nsvserver.Dto.TransferTicketDto( tt.id,tt.name,tt.transportDate,tt.description, SUM(b.weight), COUNT(DISTINCT b.id), tt.status, tt.type, SUM(b.weight * b.price) ) " +
+                        " FROM Partner p " +
+                        "left join p.transferTickets as tt left join tt.debt as debt left join tt.bins as b WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id "
         );
-        return new ArrayList<>();
 
+
+
+        if(name!=null){
+            queryString.append(" AND tt.name LIKE:namePattern");
+
+        }
+        if(isPaid!=null){
+            if(isPaid) {
+                queryString.append(" AND (debt.isPaid IS NULL or debt.isPaid = TRUE)");
+            }else{
+                queryString.append(" AND debt.isPaid = FALSE ");
+            }
+        }
+
+        queryString.append(" GROUP BY tt.id,tt.name,tt.transportDate,tt.description, tt.status,tt.type ");
+
+        queryString.append(" ORDER BY tt.transportDate DESC");
+
+
+        Query query = entityManager.createQuery(queryString.toString());
+
+        if(name!=null){
+            query.setParameter("namePattern","%"+name+"%");
+
+        }
+
+        query.setParameter("id", id);
+
+        return query.setFirstResult((pageIndex-1)*pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    @Override
+    public long countTransactionsOfPartnerById(Integer pageIndex, Integer pageSize, Integer id, String name, Boolean isPaid) {
+        StringBuilder queryString = new StringBuilder(
+                "Select COUNT(tt.id)" +
+                        " FROM Partner p" +
+                        " left join p.transferTickets as tt left join tt.debt as debt WHERE (tt.status IS NULL or tt.status='APPROVED') AND p.id =:id "
+        );
+
+
+
+        if(name!=null){
+            queryString.append(" AND tt.name LIKE:namePattern");
+
+        }
+        if(isPaid!=null){
+            if(isPaid) {
+                queryString.append(" AND (debt.isPaid IS NULL or debt.isPaid = TRUE)");
+            }else{
+                queryString.append(" AND debt.isPaid = FALSE ");
+            }
+        }
+
+
+
+        Query query = entityManager.createQuery(queryString.toString());
+
+        if(name!=null){
+            query.setParameter("namePattern","%"+name+"%");
+
+        }
+
+        query.setParameter("id", id);
+
+        return (long)query.getSingleResult();
     }
 
 }

@@ -491,10 +491,6 @@ public class TransferTicketService {
         return dto;
     }
 
-//    public <T> getTransactionOfPartnerById(Integer id){
-//
-//
-//
-//    }
+
 
 }
