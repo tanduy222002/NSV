@@ -3,6 +3,7 @@ package nsv.com.nsvserver.Service;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Repository.AddressRepository;
 import nsv.com.nsvserver.Repository.ProfileDao;
+import nsv.com.nsvserver.Util.ConvertUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import nsv.com.nsvserver.Entity.*;
@@ -84,9 +85,17 @@ public class EmployeeService {
     }
 
     public EmployeeDto getEmployeeById(Integer id){
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        Employee employee  = employeeOptional.orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
-        return createEmployeeDto(employee.getProfile());
+        Profile profile = profileDaoImpl.findOneWithEagerLoading(id).orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
+
+        return createEmployeeDto(profile);
+    }
+
+
+    @Transactional
+    public void updateEmployeeStatus(Integer id){
+        Profile profile = profileDaoImpl.findOneWithEagerLoading(id).orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
+        Employee employee = profile.getEmployee();
+
     }
 
 
@@ -101,6 +110,8 @@ public class EmployeeService {
         Address address = profile.getAddress();
         employeeDto.setAddresses(address);
         employeeDto.setRoles(profile.getEmployee().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
+        employeeDto.setEmployeeId(profile.getEmployee().getId());
+        employeeDto.setAddress(ConvertUtil.convertAddressToString(address));
         return employeeDto;
     }
 
