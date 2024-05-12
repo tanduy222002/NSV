@@ -8,16 +8,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Service.AuthService;
+import nsv.com.nsvserver.Dto.EmployeeDto;
+import nsv.com.nsvserver.Dto.PageDto;
+import nsv.com.nsvserver.Dto.ProfileDto;
 import nsv.com.nsvserver.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Validated
