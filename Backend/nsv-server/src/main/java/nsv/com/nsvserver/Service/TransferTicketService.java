@@ -72,7 +72,7 @@ public class TransferTicketService {
             debt.setNote(createDebtDto.getDescription());
             debt.setCreateDate(new Date());
             debt.setDueDate(createDebtDto.getDueDate());
-            debt.setName(createDebtDto.getName());
+            debt.setName("Phiếu nợ "+importTicketDto.getName().toLowerCase());
             transferTicket.addDebt(debt);
         }
 
@@ -217,7 +217,7 @@ public class TransferTicketService {
             debt.setNote(createDebtDto.getDescription());
             debt.setCreateDate(new Date());
             debt.setDueDate(createDebtDto.getDueDate());
-            debt.setName(createDebtDto.getName());
+            debt.setName("Phiếu nợ "+exportTicketDto.getName().toLowerCase());
             transferTicket.addDebt(debt);
         }
 
@@ -380,7 +380,8 @@ public class TransferTicketService {
             debtDto.setIsPaid(debt.getIsPaid());
             debtDto.setDescription(debt.getNote());
             debtDto.setValue(debt.getAmount());
-            debtDto.setName("Phiếu nợ " + ticket.getName());
+            debtDto.setName(debt.getName());
+            debtDto.setPaidDate(debt.getPaidDate());
 
             dto.setDebt(debtDto);
         }
