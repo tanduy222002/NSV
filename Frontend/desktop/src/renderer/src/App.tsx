@@ -22,7 +22,8 @@ import {
     ImportTicketDetailPage,
     WarehouseDetailPage,
     WarehouseSlotDetailPage,
-    ExportTicketDetailPage
+    ExportTicketDetailPage,
+    PartnerDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -124,6 +125,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/partner"
                                     element={<PartnerPage />}
+                                />
+                                <Route
+                                    path="/partner/:id"
+                                    element={<PartnerDetailPage />}
                                 />
                             </Route>
                         </Routes>

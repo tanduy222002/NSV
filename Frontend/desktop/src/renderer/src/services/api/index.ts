@@ -32,6 +32,8 @@ import { getImportTicketDetail } from './import/getImportTicketDetail';
 import { approveImportTicket } from './import/approveImportTicket';
 import { getExportTicketDetail } from './export/getExportTicketDetail';
 import { approveExportTicket } from './export/approveExportTicket';
+import { getPartnerList } from './partner/getPartnerList';
+import { getPartnerDetail } from './partner/getPartnerDetail';
 
 export {
     makeLoginRequest,
@@ -67,5 +69,7 @@ export {
     getImportTicketDetail,
     approveImportTicket,
     getExportTicketDetail,
-    approveExportTicket
+    approveExportTicket,
+    getPartnerList,
+    getPartnerDetail
 };

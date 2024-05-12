@@ -42,7 +42,7 @@ const firstSectionItems = [
         path: '/product'
     },
     {
-        title: 'Khách hàng',
+        title: 'Đối tác',
         icon: <RiUserSettingsLine />,
         path: '/partner'
     }
