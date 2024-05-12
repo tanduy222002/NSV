@@ -2,6 +2,8 @@ package nsv.com.nsvserver.Repository;
 
 import nsv.com.nsvserver.Dto.PartnerDetailDto;
 import nsv.com.nsvserver.Dto.SearchPartnerDto;
+import nsv.com.nsvserver.Dto.TicketDetailDto;
+import nsv.com.nsvserver.Dto.TransferTicketDto;
 import nsv.com.nsvserver.Entity.Profile;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public interface PartnerDao {
 
     long countGetStatisticWithFilter(String name, String phone);
 
-    public List<?> getTransactionsOfPartnerById(Integer id, Integer pageIndex, Integer pageSize);
+    public List<TransferTicketDto> getTransactionsOfPartnerById(Integer pageIndex, Integer pageSize,Integer id,  String name, Boolean isPaid);
 
+    long countTransactionsOfPartnerById(Integer pageIndex, Integer pageSize, Integer id, String name, Boolean isPaid);
 }

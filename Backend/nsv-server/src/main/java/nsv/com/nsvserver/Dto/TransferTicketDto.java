@@ -36,5 +36,15 @@ public class TransferTicketDto {
         this.status = status;
     }
 
-
+    public TransferTicketDto(Integer id, String name, Date transferDate, String description, double weight, long numberOfProducts, String status, String type, Double value) {
+        this.id = id;
+        this.name = name;
+        this.transferDate = transferDate;
+        this.description = description;
+        this.weight = weight;
+        this.numberOfProducts = Math.toIntExact(numberOfProducts);
+        this.status = status;
+        this.type = type;
+        this.value = value;
+    }
 }

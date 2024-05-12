@@ -66,4 +66,12 @@ public class PartnerService {
     public PartnerDetailDto getPartnerDetailById(Integer id){
         return partnerDaoImpl.getPartnerDetailById(id);
     }
+
+    public PageDto getPartnerTransactionById(Integer pageIndex, Integer pageSize, Integer id, String name, Boolean isPaid){
+        List<TransferTicketDto> transactions=
+                partnerDaoImpl.getTransactionsOfPartnerById(pageIndex, pageSize, id, name, isPaid);
+        long count = partnerDaoImpl.countTransactionsOfPartnerById(pageIndex, pageSize, id, name, isPaid);
+        return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,transactions);
+    }
+
 }

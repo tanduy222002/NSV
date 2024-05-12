@@ -62,4 +62,17 @@ public class PartnerController {
     ){
         return ResponseEntity.ok(partnerService.getPartnerDetailById(id));
     }
+
+    @GetMapping("/{id}/transactions")
+    @Operation(description = "get partners with statistics information ")
+    public ResponseEntity<?> get(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+            @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean isPaid
+    )
+    {
+        return ResponseEntity.ok(partnerService.getPartnerTransactionById(pageIndex, pageSize,id, name, isPaid));
+    }
 }
