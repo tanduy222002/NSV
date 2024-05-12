@@ -2,6 +2,7 @@ package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateExportTransferTicketDto {
+    @NotBlank(message = "name is mandatory")
     private String name;
     @JsonProperty("customer_id")
     @NotNull(message = "Customer id is mandatory")

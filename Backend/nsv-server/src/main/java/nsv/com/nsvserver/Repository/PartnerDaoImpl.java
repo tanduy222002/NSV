@@ -245,8 +245,9 @@ public class PartnerDaoImpl implements PartnerDao{
     @Override
     public List<DebtDetailDto> getDebtsOfPartnerById(Integer pageIndex, Integer pageSize, Integer partnerId, Boolean isPaid){
         StringBuilder queryString = new StringBuilder(
-                " SELECT new nsv.com.nsvserver.Dto.DebtDetailDto(t.name, d.amount, d.createDate, d.dueDate, d.isPaid, d.note, d.unit) " +
-                        "FROM debt d left join d.transferTicket as t join t.partner as p on p.id=:partnerId "
+                        """ 
+                        SELECT new nsv.com.nsvserver.Dto.DebtDetailDto(d.id, d.name, d.amount, d.createDate, d.dueDate, d.isPaid, d.note, d.unit, d.paidDate) 
+                        FROM debt d left join d.transferTicket as t join t.partner as p on p.id=:partnerId """
         );
 
         if(isPaid!=null){

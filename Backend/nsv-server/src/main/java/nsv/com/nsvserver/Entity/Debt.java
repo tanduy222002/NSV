@@ -2,12 +2,14 @@ package nsv.com.nsvserver.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity(name = "debt")
+@NoArgsConstructor
 public class Debt {
     @Id
     @Column(name = "id")
@@ -31,6 +33,9 @@ public class Debt {
 
     @Column(name = "due_date")
     private Date dueDate;
+
+    @Column(name = "paid_date")
+    private Date paidDate;
 
     @Column(name = "unit")
     private String unit= "VND";
