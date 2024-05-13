@@ -17,9 +17,6 @@ import java.util.*;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-import static nsv.com.nsvserver.Entity.QBinSlot.binSlot;
-
 @Service
 public class TransferTicketService {
 

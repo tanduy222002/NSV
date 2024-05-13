@@ -9,6 +9,7 @@ import nsv.com.nsvserver.Exception.EmailNotFoundException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.OtpExpiredException;
 import nsv.com.nsvserver.Exception.OtpNotMatchIdentifierException;
+import nsv.com.nsvserver.NsvServerApplication;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
 import nsv.com.nsvserver.Repository.OtpRepository;
 import nsv.com.nsvserver.Repository.RefreshTokenRepository;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,10 +61,12 @@ public class ForgotPasswordService {
         emailDetailDto.setRecipient(otpRequest.getIdentifier());
         emailDetailDto.setSubject("Otp for reset password");
         // Read the HTML template into a String variable
-        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
-        String absolutePath = currentPath.toAbsolutePath().toString();
+        URL resourceUrl = NsvServerApplication.class.getResource("/templates/generate-otp-template.html");
+        Path path= Paths.get(resourceUrl.toURI());
+//        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
+//        String absolutePath = currentPath.toAbsolutePath().toString();
 
-        String htmlContent = readHtmlTemplateFromFile(absolutePath);
+        String htmlContent = readHtmlTemplateFromFile(path.toString());
         htmlContent=htmlContent.replace("{User}", emailDetailDto.getRecipient());
         htmlContent=htmlContent.replace("{OTP}",otp.getCode());
 
