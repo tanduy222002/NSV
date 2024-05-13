@@ -4,9 +4,11 @@ import { FaRegCalendarTimes } from 'react-icons/fa';
 import { FaCircleNotch } from 'react-icons/fa';
 import { TbTicket } from 'react-icons/tb';
 import { GoNote } from 'react-icons/go';
+import { MdMoneyOff } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { isEqual } from 'lodash';
 import {
     UserInfo,
     Button,
@@ -18,7 +20,10 @@ import {
 import { useLocalStorage } from '@renderer/hooks';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
 import { ExportTicketDetailMainSection } from '@renderer/features/export';
-import { getExportTicketDetail } from '@renderer/services/api';
+import {
+    getExportTicketDetail,
+    removeTicketDebt
+} from '@renderer/services/api';
 import { ColumnType } from '@renderer/components/TableView';
 import { cn } from '@renderer/utils/util';
 import { InfoPopup, ResultPopup } from '@renderer/types/common';
@@ -27,6 +32,10 @@ import {
     approveTicketSuccessPopup
 } from '@renderer/constants/export';
 import { approveExportTicket } from '@renderer/services/api';
+import {
+    removeTicketDebtPopupData,
+    removeTicketDebtSuccessPopupData
+} from '@renderer/constants/debt';
 
 enum TicketDetailSection {
     Batch = 'Batch',
@@ -81,7 +90,7 @@ const ExportTicketDetailPage = () => {
     const closeResultPopup = () => setResultPopup(null);
 
     const [viewedSection, setViewedSection] = useState(
-        TicketDetailSection.Batch
+        TicketDetailSection.Debt
     );
 
     const { id } = useParams();
@@ -129,13 +138,35 @@ const ExportTicketDetailPage = () => {
         refetch();
     };
 
+    const handleRemoveDebtConfirm = async () => {
+        await removeTicketDebt({
+            token: accessToken,
+            ticketId: id as string
+        });
+        closeInfoPopup();
+        setResultPopup(removeTicketDebtSuccessPopupData);
+        refetch();
+    };
+
+    const handleConfirmAction = async () => {
+        if (isEqual(infoPopup, approveTicketPopupInfo)) {
+            await handleApproveExportTicket();
+        }
+        if (isEqual(infoPopup, removeTicketDebtPopupData)) {
+            await handleRemoveDebtConfirm();
+        }
+    };
+
+    const openRemoveDebtConfirmPopup = () =>
+        setInfoPopup(removeTicketDebtPopupData);
+
     return (
         <div className="w-full px-5 py-5 relative">
             {infoPopup && (
                 <ConfirmationPopup
                     title={infoPopup.title}
                     body={infoPopup.body}
-                    confirmAction={handleApproveExportTicket}
+                    confirmAction={handleConfirmAction}
                     cancelAction={closeInfoPopup}
                 />
             )}
@@ -178,18 +209,6 @@ const ExportTicketDetailPage = () => {
                         <Button
                             className={cn(
                                 'px-2 py-1 border rounded-md font-semibold w-fit',
-                                viewedSection === TicketDetailSection.Batch
-                                    ? 'bg-sky-800 text-white'
-                                    : 'border-sky-800 text-sky-800'
-                            )}
-                            text="Lô hàng"
-                            action={() =>
-                                setViewedSection(TicketDetailSection.Batch)
-                            }
-                        />
-                        <Button
-                            className={cn(
-                                'px-2 py-1 border rounded-md font-semibold w-fit',
                                 viewedSection === TicketDetailSection.Debt
                                     ? 'bg-sky-800 text-white'
                                     : 'border-sky-800 text-sky-800'
@@ -197,6 +216,18 @@ const ExportTicketDetailPage = () => {
                             text="Công nợ"
                             action={() =>
                                 setViewedSection(TicketDetailSection.Debt)
+                            }
+                        />
+                        <Button
+                            className={cn(
+                                'px-2 py-1 border rounded-md font-semibold w-fit',
+                                viewedSection === TicketDetailSection.Batch
+                                    ? 'bg-sky-800 text-white'
+                                    : 'border-sky-800 text-sky-800'
+                            )}
+                            text="Lô hàng"
+                            action={() =>
+                                setViewedSection(TicketDetailSection.Batch)
                             }
                         />
                         <Button
@@ -270,6 +301,16 @@ const ExportTicketDetailPage = () => {
                                             : 'text-red-500'
                                     }
                                 />
+                                {!data?.debt?.is_paid && (
+                                    <Button
+                                        icon={
+                                            <MdMoneyOff className="w-[20px] h-[20px]" />
+                                        }
+                                        className="border border-amber-200 text-amber-200 hover:bg-amber-50 rounded-md"
+                                        text="Gạch nợ"
+                                        action={openRemoveDebtConfirmPopup}
+                                    />
+                                )}
                             </div>
                         )
                     )}

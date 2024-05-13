@@ -36,6 +36,7 @@ import { getPartnerList } from './partner/getPartnerList';
 import { getPartnerDetail } from './partner/getPartnerDetail';
 import { getPartnerDebtDetail } from './partner/getPartnerDebtDetail';
 import { getPartnerTransactionDetail } from './partner/getPartnerTransactionDetail';
+import { removeTicketDebt } from './debt/removeTicketDebt';
 
 export {
     makeLoginRequest,
@@ -75,5 +76,6 @@ export {
     getPartnerList,
     getPartnerDetail,
     getPartnerDebtDetail,
-    getPartnerTransactionDetail
+    getPartnerTransactionDetail,
+    removeTicketDebt
 };
