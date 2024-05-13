@@ -382,6 +382,7 @@ public class TransferTicketService {
             debtDto.setValue(debt.getAmount());
             debtDto.setName(debt.getName());
             debtDto.setPaidDate(debt.getPaidDate());
+            debtDto.setId(debt.getId());
 
             dto.setDebt(debtDto);
         }
