@@ -32,7 +32,7 @@ public class Employee {
     private String status;
 
     @ManyToMany(fetch = FetchType.EAGER ,cascade = {CascadeType.DETACH,
-            CascadeType.MERGE,CascadeType.PERSIST
+            CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE
     })
     @JoinTable(name = "Employee_Role",
             joinColumns = @JoinColumn(name = "employee_id"),
@@ -81,7 +81,7 @@ public class Employee {
     public void setOtp(Otp otp) {
         this.otp = otp;
         if(otp != null){
-        otp.setEmployee(this);
+           otp.setEmployee(this);
         }
     }
 

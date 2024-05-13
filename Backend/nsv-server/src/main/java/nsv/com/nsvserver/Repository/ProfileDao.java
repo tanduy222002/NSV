@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProfileDao {
 
-    public List<Profile> findAllWithEagerLoading(Integer page, Integer pageSize);
+    public List<Profile> findAllWithEagerLoading(Integer page, Integer pageSize,String name, String status);
 
     Optional<Profile> findOneWithEagerLoading(Integer id);
 

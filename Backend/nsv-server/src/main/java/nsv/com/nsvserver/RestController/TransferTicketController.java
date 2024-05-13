@@ -32,7 +32,7 @@ public class TransferTicketController {
 
     @PostMapping("/import_tickets")
     @Operation(summary = "Create import ticket")
-    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
+//    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     public ResponseEntity<?> createImportTicket(@Valid @RequestBody CreateTransferTicketDto dto){
         String message= transferTicketService.createImportTransferTicket(dto);
         Map<String, String> responseData = new HashMap<>();

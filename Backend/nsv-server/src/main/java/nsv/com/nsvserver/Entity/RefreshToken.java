@@ -23,7 +23,7 @@ public class RefreshToken {
     public RefreshToken() {
     }
 
-    @OneToOne(cascade = {CascadeType.DETACH,
+    @OneToOne(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,
             CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH
     })
     @JoinColumn(name = "user_id",referencedColumnName = "id")

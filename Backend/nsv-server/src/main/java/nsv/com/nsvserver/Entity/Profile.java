@@ -35,7 +35,7 @@ public class Profile {
     private Employee employee;
 
 
-    @OneToOne(mappedBy="profile",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy="profile",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
     private Address address;
     public Profile(String name, String phoneNumber, String email, String gender, Employee employee) {

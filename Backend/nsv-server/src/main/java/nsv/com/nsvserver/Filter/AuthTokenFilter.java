@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nsv.com.nsvserver.Entity.EmployeeDetail;
+import nsv.com.nsvserver.Exception.AccountSuspendedException;
 import nsv.com.nsvserver.Service.EmployeeDetailService;
 import nsv.com.nsvserver.Service.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 String userName = jwtTokenService.getUserNameFromJWT(jwt);
 
                 EmployeeDetail employeeDetail = employeeDetailService.loadUserByUsername(userName);
+                if(employeeDetail.getEmployee().getStatus().equals("SUSPENDED")){
+                    throw new AccountSuspendedException();
+                }
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(

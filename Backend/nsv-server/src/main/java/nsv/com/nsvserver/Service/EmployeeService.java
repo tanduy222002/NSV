@@ -1,6 +1,7 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
+import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Repository.AddressRepository;
 import nsv.com.nsvserver.Repository.ProfileDao;
 import nsv.com.nsvserver.Util.ConvertUtil;
@@ -43,9 +44,15 @@ public class EmployeeService {
         this.profileDaoImpl = profileDaoImpl;
     }
 
-    public PageDto getAllEmployeeProfile(Integer page, Integer pageSize){
+    @Transactional
+    public void updateEmployeeStatus(Integer id, String status){
+        Employee employee = employeeRepository.findById(id).orElseThrow(()->new NotFoundException("No employee found for id " + id));
+        employee.setStatus(status);
+    }
+    public PageDto getAllEmployeeProfile(Integer page, Integer pageSize, String name, String status){
         System.out.println("getAllEmployeeProfile");
-        List<Profile> profiles = profileDaoImpl.findAllWithEagerLoading(page, pageSize);
+        List<Profile> profiles = profileDaoImpl.findAllWithEagerLoading(page, pageSize,name,status);
+        System.out.println("before mapping");
         List<EmployeeDto> results = profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
         long totalCount = profileDaoImpl.getTotalCount();
         return new PageDto(Math.ceil((double) totalCount / pageSize), totalCount, page, results);
@@ -56,20 +63,33 @@ public class EmployeeService {
         Employee employee=employeeRepository.findById(id).orElseThrow(()->new NotFoundException("Employee not found"));
         Profile profile = employee.getProfile();
         AddressDto addressDtos = profileDto.getAddresses();
-
         Address address=profile.getAddress();
-        if (address!=null)
-            addressRepository.delete(address);
-        profile.setAddress(null);
 
-        address = addressService.createAddress(
-                addressDtos.getAddress(), addressDtos.getWardId(),
-                addressDtos.getDistrictId(), addressDtos.getProvinceId());
+        if(addressDtos!=null){
+            profile.setAddress(null);
+            address = addressService.createAddress(
+                    addressDtos.getAddress(), addressDtos.getWardId(),
+                    addressDtos.getDistrictId(), addressDtos.getProvinceId());
+        }
 
-        Profile mergedProfile = new Profile(profileDto,profile.getId());
-        mergedProfile.setAddress(address);
-        address.setProfile(mergedProfile);
-        profileRepository.save(mergedProfile);
+        if(profileDto.getName()!=null){
+            profile.setName(profileDto.getName());
+        }
+        if(profileDto.getGender()!=null){
+            profile.setGender(profileDto.getGender());
+        }
+        if(profileDto.getEmail()!=null){
+            if(profileRepository.existsByEmail(profileDto.getEmail())
+                    &&!profileDto.getEmail().equals(profile.getEmail())){
+                throw new ExistsException("Email already taken");
+            }
+            profile.setEmail(profileDto.getEmail());
+        }
+        if(profileDto.getPhoneNumber()!=null){
+            profile.setPhoneNumber(profileDto.getPhoneNumber());
+        }
+
+
     }
 
     @Transactional
@@ -108,10 +128,14 @@ public class EmployeeService {
         employeeDto.setGender(profile.getGender());
         employeeDto.setStatus(profile.getEmployee().getStatus());
         Address address = profile.getAddress();
-        employeeDto.setAddresses(address);
+        if(address != null){
+            employeeDto.setAddresses(address);
+            employeeDto.setAddress(ConvertUtil.convertAddressToString(address));
+        }
+
         employeeDto.setRoles(profile.getEmployee().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         employeeDto.setEmployeeId(profile.getEmployee().getId());
-        employeeDto.setAddress(ConvertUtil.convertAddressToString(address));
+
         return employeeDto;
     }
 
