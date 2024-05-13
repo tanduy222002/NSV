@@ -85,11 +85,5 @@ public class PartnerController {
         return ResponseEntity.ok(partnerService.getPartnerDebtById(pageIndex, pageSize,id, isPaid));
     }
 
-//    @GetMapping("/test")
-//    @Secured({ "ROLE_MANAGER", "ROLE_EMPLOYEE" })
-//    @Operation(description = "get partners with statistics information ")
-//    public ResponseEntity<?> getTest()
-//    {
-//        return ResponseEntity.ok("ok");
-//    }
+
 }

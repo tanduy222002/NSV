@@ -11,6 +11,7 @@ import nsv.com.nsvserver.Exception.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,12 +70,30 @@ public class AuthExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleIHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.BAD_REQUEST.toString(),
                 e.getMessage()),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleAccountSuspendedException(AccountSuspendedException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.FORBIDDEN.toString(),
+                e.getMessage()),
+                HttpStatus.FORBIDDEN);
+    }
+
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler

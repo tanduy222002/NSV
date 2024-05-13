@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional;
 import nsv.com.nsvserver.Dto.AuthResponseDto;
 import nsv.com.nsvserver.Dto.SignUpRequestDto;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.AccountSuspendedException;
 import nsv.com.nsvserver.Exception.UserNameExistsException;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
+import nsv.com.nsvserver.Repository.ProfileRepository;
 import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import nsv.com.nsvserver.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,10 @@ public class AuthService {
 
     RefreshTokenService refreshTokenService;
 
+    ProfileRepository profileRepository;
+
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager, EmployeeRepository employeeRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenService jwtTokenService, RefreshTokenRepository refreshTokenRepository, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, EmployeeRepository employeeRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenService jwtTokenService, RefreshTokenRepository refreshTokenRepository, RefreshTokenService refreshTokenService, ProfileRepository profileRepository) {
         this.authenticationManager = authenticationManager;
         this.employeeRepository = employeeRepository;
         this.roleRepository = roleRepository;
@@ -48,6 +52,7 @@ public class AuthService {
         this.jwtTokenService = jwtTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.refreshTokenService = refreshTokenService;
+        this.profileRepository = profileRepository;
     }
 
     public AuthResponseDto authenticateUser (String userName, String password){
@@ -60,6 +65,10 @@ public class AuthService {
         EmployeeDetail employeeDetail = (EmployeeDetail) authentication.getPrincipal();
         Employee employee = employeeDetail.getEmployee();
         String jwt = jwtTokenService.generateToken(employee);
+
+        if(employeeDetail.getEmployee().getStatus().equals("SUSPENDED")){
+            throw new AccountSuspendedException();
+        }
 
         if(employee.getRefreshToken()==null){
             RefreshToken refreshToken = refreshTokenService.generateRefreshToken(employee);
@@ -83,16 +92,22 @@ public class AuthService {
             throw new UserNameExistsException("Username already exists");
         }
 
+        //Check if email is already existed
+        if (profileRepository.existsByEmail(email)){
+            throw new UserNameExistsException("Email already taken");
+        }
+
         // Create new employee
         Employee employee =new Employee(userName, encoder.encode(password));
 
         //Set roles for employee
-        if(roles==null || roles.isEmpty()){
-            roles =Arrays.asList("ROLE_EMPLOYEE");
-        }
-        else{
-            checkValidRole(roles);
-        }
+//        if(roles==null || roles.isEmpty()){
+//            roles =Arrays.asList("ROLE_EMPLOYEE");
+//        }
+//        else{
+//            checkValidRole(roles);
+//        }
+        roles =Arrays.asList("ROLE_EMPLOYEE");
         List<Role> authorization = new ArrayList<>();
         for(String role : roles){
             Optional<Role> optionalValue = Optional.ofNullable(roleRepository.findByName(role));

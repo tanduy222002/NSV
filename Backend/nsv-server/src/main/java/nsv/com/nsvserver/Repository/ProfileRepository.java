@@ -16,5 +16,7 @@ public interface ProfileRepository extends JpaRepository<Profile,Integer> {
     @Query("select p from Profile p join fetch p.employee e join fetch p.address a join fetch a.ward w join fetch w.district d join fetch d.province pv")
     public List<Profile> findAllWithEagerLoading(Integer page, Integer pageSize);
 
+    public boolean existsByEmail(String email);
+
 
 }
