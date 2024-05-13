@@ -9,6 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -48,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
         try {
-            mimeMessageHelper.setFrom("tanduy222002@gmail.com");
+            mimeMessageHelper.setFrom("duytan222002@gmail.com");
             mimeMessageHelper.setTo(emailDetailDto.getRecipient());
             mimeMessageHelper.setSubject(
                     emailDetailDto.getSubject());
@@ -72,7 +73,7 @@ public class EmailServiceImpl implements EmailService {
             // be send
             mimeMessageHelper
                     = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom("tanduy222002@gmail.com");
+            mimeMessageHelper.setFrom("duytan222002@gmail.com");
             mimeMessageHelper.setTo(emailDetailDto.getRecipient());
             mimeMessageHelper.setText(emailDetailDto.getMsgBody());
             mimeMessageHelper.setSubject(
@@ -99,6 +100,8 @@ public class EmailServiceImpl implements EmailService {
 
 
     }
+
+
 
 }
 
