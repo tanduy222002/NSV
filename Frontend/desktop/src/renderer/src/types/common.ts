@@ -19,3 +19,8 @@ export type ResultPopup = {
     body: string;
     popupType: ResultPopupType;
 };
+
+export type Location = {
+    id: number;
+    name: string;
+};

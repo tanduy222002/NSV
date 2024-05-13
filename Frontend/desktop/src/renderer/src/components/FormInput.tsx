@@ -5,7 +5,7 @@ type FormInputProps = {
     value?: string;
     name?: string;
     label: string;
-    onChange?: any;
+    onChange?: (value: any) => void;
     bg?: string;
     icon?: ReactNode;
     defaultValue?: string | number;
@@ -34,7 +34,7 @@ const FormInput = (
             <input
                 name={name}
                 type="text"
-                onChange={onChange}
+                onChange={(e) => onChange && onChange(e.target.value)}
                 value={value}
                 ref={ref}
                 defaultValue={defaultValue}

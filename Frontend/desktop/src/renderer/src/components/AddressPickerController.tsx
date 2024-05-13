@@ -19,7 +19,7 @@ const AddressPickerController = ({
                 <div>Địa chỉ</div>
             </div>
             <div className="flex items-center">
-                <div>
+                <div className="text-sm font-semibold">
                     {address &&
                         `${address?.address}, ${address?.ward?.name}, ${address?.district?.name}, ${address?.province?.name}`}
                 </div>

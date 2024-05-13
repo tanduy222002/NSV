@@ -51,15 +51,16 @@ const PartnerPage = () => {
     const navigate = useNavigate();
     const goToPartnerDetailPage = (id: number | string) =>
         navigate(`/partner/${id}`);
+    const goToCreatePartnerPage = () => navigate('/partner/create');
 
     const mapPartnerTable = (partners) =>
-        partners.map((partner) => ({
+        partners?.map((partner) => ({
             id: partner?.id,
             name: partner?.name,
             phoneNumber: partner?.phone,
             address: partner?.address_string,
             transactionValue: partner?.total_transaction_amount
-        }));
+        })) ?? [];
 
     console.log('partner data: ', data);
     return (
@@ -70,9 +71,9 @@ const PartnerPage = () => {
                 <h1 className="font-semibold text-xl">Đối tác</h1>
             </div>
             <Button
-                className="mb-5 px-2 py-1 border border-emerald-600 rounded-md text-emerald-600 text-base font-semibold w-fit"
+                className="mb-5 px-2 py-1 border border-emerald-500 rounded-md hover:bg-emerald-50 text-emerald-500 text-base font-semibold w-fit"
                 text="Thêm đối tác"
-                // action={confirmAction}
+                action={goToCreatePartnerPage}
             />
             <div className="flex gap-2 mb-5">
                 <Button

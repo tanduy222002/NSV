@@ -8,7 +8,7 @@ type ButtonProps = {
     type?: 'button' | 'submit';
     variant?: 'button' | 'icon';
     icon?: ReactNode;
-    action?: () => any;
+    action?: (() => any) | ((param: any) => void);
 };
 
 const Button = ({

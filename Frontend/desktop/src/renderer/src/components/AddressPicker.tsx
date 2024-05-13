@@ -1,9 +1,10 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, useRef } from 'react';
 import { CgCloseR } from 'react-icons/cg';
 import { useModal, useLocalStorage } from '@renderer/hooks';
 import { getProvinces, getDistricts, getWards } from '@renderer/services/api';
 import { FormInput, Button } from '@renderer/components';
 import AsyncSelectInput from './AsyncSelectInput';
+import { Address } from '@renderer/types/partner';
 
 type Location = {
     id: number;
@@ -11,7 +12,7 @@ type Location = {
 };
 
 type AddressPickerProps = {
-    updateAddressDetail: (address: any) => void;
+    updateAddressDetail: (address: Address) => void;
 };
 
 const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
@@ -22,9 +23,7 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
     const [ward, setWard] = useState<Location | null>(null);
     const updateWard = (ward: Location) => setWard(ward);
 
-    const [address, setAddress] = useState('');
-    const updateAddress = (e: ChangeEvent<HTMLInputElement>) =>
-        setAddress(e.target.value);
+    const addressDetailRef = useRef<HTMLInputElement>(null);
     const { closeModal } = useModal();
 
     const { getItem } = useLocalStorage('access-token');
@@ -55,11 +54,18 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
     };
 
     const saveAddress = () => {
+        console.log({
+            province: province,
+            district: district,
+            ward: ward,
+            address: addressDetailRef?.current?.value
+        });
+
         updateAddressDetail({
             province: province,
             district: district,
             ward: ward,
-            address: address
+            address: addressDetailRef?.current?.value as string
         });
         closeModal && closeModal();
     };
@@ -95,7 +101,7 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
                 />
                 <FormInput
                     label="Địa chỉ"
-                    onChange={updateAddress}
+                    ref={addressDetailRef}
                     bg="bg-gray-50"
                 />
                 <Button
