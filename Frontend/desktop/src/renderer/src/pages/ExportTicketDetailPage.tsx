@@ -141,7 +141,7 @@ const ExportTicketDetailPage = () => {
     const handleRemoveDebtConfirm = async () => {
         await removeTicketDebt({
             token: accessToken,
-            ticketId: id as string
+            debtId: data?.debt?.id as string as string
         });
         closeInfoPopup();
         setResultPopup(removeTicketDebtSuccessPopupData);
@@ -261,58 +261,60 @@ const ExportTicketDetailPage = () => {
                                 defaultValue="Mô tả"
                             />
                         </div>
+                    ) : data?.debt ? (
+                        <div className="space-y-5 max-w-[400px]">
+                            <DataField
+                                name={'Giá trị'}
+                                icon={<RiMoneyDollarCircleLine />}
+                                disabled={false}
+                                value={`${data?.debt?.value} ${data?.debt?.unit ?? 'VND'}`}
+                                defaultValue={'Giá trị'}
+                            />
+                            <DataField
+                                name="Ngày hết hạn"
+                                icon={<FaRegCalendarTimes />}
+                                disabled={false}
+                                value={data?.debt?.due_date}
+                                defaultValue="Ngày hết hạn"
+                            />
+                            <DataField
+                                name="Mô tả"
+                                icon={<GoNote />}
+                                disabled={false}
+                                value={data?.debt?.description}
+                                defaultValue="Mô tả"
+                            />
+                            <DataField
+                                name="Trạng thái"
+                                icon={<FaCircleNotch />}
+                                disabled={false}
+                                value={
+                                    data?.debt?.is_paid
+                                        ? 'Đã thanh toán'
+                                        : 'Chưa thanh toán'
+                                }
+                                defaultValue={'Trạng thái'}
+                                textColor={
+                                    data?.debt?.is_paid
+                                        ? 'text-emerald-500'
+                                        : 'text-red-500'
+                                }
+                            />
+                            {!data?.debt?.is_paid && (
+                                <Button
+                                    icon={
+                                        <MdMoneyOff className="w-[20px] h-[20px]" />
+                                    }
+                                    className="border border-amber-200 text-amber-200 hover:bg-amber-50 rounded-md"
+                                    text="Gạch nợ"
+                                    action={openRemoveDebtConfirmPopup}
+                                />
+                            )}
+                        </div>
                     ) : (
-                        data?.debt && (
-                            <div className="space-y-5 max-w-[400px]">
-                                <DataField
-                                    name={'Giá trị'}
-                                    icon={<RiMoneyDollarCircleLine />}
-                                    disabled={false}
-                                    value={`${data?.debt?.value} ${data?.debt?.unit ?? 'VND'}`}
-                                    defaultValue={'Giá trị'}
-                                />
-                                <DataField
-                                    name="Ngày hết hạn"
-                                    icon={<FaRegCalendarTimes />}
-                                    disabled={false}
-                                    value={data?.debt?.due_date}
-                                    defaultValue="Ngày hết hạn"
-                                />
-                                <DataField
-                                    name="Mô tả"
-                                    icon={<GoNote />}
-                                    disabled={false}
-                                    value={data?.debt?.description}
-                                    defaultValue="Mô tả"
-                                />
-                                <DataField
-                                    name="Trạng thái"
-                                    icon={<FaCircleNotch />}
-                                    disabled={false}
-                                    value={
-                                        data?.debt?.is_paid
-                                            ? 'Đã thanh toán'
-                                            : 'Chưa thanh toán'
-                                    }
-                                    defaultValue={'Trạng thái'}
-                                    textColor={
-                                        data?.debt?.is_paid
-                                            ? 'text-emerald-500'
-                                            : 'text-red-500'
-                                    }
-                                />
-                                {!data?.debt?.is_paid && (
-                                    <Button
-                                        icon={
-                                            <MdMoneyOff className="w-[20px] h-[20px]" />
-                                        }
-                                        className="border border-amber-200 text-amber-200 hover:bg-amber-50 rounded-md"
-                                        text="Gạch nợ"
-                                        action={openRemoveDebtConfirmPopup}
-                                    />
-                                )}
-                            </div>
-                        )
+                        <h1 className="text-base font-semibold text-sky-800">
+                            Không có nợ
+                        </h1>
                     )}
                 </>
             )}

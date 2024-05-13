@@ -2,18 +2,18 @@ import { makeAuthRequest } from '../makeRequest';
 
 type RemoveTicketDebtPayload = {
     token: string;
-    ticketId: string;
+    debtId: string;
 };
 
 export const removeTicketDebt = async ({
     token,
-    ticketId
+    debtId
 }: RemoveTicketDebtPayload): Promise<any> => {
     let response: any = undefined;
     try {
         response = await makeAuthRequest({
             token: token,
-            url: `/debts/${ticketId}`,
+            url: `/debts/${debtId}`,
             method: 'put',
             body: {
                 is_paid: true
