@@ -1,5 +1,5 @@
 import { login } from './auth/login';
-import { makeSignupRequest } from './auth/makeSignupRequest';
+import { signup } from './auth/signup';
 import { makeGenerateOtpRequest } from './auth/makeGenerateOtpRequest';
 import { makeRenewPasswordRequest } from './auth/makeRenewPasswordRequest';
 import { getProductList } from './product/getProductList';
@@ -40,7 +40,7 @@ import { removeTicketDebt } from './debt/removeTicketDebt';
 
 export {
     login,
-    makeSignupRequest,
+    signup,
     makeGenerateOtpRequest,
     makeRenewPasswordRequest,
     getProductList,

@@ -7,16 +7,14 @@ type SignupPayload = {
     roles: string[];
 };
 
-export const makeSignupRequest = async ({
+export const signup = async ({
     username,
     password,
     email,
     roles = ['ROLE_EMPLOYEE', 'ROLE_MANAGER']
 }: SignupPayload) => {
-    console.log('payload: ', username, password, email);
-    let response = undefined;
     try {
-        response = await makeRequest({
+        const response = await makeRequest({
             url: '/auth/sign-up',
             method: 'post',
             body: {
@@ -27,9 +25,8 @@ export const makeSignupRequest = async ({
                 confirm_password: password
             }
         });
-        console.log('res: ', response);
+        return response;
     } catch (err) {
         console.log('error: ', err);
     }
-    return response;
 };

@@ -70,11 +70,12 @@ const LoginForm = () => {
             setResultPopup(LoginError.Internal);
             return;
         }
+
         // update user
-        setAccessToken(response?.token);
-        setRefreshToken(response?.refresh_token);
+        setAccessToken(response?.data?.token);
+        setRefreshToken(response?.data?.refresh_token);
         console.log('login res: ', response);
-        const { sub } = parseJwt(response?.token);
+        const { sub } = parseJwt(response?.data?.token);
         dispatch(
             loggedIn({ value: { username: sub, email: '', phoneNo: '' } })
         );
