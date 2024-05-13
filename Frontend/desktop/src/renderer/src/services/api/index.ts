@@ -1,4 +1,4 @@
-import { makeLoginRequest } from './auth/makeLoginRequest';
+import { login } from './auth/login';
 import { makeSignupRequest } from './auth/makeSignupRequest';
 import { makeGenerateOtpRequest } from './auth/makeGenerateOtpRequest';
 import { makeRenewPasswordRequest } from './auth/makeRenewPasswordRequest';
@@ -39,7 +39,7 @@ import { getPartnerTransactionDetail } from './partner/getPartnerTransactionDeta
 import { removeTicketDebt } from './debt/removeTicketDebt';
 
 export {
-    makeLoginRequest,
+    login,
     makeSignupRequest,
     makeGenerateOtpRequest,
     makeRenewPasswordRequest,

@@ -5,13 +5,9 @@ type LoginPayload = {
     password: string;
 };
 
-export const makeLoginRequest = async ({
-    username,
-    password
-}: LoginPayload) => {
-    let response = undefined;
+export const login = async ({ username, password }: LoginPayload) => {
     try {
-        response = await makeRequest({
+        const response = await makeRequest({
             url: '/auth/sign-in',
             method: 'post',
             body: {
@@ -19,8 +15,8 @@ export const makeLoginRequest = async ({
                 password: password
             }
         });
+        return response;
     } catch (err) {
         console.log('login error: ', err);
     }
-    return response;
 };

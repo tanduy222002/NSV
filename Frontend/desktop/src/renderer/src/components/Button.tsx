@@ -20,7 +20,7 @@ const Button = ({
         <button
             type={type}
             className={cn(
-                'flex items-center gap-2 px-2 py-1 border rounded-md font-semibold w-fit',
+                'flex items-center justify-center gap-2 px-2 py-1 border rounded-md font-semibold w-fit',
                 className
             )}
             onClick={action}

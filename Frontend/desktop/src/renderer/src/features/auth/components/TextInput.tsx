@@ -23,12 +23,12 @@ const TextInput = ({
         <div className="flex flex-col gap-1 relative">
             <label
                 htmlFor={label}
-                className="font-semibold text-base text-[#1A3389]"
+                className="font-semibold text-base text-sky-800"
             >
                 {placeHolder}
             </label>
             <input
-                className="outline-none border border-[#1A3389] text-[#1A3389] font-semibold rounded-md text-sm px-4 py-2"
+                className="outline-none border border-sky-800 text-sky-800 font-semibold rounded-md text-sm px-4 py-2"
                 type={type}
                 placeholder={placeHolder}
                 name={name}
