@@ -32,7 +32,7 @@ public class Employee {
     private String status;
 
     @ManyToMany(fetch = FetchType.EAGER ,cascade = {CascadeType.DETACH,
-            CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE
+            CascadeType.MERGE,CascadeType.PERSIST
     })
     @JoinTable(name = "Employee_Role",
             joinColumns = @JoinColumn(name = "employee_id"),

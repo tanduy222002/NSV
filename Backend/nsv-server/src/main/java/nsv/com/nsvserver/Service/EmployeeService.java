@@ -106,6 +106,7 @@ public class EmployeeService {
     @Transactional
     public void deleteEmployee(Integer id){
         if(employeeRepository.existsById(id)){
+            System.out.println("Before delete");
             employeeRepository.deleteById(id);
         }
         else{

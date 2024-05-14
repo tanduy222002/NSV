@@ -302,7 +302,7 @@ public class TransferTicketService {
         if (transferTicket.getStatus().equals("APPROVED")) {
             throw new TicketStatusMismatchException();
         }
-        System.out.println(transferTicket.getBins().size());
+
 
         transferTicket.setStatus("APPROVED");
 
