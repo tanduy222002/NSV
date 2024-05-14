@@ -2,16 +2,14 @@ package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Exception.ExistsException;
-import nsv.com.nsvserver.Repository.AddressRepository;
-import nsv.com.nsvserver.Repository.ProfileDao;
+import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Util.ConvertUtil;
+import nsv.com.nsvserver.Util.EmployeeRoles;
 import org.springframework.transaction.annotation.Transactional;
 
 import nsv.com.nsvserver.Entity.*;
 
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.EmployeeRepository;
-import nsv.com.nsvserver.Repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
+    private final RoleRepository roleRepository;
     private EmployeeRepository employeeRepository;
 
     private ProfileRepository profileRepository;
@@ -36,12 +35,24 @@ public class EmployeeService {
 
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl) {
+    public EmployeeService(EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl, RoleRepository roleRepository) {
         this.employeeRepository = employeeRepository;
         this.profileRepository = profileRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
         this.profileDaoImpl = profileDaoImpl;
+        this.roleRepository = roleRepository;
+    }
+
+    @Transactional
+    public void updateEmployeeRole(Integer id, EmployeeRoles role){
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                ()-> new NotFoundException("Employee not found with id: "+id));
+        List<Role> roles = employee.getRoles();
+        Role current = roles.get(0);
+        Role newRole = roleRepository.findByName(role.name());
+        employee.removeRole(current);
+        employee.addRole(newRole);
     }
 
     @Transactional

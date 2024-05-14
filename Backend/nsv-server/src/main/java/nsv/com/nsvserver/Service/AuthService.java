@@ -6,11 +6,13 @@ import nsv.com.nsvserver.Dto.AuthResponseDto;
 import nsv.com.nsvserver.Dto.SignUpRequestDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.AccountSuspendedException;
+import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.UserNameExistsException;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
 import nsv.com.nsvserver.Repository.ProfileRepository;
 import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import nsv.com.nsvserver.Repository.RoleRepository;
+import nsv.com.nsvserver.Util.EmployeeRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -138,6 +140,7 @@ public class AuthService {
         return new AuthResponseDto(employee.getId(),jwt,roles,"Signup successfully",refreshToken.getToken());
 
     }
+
 
     @Transactional
     public void logOut(){

@@ -28,6 +28,8 @@ public class EmailServiceImpl implements EmailService {
         this.mailSender = mailSender;
     }
 
+
+
     @Override
     public void sendEmail(EmailDetailDto emailDetailDto) {
         try{
