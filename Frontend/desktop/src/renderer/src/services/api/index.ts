@@ -1,7 +1,7 @@
 import { login } from './auth/login';
 import { signup } from './auth/signup';
-import { makeGenerateOtpRequest } from './auth/makeGenerateOtpRequest';
-import { makeRenewPasswordRequest } from './auth/makeRenewPasswordRequest';
+import { generateOtp } from './auth/generateOtp';
+import { renewPassword } from './auth/renewPassword';
 import { getProductList } from './product/getProductList';
 import { searchWarehouseMap } from './warehouse/searchWarehouseMap';
 import { createWarehouseMap } from './warehouse/createWarehouseMap';
@@ -41,8 +41,8 @@ import { removeTicketDebt } from './debt/removeTicketDebt';
 export {
     login,
     signup,
-    makeGenerateOtpRequest,
-    makeRenewPasswordRequest,
+    generateOtp,
+    renewPassword,
     getProductList,
     searchWarehouseMap,
     getWarehouseMap,

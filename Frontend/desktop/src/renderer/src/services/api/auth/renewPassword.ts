@@ -7,7 +7,7 @@ type RenewPasswordPayload = {
 };
 
 // get new access token
-export const makeRenewPasswordRequest = async ({
+export const renewPassword = async ({
     otp,
     identifier,
     password

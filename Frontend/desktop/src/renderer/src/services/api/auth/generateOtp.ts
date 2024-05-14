@@ -8,7 +8,7 @@ type GenerateOtpPayload = {
 };
 
 // get new access token
-export const makeGenerateOtpRequest = async (payload: GenerateOtpPayload) => {
+export const generateOtp = async (payload: GenerateOtpPayload) => {
     let response = undefined;
     try {
         response = await makeRequest({

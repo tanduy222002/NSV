@@ -53,3 +53,16 @@ export const RegisterError: RegisterErrorType = {
         popupType: ResultPopupType.Error
     }
 };
+
+export const RenewPasswordError = {
+    OtpExpired: {
+        title: 'Thất bại',
+        body: 'Otp đã hết hiệu lực, vui lòng tạo Otp mới',
+        popupType: ResultPopupType.Error
+    },
+    OtpMismatched: {
+        title: 'Thất bại',
+        body: 'Otp không hợp lệ',
+        popupType: ResultPopupType.Error
+    }
+};
