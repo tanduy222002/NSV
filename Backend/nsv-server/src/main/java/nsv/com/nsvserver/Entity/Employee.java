@@ -73,6 +73,11 @@ public class Employee {
         }
     }
 
+    public void removeRole(Role role){
+        this.roles.remove(role);
+        role.getEmployeeList().remove(this);
+    }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
         profile.setEmployee(this);

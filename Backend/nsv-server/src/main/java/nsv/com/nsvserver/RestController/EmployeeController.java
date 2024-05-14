@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
-import nsv.com.nsvserver.Dto.EmployeeDto;
-import nsv.com.nsvserver.Dto.PageDto;
-import nsv.com.nsvserver.Dto.ProfileDto;
-import nsv.com.nsvserver.Dto.UpdateEmployeeStatusDto;
+import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +90,14 @@ public class EmployeeController {
     public ResponseEntity<?> updateEmployeeStatus(@PathVariable Integer id, @Valid @RequestBody UpdateEmployeeStatusDto dto) {
         employeeService.updateEmployeeStatus(id,dto.getStatus().name());
         return ResponseEntity.ok("Updated account status successfully");
+    }
+
+    @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
+    @Operation(summary = "Update employee role")
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<?> updateEmployeeStatus(@PathVariable Integer id, @Valid @RequestBody UpdateEmployeeRoleDto dto) {
+        employeeService.updateEmployeeRole(id,dto.getRole());
+        return ResponseEntity.ok("Updated employee role successfully");
     }
 
 
