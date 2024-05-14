@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoChevronBack } from 'react-icons/io5';
-import { UserInfo, Button } from '@renderer/components';
+import { UserInfo, Button, PageLoading } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { getPartnerDetail } from '@renderer/services/api';
 import {
@@ -53,12 +53,13 @@ const PartnerDetailPage = () => {
                 <h1 className="text-xl font-semibold">Đối tác</h1>
             </div>
             {isFetching ? (
-                <h1>Loading...</h1>
+                <PageLoading />
             ) : (
                 <>
                     <PartnerDetailMainSection
                         name={data?.name}
                         phoneNumber={data?.phone}
+                        email={data?.email}
                         address={data?.address_string}
                         bankAccount={data?.bankAccount}
                         taxNumber={data?.taxNumber}

@@ -3,6 +3,7 @@ import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { FaPhone } from 'react-icons/fa';
 import { IoLocationOutline } from 'react-icons/io5';
 import { FaMoneyCheckAlt } from 'react-icons/fa';
+import { MdOutlineEmail } from 'react-icons/md';
 import { TbPigMoney } from 'react-icons/tb';
 import { BiTransfer } from 'react-icons/bi';
 import { DataField } from '@renderer/components';
@@ -11,7 +12,7 @@ type PartnerDetailMainSectionProps = {
     name: string;
     phoneNumber: string;
     address: string;
-    // email: string;
+    email: string;
     bankAccount: string;
     taxNumber: string;
     totalTransactionCount: number;
@@ -22,7 +23,7 @@ const PartnerDetailMainSection = ({
     name,
     phoneNumber,
     address,
-    // email,
+    email,
     bankAccount,
     taxNumber,
     totalTransactionCount,
@@ -39,11 +40,18 @@ const PartnerDetailMainSection = ({
                     defaultValue="Tên đối tác"
                 />
                 <DataField
-                    name={'Liên hệ'}
+                    name={'Số điện thoại'}
                     icon={<FaPhone />}
                     disabled={false}
                     value={phoneNumber}
-                    defaultValue={'Liên hệ'}
+                    defaultValue={'Số điện thoại'}
+                />
+                <DataField
+                    name={'Email'}
+                    icon={<MdOutlineEmail />}
+                    disabled={false}
+                    value={email}
+                    defaultValue={'Email'}
                 />
                 <DataField
                     name={'Địa chỉ'}
@@ -52,6 +60,8 @@ const PartnerDetailMainSection = ({
                     value={address}
                     defaultValue={'Địa chỉ'}
                 />
+            </div>
+            <div className="space-y-5 flex-1">
                 <DataField
                     name={'Tài khoản NH'}
                     icon={<FaMoneyCheckAlt />}
@@ -66,22 +76,6 @@ const PartnerDetailMainSection = ({
                     value={taxNumber}
                     defaultValue={'Mã số thuế'}
                 />
-            </div>
-            <div className="space-y-5 flex-1">
-                {/* <DataField
-                    name={'Khối lượng'}
-                    icon={<FaWeightScale />}
-                    disabled={false}
-                    value={`${weight} kg`}
-                    defaultValue={'Khối lượng'}
-                /> */}
-                {/* <DataField
-                    name={'Vận chuyển'}
-                    icon={<FaTruck />}
-                    disabled={false}
-                    value={transporter}
-                    defaultValue={'Vận chuyển'}
-                /> */}
                 <DataField
                     name="Số giao dịch"
                     icon={<BiTransfer className="rotate-90" />}

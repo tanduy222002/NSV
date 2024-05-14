@@ -5,6 +5,7 @@ import { useLocalStorage } from '@renderer/hooks';
 import { getPartnerDebtDetail } from '@renderer/services/api';
 import { TableSkeleton, TableView } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
+import { formatDate, formatNumber } from '@renderer/utils/formatText';
 
 const debtTableConfig = [
     {
@@ -65,9 +66,9 @@ const PartnerDetailDebtSection = () => {
         debts.map((debt) => ({
             id: debt?.id,
             name: debt?.name,
-            createDate: debt?.create_date,
-            dueDate: debt?.due_date,
-            value: `${debt?.value} VND`,
+            createDate: formatDate(debt?.create_date),
+            dueDate: formatDate(debt?.due_date),
+            value: `${formatNumber(debt?.value)} VND`,
             description: debt?.description,
             paidStatus: debt?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'
         })) ?? [];

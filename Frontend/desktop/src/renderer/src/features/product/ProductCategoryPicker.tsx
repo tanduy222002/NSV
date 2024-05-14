@@ -93,7 +93,7 @@ const ProductCategoryPicker = ({ addCategory }: ProductCategoryPickerProps) => {
                 />
                 <Button
                     text="Thêm"
-                    className="text-[#008767] border-[#008767] mx-auto"
+                    className="text-emerald-500 border-emerald-500 hover:bg-emerald-50 mx-auto"
                     icon={<MdOutlineAddBox />}
                     action={addQuality}
                 />
@@ -117,7 +117,7 @@ const ProductCategoryPicker = ({ addCategory }: ProductCategoryPickerProps) => {
             </div>
             <Button
                 text="Thêm loại sản phẩm"
-                className="text-[#008767] border-[#008767] w-fit mx-auto"
+                className="text-emerald-500 border-emerald-500 hover:bg-emerald-50 w-fit mx-auto"
                 icon={<MdOutlineAddBox />}
                 action={saveCategory}
             />

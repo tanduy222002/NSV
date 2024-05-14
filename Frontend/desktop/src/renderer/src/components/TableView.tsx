@@ -36,11 +36,11 @@ const TableView = ({
     if (items.length === 0)
         return <h2 className="text-sm font-semibold">Chưa có dữ liệu </h2>;
     return (
-        <table className="w-fit min-w-[750px] h-fit border-collapse">
-            <tr className="border border-1">
+        <table className="table-auto min-w-[720px] h-fit border-collapse">
+            <tr className="border border-bottom-1">
                 {columns.map(({ title, sortable }) => (
                     <th className="px-2 py-2" key={title}>
-                        <div className="flex items-center gap-2 text-[#B5B7C0] text-base">
+                        <div className="flex items-center gap-2 text-base text-sky-800">
                             <p>{title}</p>
                             {sortable && <TbTransferVertical />}
                         </div>
@@ -56,27 +56,29 @@ const TableView = ({
                     <tr key={i} className="border border-1">
                         {columns.map((column, i) => (
                             <td
-                                className="px-2 py-2 text-base font-semibold"
+                                className="px-2 py-2 text-base font-medium"
                                 key={i}
                             >
                                 {column.type === ColumnType.Text ? (
                                     (itemValues[i] as string)
                                 ) : column.type === ColumnType.Image ? (
-                                    <div className="w-[40px] h-[40px]">
+                                    <div className="w-[40px] h-[40px] mx-auto ">
                                         <img
                                             src={itemValues[i] as any}
                                             className="object-cover"
                                         />
                                     </div>
                                 ) : column.type === ColumnType.Action ? (
-                                    <RowAction
-                                        id={itemId as string}
-                                        viewAction={
-                                            item.viewAction ?? viewAction
-                                        }
-                                        editAction={editAction}
-                                        deleteAction={deleteAction}
-                                    />
+                                    <div className="mx-auto w-fit">
+                                        <RowAction
+                                            id={itemId as string}
+                                            viewAction={
+                                                item.viewAction ?? viewAction
+                                            }
+                                            editAction={editAction}
+                                            deleteAction={deleteAction}
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="flex justify-center">
                                         {item?.icon}

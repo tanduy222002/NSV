@@ -6,6 +6,7 @@ import { ColumnType } from '@renderer/components/TableView';
 import { TableSkeleton, Button, TableView } from '@renderer/components';
 import { getPartnerList } from '@renderer/services/api';
 import { useNavigate } from 'react-router-dom';
+import { formatNumber } from '@renderer/utils/formatText';
 
 const partnerTableConfig = [
     {
@@ -59,12 +60,12 @@ const PartnerPage = () => {
             name: partner?.name,
             phoneNumber: partner?.phone,
             address: partner?.address_string,
-            transactionValue: partner?.total_transaction_amount
+            transactionValue: `${formatNumber(partner?.total_transaction_amount ?? 0)} VND`
         })) ?? [];
 
     console.log('partner data: ', data);
     return (
-        <div className="w-full px-5 py-5">
+        <div className="w-full p-10">
             <UserInfo />
             <div className="flex items-center gap-2 mb-5">
                 <img src={partnerIconSrc} />
@@ -92,7 +93,7 @@ const PartnerPage = () => {
                     // action={confirmAction}
                 />
             </div>
-            <div className="w-full max-w-[900px]">
+            <div className="w-fit max-w-[1200px]">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

@@ -12,6 +12,7 @@ import {
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { searchExportTicket } from '@renderer/services/api';
+import { formatNumber, formatDate } from '@renderer/utils/formatText';
 
 const exportTicketTableConfig = [
     {
@@ -59,15 +60,15 @@ const ExportPage = () => {
     const updateTicketStatus = (status: TicketStatus) =>
         setTicketStatus(status);
 
-    const mapTicket = useCallback(
+    const mapTicketTable = useCallback(
         (tickets: any[]) =>
             tickets.map((ticket) => ({
                 id: ticket?.id,
                 name: ticket?.name,
                 productCount: `${ticket?.number_of_products} sản phẩm`,
-                weight: ticket?.weight,
-                exportDate: ticket?.transfer_date
-            })),
+                weight: `${formatNumber(ticket?.weight)} kg`,
+                exportDate: formatDate(ticket?.transfer_date)
+            })) ?? [],
         []
     );
 
@@ -120,14 +121,14 @@ const ExportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.Rejected)}
                 />
             </div>
-            <div className="flex flex-col items-center">
+            <div className="">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
                     data?.content.length > 0 && (
                         <TableView
                             columns={exportTicketTableConfig}
-                            items={mapTicket(data?.content)}
+                            items={mapTicketTable(data?.content)}
                             viewAction={goToExportTicketDetailPage}
                         />
                     )

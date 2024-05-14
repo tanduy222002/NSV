@@ -19,6 +19,7 @@ import SelectInput from './SelectInput';
 import TextAreaInput from './TextAreaInput';
 import FileInput from './FileInput';
 import StatisticSummary from './StatisticSummary';
+import PageLoading from './PageLoading';
 
 export {
     Button,
@@ -41,5 +42,6 @@ export {
     SelectInput,
     FileInput,
     TextAreaInput,
-    StatisticSummary
+    StatisticSummary,
+    PageLoading
 };

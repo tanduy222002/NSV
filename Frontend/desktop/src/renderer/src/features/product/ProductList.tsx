@@ -5,6 +5,7 @@ import { getProductListStatistic } from '@renderer/services/api';
 import { TableView, Button, TableSkeleton } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
 import { ProductLineItem } from '@renderer/types/product';
+import { formatNumber } from '@renderer/utils/formatText';
 
 const productTableConfig = [
     {
@@ -44,7 +45,7 @@ const ProductList = () => {
 
     const goToCreateProductPage = () => navigate('/product/create');
     const goToEditProductPage = () => navigate('/product/edit');
-    const goToOverview = (productId: number) => {
+    const goToOverview = (productId: number | string) => {
         navigate(`/product/${productId}/location`);
     };
 
@@ -66,15 +67,15 @@ const ProductList = () => {
             image: product.image,
             id: product.id,
             name: product.name,
-            inventory: `${product.inventory} kg`,
+            inventory: `${formatNumber(product.inventory)} kg`,
             containingSlots: product.number_of_containing_slot
-        }));
+        })) ?? [];
 
     return (
         <div>
             <Button
                 text="Thêm sản phẩm"
-                className="text-[#008767] border-[#008767] bg-[#16C098] mb-6"
+                className="text-emerald-500 border-emerald-500 hover:bg-emerald-50 mb-5"
                 action={goToCreateProductPage}
             />
             <div className="flex h-full max-h-screen gap-10">
@@ -83,7 +84,7 @@ const ProductList = () => {
                 ) : (
                     <TableView
                         columns={productTableConfig}
-                        items={mapProductData(data!.content)}
+                        items={mapProductData(data?.content)}
                         viewAction={goToOverview}
                         editAction={goToEditProductPage}
                     />

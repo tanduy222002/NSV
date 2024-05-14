@@ -12,6 +12,7 @@ import {
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { searchImportTicket } from '@renderer/services/api';
+import { formatDate, formatNumber } from '@renderer/utils/formatText';
 
 const importTicketTableConfig = [
     {
@@ -59,15 +60,15 @@ const ImportPage = () => {
     const updateTicketStatus = (status: TicketStatus) =>
         setTicketStatus(status);
 
-    const mapTicket = useCallback(
+    const mapTicketTable = useCallback(
         (tickets: any[]) =>
             tickets.map((ticket) => ({
                 id: ticket?.id,
                 name: ticket?.name,
-                weight: ticket?.weight,
+                weight: `${formatNumber(ticket?.weight)} kg`,
                 productCount: `${ticket?.product.length} lô hàng`,
-                importDate: ticket?.transfer_date
-            })),
+                importDate: formatDate(ticket?.transfer_date)
+            })) ?? [],
         []
     );
 
@@ -121,14 +122,14 @@ const ImportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.Rejected)}
                 />
             </div>
-            <div className="flex flex-col items-center">
+            <div className="">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
                     data?.content.length > 0 && (
                         <TableView
                             columns={importTicketTableConfig}
-                            items={mapTicket(data?.content)}
+                            items={mapTicketTable(data?.content)}
                             viewAction={goToImportTicketDetailPage}
                         />
                     )

@@ -14,8 +14,8 @@ const SidebarSection = ({
     title,
     icon,
     path,
-    className = 'text-[#7C8DB5]',
-    activeClassName = 'text-[#1A3389]'
+    className = 'text-slate-400',
+    activeClassName = 'text-sky-800'
 }: SidebarSectionProps) => {
     return (
         <NavLink

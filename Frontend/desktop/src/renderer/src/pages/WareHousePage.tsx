@@ -29,7 +29,7 @@ const WareHousePage = () => {
     const navigate = useNavigate();
     const goToCreateMapPage = () => navigate('/warehouse/map/create');
     const goToCreateWarehousePage = () => navigate('/warehouse/create');
-    const goToWarehouseDetailPage = (id: number) =>
+    const goToWarehouseDetailPage = (id: number | string) =>
         navigate(`/warehouse/${id}`);
     const { showPopup, show, hide } = usePopup();
 
@@ -58,7 +58,7 @@ const WareHousePage = () => {
     if (!isFetching) console.log('data: ', data);
 
     return (
-        <div className="flex-1 h-screen px-8 py-6 relative">
+        <div className="w-full p-10 relative">
             {showPopup && (
                 <ConfirmationPopup
                     title="Xóa sản phẩm"
@@ -67,24 +67,24 @@ const WareHousePage = () => {
                     confirmAction={hide}
                 />
             )}
+            <UserInfo />
             <div className="flex justify-between items-center w-full mb-6">
                 <h1 className="text-2xl font-semibold">Quản lý kho hàng</h1>
-                <UserInfo />
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mb-5">
                 <Button
                     text="Tạo sơ đồ kho"
-                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                     action={goToCreateMapPage}
                 />
                 <Button
                     text="Tạo kho mới"
-                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                     action={goToCreateWarehousePage}
                 />
             </div>
-            <SearchBar className="mt-6 ml-auto" placeHolder="Tìm kiếm..." />
-            <div className="flex flex-col gap-4 mt-6">
+            <SearchBar className="ml-auto" placeHolder="Tìm kiếm..." />
+            <div className="flex flex-col gap-4 mt-6 w-fit">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

@@ -15,7 +15,8 @@ import {
     TableView,
     DataField,
     ConfirmationPopup,
-    InformationPopup
+    InformationPopup,
+    PageLoading
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
@@ -190,7 +191,7 @@ const ExportTicketDetailPage = () => {
                 </h1>
             </div>
             {isFetching ? (
-                <h1>Loading...</h1>
+                <PageLoading />
             ) : (
                 <>
                     <ExportTicketDetailMainSection

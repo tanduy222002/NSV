@@ -5,6 +5,7 @@ import { getPartnerTransactionDetail } from '@renderer/services/api';
 import { TableSkeleton, TableView, SelectInput } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
 import { useState } from 'react';
+import { formatDate, formatNumber } from '@renderer/utils/formatText';
 
 const transactionTableConfig = [
     {
@@ -81,11 +82,11 @@ const PartnerDetailTransactionSection = () => {
         transactions.map((transaction) => ({
             id: transaction?.id,
             name: transaction?.name,
-            transferDate: transaction?.transfer_date,
+            transferDate: formatDate(transaction?.transfer_date),
             numberOfProducts: `${transaction?.number_of_products} loại sản phẩm`,
             description: transaction?.description,
-            weight: transaction?.weight,
-            value: transaction?.value
+            weight: `${formatNumber(transaction?.weight)} kg`,
+            value: `${formatNumber(transaction?.value)} VND`
         })) ?? [];
 
     if (!isFetching) console.log('partner transaction: ', data);

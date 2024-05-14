@@ -14,27 +14,26 @@ const FileInput = ({ fileSrc, onChange }: FileInputProps) => {
             reader.readAsDataURL(file);
 
             reader.onload = () => {
-                console.log('called: ', reader);
                 onChange(reader.result as string);
             };
         }
     };
 
     return (
-        <div className="mx-auto">
-            {fileSrc == null ? (
-                <GiFruitBowl className="w-4/5 h-4/5 min-[400px]" />
-            ) : (
-                <div className="w-fit h-4/5 mx-auto">
+        <div className="mx-auto flex-col flex items-center">
+            <div className="w-[200px] h-[200px] p-3 my-3 border border-gray-300 rounded-md mx-auto flex items-center justify-center">
+                {fileSrc == null ? (
+                    <GiFruitBowl className="w-full h-full min-[400px] text-gray-300" />
+                ) : (
                     <img
-                        className="fit-cover"
+                        className="fit-cover w-full h-full"
                         src={fileSrc}
                         alt="preview-image"
                     />
-                </div>
-            )}
+                )}
+            </div>
             <button
-                className=" relative self-center w-fit px-2 py-2 flex gap-2 items-center rounded-md border border-blue-500 text-blue-500 hover:bg-blue-50"
+                className=" relative self-center mb-3 w-fit px-2 py-2 flex gap-2 items-center rounded-md border border-sky-800 text-sky-800 hover:bg-sky-50"
                 type="button"
             >
                 <input

@@ -14,7 +14,8 @@ import {
     TableView,
     DataField,
     ConfirmationPopup,
-    InformationPopup
+    InformationPopup,
+    PageLoading
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
@@ -32,6 +33,7 @@ import {
     removeTicketDebtSuccessPopupData
 } from '@renderer/constants/debt';
 import { approveImportTicket, removeTicketDebt } from '@renderer/services/api';
+import { formatDate } from '@renderer/utils/formatText';
 
 enum TicketDetailSection {
     Batch = 'Batch',
@@ -171,7 +173,7 @@ const ImportTicketDetailPage = () => {
                 </h1>
             </div>
             {isFetching ? (
-                <h1>Loading...</h1>
+                <PageLoading />
             ) : (
                 <>
                     <ImportTicketDetailMainSection
@@ -255,7 +257,7 @@ const ImportTicketDetailPage = () => {
                                 name="Ngày hết hạn"
                                 icon={<FaRegCalendarTimes />}
                                 disabled={false}
-                                value={data?.debt?.due_date}
+                                value={formatDate(data?.debt?.due_date)}
                                 defaultValue="Ngày hết hạn"
                             />
                             <DataField

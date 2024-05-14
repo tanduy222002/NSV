@@ -9,6 +9,7 @@ import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { TicketStatus } from '@renderer/types/import';
 import { FaCircleNotch } from 'react-icons/fa';
 import { DataField, Button } from '@renderer/components';
+import { formatDateTime } from '@renderer/utils/formatText';
 
 type ImportTicketDetailMainSectionProps = {
     partnerName: string;
@@ -75,14 +76,14 @@ const ImportTicketDetailMainSection = ({
                     name={'Ngày nhập'}
                     icon={<FaRegCalendarAlt />}
                     disabled={false}
-                    value={dateCreated}
+                    value={formatDateTime(dateCreated)}
                     defaultValue={'Tên đối tác'}
                 />
                 <DataField
                     name={'Ngày duyệt'}
                     icon={<FaRegCalendarCheck />}
                     disabled={false}
-                    value={dateApproved}
+                    value={formatDateTime(dateApproved)}
                     defaultValue={'Ngày duyệt'}
                 />
             </div>
