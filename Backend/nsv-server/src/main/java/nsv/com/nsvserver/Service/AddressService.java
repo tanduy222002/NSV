@@ -66,7 +66,6 @@ public class AddressService {
         Province province =provinceRepository.findProvinceNameAndIdById(id);
         if(province==null)
             throw new NotFoundException("Province not found");
-        System.out.println("after fetch");
         return province;
     }
 
