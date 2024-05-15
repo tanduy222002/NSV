@@ -1,5 +1,6 @@
 import { TbTransferVertical } from 'react-icons/tb';
 import RowAction from './RowAction';
+import { cn } from '@renderer/utils/util';
 
 export enum ColumnType {
     Text = 'Text',
@@ -12,6 +13,7 @@ type Column = {
     title: string;
     sortable: boolean;
     type: ColumnType;
+    stylable?: boolean;
 };
 
 type TableItem = any & {
@@ -23,7 +25,7 @@ type TableViewProps = {
     items: TableItem[];
     viewAction?: (param: number | string) => void;
     editAction?: (param: number | string) => void;
-    deleteAction?: () => void;
+    deleteAction?: (param: number | string) => void;
 };
 
 const TableView = ({
@@ -56,7 +58,10 @@ const TableView = ({
                     <tr key={i} className="border border-1">
                         {columns.map((column, i) => (
                             <td
-                                className="px-2 py-2 text-base font-medium"
+                                className={cn(
+                                    'px-2 py-2 text-base font-medium',
+                                    column.stylable && (item?.textColor ?? '')
+                                )}
                                 key={i}
                             >
                                 {column.type === ColumnType.Text ? (

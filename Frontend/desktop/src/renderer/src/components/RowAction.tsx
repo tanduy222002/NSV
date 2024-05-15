@@ -8,7 +8,7 @@ type RowActionProps = {
     id: string | number;
     viewAction?: (param: string | number) => void;
     editAction?: (param: string | number) => void;
-    deleteAction?: () => void;
+    deleteAction?: (param: string | number) => void;
 };
 
 const RowAction = ({
@@ -45,7 +45,7 @@ const RowAction = ({
                         <p>Chỉnh sửa</p>
                     </div>
                     <div
-                        onClick={deleteAction}
+                        onClick={() => deleteAction && deleteAction(id)}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-2 py-1 text-[#DF0404]"
                     >
                         <TiDeleteOutline />

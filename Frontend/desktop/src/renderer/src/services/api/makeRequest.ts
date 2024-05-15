@@ -52,3 +52,25 @@ export const makeAuthRequest = ({
         })
         .catch((err) => err);
 };
+
+export const makeAuthRequestV2 = ({
+    method,
+    token,
+    url,
+    params,
+    body
+}: HttpAuthRequest) => {
+    return axiosInstance({
+        url: url,
+        method: method,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: params,
+        data: body
+    })
+        .then((res) => {
+            return { status: res.status, data: res.data };
+        })
+        .catch((err) => err?.response);
+};

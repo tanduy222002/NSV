@@ -6,6 +6,7 @@ import { GiFruitBowl } from 'react-icons/gi';
 import { CiSettings } from 'react-icons/ci';
 import { LuHelpCircle } from 'react-icons/lu';
 import { MdOutlineLogout } from 'react-icons/md';
+import { GrUserWorker } from 'react-icons/gr';
 import { RiUserSettingsLine } from 'react-icons/ri';
 import { Outlet, useNavigate } from 'react-router-dom';
 import SidebarSection from './SidebarSection';
@@ -45,6 +46,11 @@ const firstSectionItems = [
         title: 'Đối tác',
         icon: <RiUserSettingsLine />,
         path: '/partner'
+    },
+    {
+        title: 'Nhân viên',
+        icon: <GrUserWorker />,
+        path: '/employee'
     }
 ];
 

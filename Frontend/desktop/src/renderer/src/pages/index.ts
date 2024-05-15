@@ -18,6 +18,8 @@ import WarehouseSlotDetailPage from './WarehouseSlotDetailPage';
 import ExportTicketDetailPage from './ExportTicketDetailPage';
 import PartnerDetailPage from './PartnerDetailPage';
 import CreatePartnerPage from './CreatePartnerPage';
+import EmployeePage from './EmployeePage';
+import EmployeeDetailPage from './EmployeeDetailPage';
 
 export {
     AuthPage,
@@ -39,5 +41,7 @@ export {
     WarehouseSlotDetailPage,
     ExportTicketDetailPage,
     PartnerDetailPage,
-    CreatePartnerPage
+    CreatePartnerPage,
+    EmployeePage,
+    EmployeeDetailPage
 };

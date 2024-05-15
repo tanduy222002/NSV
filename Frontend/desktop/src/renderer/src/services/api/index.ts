@@ -37,6 +37,11 @@ import { getPartnerDetail } from './partner/getPartnerDetail';
 import { getPartnerDebtDetail } from './partner/getPartnerDebtDetail';
 import { getPartnerTransactionDetail } from './partner/getPartnerTransactionDetail';
 import { removeTicketDebt } from './debt/removeTicketDebt';
+import { getEmployeeList } from './employee/getEmployeeList';
+import { deleteEmployee } from './employee/deleteEmployee';
+import { getEmployeeDetail } from './employee/getEmployeeDetail';
+import { updateEmployeeAccountStatus } from './employee/updateEmployeeAccountStatus';
+import { updateEmployeeRoles } from './employee/updateEmployeeRoles';
 
 export {
     login,
@@ -77,5 +82,10 @@ export {
     getPartnerDetail,
     getPartnerDebtDetail,
     getPartnerTransactionDetail,
-    removeTicketDebt
+    removeTicketDebt,
+    getEmployeeList,
+    deleteEmployee,
+    getEmployeeDetail,
+    updateEmployeeAccountStatus,
+    updateEmployeeRoles
 };
