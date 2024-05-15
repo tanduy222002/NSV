@@ -73,7 +73,6 @@ public class AddressService {
         District district = districtRepository.findDistrictNameAndId(id);
         if(district==null)
             throw new NotFoundException("Province not found");
-        System.out.println("after fetch");
         return district;
 
     }
@@ -99,4 +98,6 @@ public class AddressService {
         addressRepository.save(address);
         return address;
     }
+
+
 }
