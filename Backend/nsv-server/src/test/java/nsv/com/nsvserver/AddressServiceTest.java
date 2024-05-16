@@ -1,5 +1,4 @@
 package nsv.com.nsvserver;
-
 import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.District;
 import nsv.com.nsvserver.Entity.Province;
@@ -17,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -267,8 +265,8 @@ public class AddressServiceTest {
     public void CreateAddress_WardNotFound_NotFoundExceptionThrown() {
         String streetAddress = "123 Ta Quang Buu";
         Integer wardId = 1;
-        Integer districtId = 2; // Not used in the current method but included for completeness
-        Integer provinceId = 3; // Not used in the current method but included for completeness
+        Integer districtId = 2;
+        Integer provinceId = 3;
 
         when(wardRepository.findById(wardId)).thenReturn(Optional.empty());
 
@@ -282,7 +280,7 @@ public class AddressServiceTest {
     }
 
     @Test
-    public void testCreateAddress_WardExists() {
+    public void testCreateAddress_WardExists_SaveWard() {
         String streetAddress = "123 Ta Quang Buu";
         Integer wardId = 1;
         Integer districtId = 2; // Not used in the current method but included for completeness
