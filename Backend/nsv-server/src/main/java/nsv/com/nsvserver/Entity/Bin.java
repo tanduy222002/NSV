@@ -83,4 +83,19 @@ public class Bin {
         this.weight = weight;
         this.leftWeight = weight;
     }
+
+    public Bin(Integer id, Double weight, Double leftWeight, String packageType, String unit, String status, Integer amount, Double price, Date importDate, Date exportDate, String document, String qr) {
+        this.id = id;
+        this.weight = weight;
+        this.leftWeight = leftWeight;
+        this.packageType = packageType;
+        this.unit = unit;
+        this.status = status;
+        this.amount = amount;
+        this.price = price;
+        this.importDate = importDate;
+        this.exportDate = exportDate;
+        this.document = document;
+        this.qr = qr;
+    }
 }
