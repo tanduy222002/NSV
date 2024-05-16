@@ -102,13 +102,6 @@ public class AuthService {
         // Create new employee
         Employee employee =new Employee(userName, encoder.encode(password));
 
-        //Set roles for employee
-//        if(roles==null || roles.isEmpty()){
-//            roles =Arrays.asList("ROLE_EMPLOYEE");
-//        }
-//        else{
-//            checkValidRole(roles);
-//        }
         roles =Arrays.asList("ROLE_EMPLOYEE");
         List<Role> authorization = new ArrayList<>();
         for(String role : roles){
@@ -149,12 +142,5 @@ public class AuthService {
         Employee employee = employeeDetail.getEmployee();
         refreshTokenRepository.deleteByEmployee(employee);
     }
-    public void checkValidRole(List<String> roles){
-        List<String> acceptedRole = Arrays.asList("ROLE_EMPLOYEE", "ROLE_ADMIN", "ROLE_MANAGER");
-        for (String role : roles){
-            if(!acceptedRole.contains(role)){
-                throw new RuntimeException("Invalid role: " + role);
-            }
-        }
-    }
+
 }
