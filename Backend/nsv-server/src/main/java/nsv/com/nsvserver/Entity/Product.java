@@ -29,7 +29,7 @@ public class Product {
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
 //    @JsonManagedReference
-    private List<Type> types;
+    private List<Type> types = new ArrayList<>();
 
     public Product() {
     }
