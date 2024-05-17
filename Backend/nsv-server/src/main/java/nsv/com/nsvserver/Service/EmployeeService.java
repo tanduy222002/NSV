@@ -123,12 +123,12 @@ public class EmployeeService {
     }
 
 
-    @Transactional
-    public void updateEmployeeStatus(Integer id){
-        Profile profile = profileDaoImpl.findOneWithEagerLoading(id).orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
-        Employee employee = profile.getEmployee();
-
-    }
+//    @Transactional
+//    public void updateEmployeeStatus(Integer id){
+//        Profile profile = profileDaoImpl.findOneWithEagerLoading(id).orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));
+//        Employee employee = profile.getEmployee();
+//
+//    }
 
 
 
