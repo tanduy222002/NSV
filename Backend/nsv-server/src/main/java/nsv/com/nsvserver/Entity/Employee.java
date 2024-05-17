@@ -38,7 +38,7 @@ public class Employee {
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
 
 
@@ -75,7 +75,7 @@ public class Employee {
 
     public void removeRole(Role role){
         this.roles.remove(role);
-        role.getEmployeeList().remove(this);
+//        role.getEmployeeList().remove(this);
     }
 
     public void setProfile(Profile profile) {
