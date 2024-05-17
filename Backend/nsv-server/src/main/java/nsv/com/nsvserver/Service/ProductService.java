@@ -147,7 +147,7 @@ public class ProductService {
     }
     public List<QualityInTypeDto> getQualityCombineType(Integer productId){
         Product product=productRepository.findWithEagerQualityAndType(productId).orElseThrow(
-                ()-> new NotFoundException("Product not found with id " + productId)
+                ()-> new NotFoundException("Product with id: " + productId+ "does not have quality and type")
         );
         List<QualityInTypeDto> dtos = product.getTypes().stream().flatMap(type ->
                 type.getQualities().parallelStream().map(quality -> {
