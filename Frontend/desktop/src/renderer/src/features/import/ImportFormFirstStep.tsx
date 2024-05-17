@@ -200,7 +200,7 @@ const ImportFormFirstStep = ({
             </div>
             <div className="flex items-center gap-5 mt-5 w-fit mx-auto">
                 <Button
-                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    className="text-emerald-500 border-emerald-500  hover:bg-emerald-50"
                     text="Tiếp theo"
                     action={handleFirstStep}
                 />

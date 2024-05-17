@@ -1,7 +1,10 @@
-import { useRef } from 'react';
-import { Formik, FieldArray } from 'formik';
+import { FormEvent, useRef, useState } from 'react';
 import { FormSection, WarehouseMapPreview } from './components';
-import { MapRow, WarehouseMap as CreateWarehouseMapFormValues } from './type';
+import {
+    MapRow,
+    WarehouseMap as CreateWarehouseMapFormValues,
+    MapSlot
+} from './type';
 import { FormInput } from '@renderer/components';
 import { FaBraille } from 'react-icons/fa6';
 import { MdWarehouse } from 'react-icons/md';
@@ -16,6 +19,10 @@ const createWareHouseMapInitValues: CreateWarehouseMapFormValues = {
 };
 
 const CreateWarehouseMapForm = () => {
+    const [warehouseMap, setWarehouseMap] = useState(
+        createWareHouseMapInitValues
+    );
+
     const nameRef = useRef<HTMLInputElement>(null);
     const areaRef = useRef<HTMLInputElement>(null);
     const slotRef = useRef<HTMLInputElement>(null);
@@ -23,56 +30,47 @@ const CreateWarehouseMapForm = () => {
     const { getItem } = useLocalStorage('access-token');
     const token = getItem();
 
-    const addMapRow = (pushCallback: any) => {
-        console.log(
-            'name: ',
-            nameRef?.current?.value,
-            'slot: ',
-            slotRef?.current?.value,
-            'capacity: ',
-            areaRef.current?.value
-        );
-
+    const addMapRow = () => {
         const slot = parseInt(slotRef!.current!.value);
         const name = nameRef?.current?.value;
         const capacity = parseInt(areaRef.current!.value);
 
-        const newRow = Array.from(Array(slot).keys())
+        const newRowValue: MapSlot[] = Array.from(Array(slot).keys())
             .map((slotId) => slotId + 1)
             .map((slotId) => ({
                 capacity: capacity,
                 description: '',
-                name: `#${name}${slotId}`
+                name: `#${name}${slotId}`,
+                status: 'EMPTY',
+                curentLoad: 0
             }));
 
-        const row: MapRow = {
+        const newRow: MapRow = {
             name: name as string,
-            slots: [...newRow]
+            slots: [...newRowValue]
         };
-        pushCallback(row);
+
+        setWarehouseMap((prev) => ({ ...prev, rows: [...prev.rows, newRow] }));
     };
 
-    const validateInput = ({ name, rows }: CreateWarehouseMapFormValues) => {
-        const errors: any = {};
-        console.log('name: ', name, 'rows: ', rows);
-        // if (!username) {
-        //     errors.username = 'Required';
-        // }
-        // if (!password) {
-        //     errors.password = 'Required';
-        // }
-        console.log('validation error: ', errors);
-
-        return errors;
+    const deleteRow = (rowId) => {
+        setWarehouseMap((prev) => ({
+            ...prev,
+            rows: prev.rows.filter((_, id) => id !== rowId)
+        }));
     };
 
-    const handleCreateLayoutSubmit = async (
-        values: CreateWarehouseMapFormValues
-    ) => {
-        console.log('submit value: ', values);
+    const updateFormValue = (key: string) => {
+        return (value: any) => {
+            setWarehouseMap((prev) => ({ ...prev, [key]: value }));
+        };
+    };
+
+    const handleCreateLayoutSubmit = async (e: FormEvent) => {
+        e.preventDefault();
         const response: any = await createWarehouseMap({
             token: token,
-            warehouseMap: values
+            warehouseMap: warehouseMap
         });
         console.log('create response: ', response);
         if (response?.status === 200) {
@@ -81,78 +79,68 @@ const CreateWarehouseMapForm = () => {
     };
 
     return (
-        <Formik
-            initialValues={createWareHouseMapInitValues}
-            validate={validateInput}
-            onSubmit={(values) => handleCreateLayoutSubmit(values)}
+        <form
+            className="w-4/5 relative flex flex-col justify-center rounded-md bg-white py-5 px-8"
+            onSubmit={handleCreateLayoutSubmit}
         >
-            {({ values, handleChange, handleSubmit }) => (
-                <form
-                    className="w-4/5 relative flex flex-col justify-center rounded-md bg-white py-5 px-8"
-                    onSubmit={handleSubmit}
-                >
+            <FormInput
+                name="name"
+                value={warehouseMap.name}
+                label="Tên sơ đồ"
+                ref={slotRef}
+                onChange={updateFormValue('name')}
+                bg="bg-white"
+            />
+            <FormSection
+                title="Tạo dãy kho"
+                icon={<FaBraille />}
+                layoutClassName="flex flex-col gap-2"
+            >
+                <div className="flex items-center justify-between flex-wrap gap-4">
                     <FormInput
-                        name="name"
-                        value={values.name}
-                        label="Tên sơ đồ"
+                        label="Số lô chứa"
+                        name="Số lô chứa"
                         ref={slotRef}
-                        onChange={handleChange}
+                        bg="bg-white"
                     />
-                    <FieldArray name="rows">
-                        {({ push, remove }) => (
-                            <>
-                                <FormSection
-                                    title="Tạo dãy kho"
-                                    icon={<FaBraille />}
-                                    layoutClassName="flex flex-col gap-2"
-                                >
-                                    <div className="flex items-center justify-between flex-wrap gap-4">
-                                        <FormInput
-                                            label="Số lô chứa"
-                                            name="Số lô chứa"
-                                            ref={slotRef}
-                                        />
-                                        <FormInput
-                                            label="Diện tích(m²)"
-                                            name="Diện tích(m²)"
-                                            ref={areaRef}
-                                        />
-                                        <FormInput
-                                            label="Tên lô"
-                                            name="Tên lô"
-                                            ref={nameRef}
-                                        />
-                                    </div>
-                                    <Button
-                                        text="Thêm mới"
-                                        className="text-[#1A3389] border-[#1A3389]"
-                                        action={() => addMapRow(push)}
-                                    />
-                                </FormSection>
-                                {values.rows.length > 0 && (
-                                    <FormSection
-                                        title="Xem trước"
-                                        icon={<MdWarehouse />}
-                                        layoutClassName="flex flex-col items-center"
-                                    >
-                                        <WarehouseMapPreview
-                                            warehouseMap={values}
-                                            viewMode={MapViewMode.Edit}
-                                            deleteRow={remove}
-                                        />
-                                    </FormSection>
-                                )}
-                            </>
-                        )}
-                    </FieldArray>
-                    <Button
-                        text="Lưu sơ đồ"
-                        type="submit"
-                        className="text-[#1A3389] border-[#1A3389] mx-auto"
+                    <FormInput
+                        label="Diện tích(m²)"
+                        name="Diện tích(m²)"
+                        ref={areaRef}
+                        bg="bg-white"
                     />
-                </form>
+                    <FormInput
+                        label="Tên lô"
+                        name="Tên lô"
+                        ref={nameRef}
+                        bg="bg-white"
+                    />
+                </div>
+                <Button
+                    text="Thêm mới"
+                    className="text-sky-800 border-sky-800"
+                    action={() => addMapRow()}
+                />
+            </FormSection>
+            {warehouseMap.rows.length > 0 && (
+                <FormSection
+                    title="Xem trước"
+                    icon={<MdWarehouse />}
+                    layoutClassName="flex flex-col items-center"
+                >
+                    <WarehouseMapPreview
+                        warehouseMap={warehouseMap}
+                        viewMode={MapViewMode.Edit}
+                        deleteRow={deleteRow}
+                    />
+                </FormSection>
             )}
-        </Formik>
+            <Button
+                text="Lưu sơ đồ"
+                type="submit"
+                className="text-sky-800 border-sky-800 mx-auto"
+            />
+        </form>
     );
 };
 

@@ -7,6 +7,7 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { TbPigMoney } from 'react-icons/tb';
 import { BiTransfer } from 'react-icons/bi';
 import { DataField } from '@renderer/components';
+import { formatNumber } from '@renderer/utils/formatText';
 
 type PartnerDetailMainSectionProps = {
     name: string;
@@ -87,7 +88,7 @@ const PartnerDetailMainSection = ({
                     name={'Tổng giá trị'}
                     icon={<RiMoneyDollarCircleLine />}
                     disabled={false}
-                    value={`${totalTransactionValue} VND`}
+                    value={`${formatNumber(totalTransactionValue)} VND`}
                     defaultValue={'Tổng giá trị'}
                     textColor="text-sky-800"
                 />

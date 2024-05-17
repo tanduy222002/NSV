@@ -89,7 +89,7 @@ const ImportPage = () => {
     }
 
     return (
-        <div className="w-full px-5 py-5">
+        <div className="w-full p-10">
             <UserInfo />
             <div className="flex items-center gap-2 mb-5">
                 <img src={warehouseIconSrc} />

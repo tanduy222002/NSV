@@ -76,7 +76,6 @@ const ExportFormFirstStep = ({
             transporter: transportRef?.current?.value ?? '',
             description: descriptionRef?.current?.value ?? '',
             export_date: exportDate?.startDate ?? String(Date.now())
-            // provider_detail: { ...partner },
             // value: costRef?.current ? Number(costRef?.current?.value) : 0
         };
         if (debtOption === DebtOption.Yes) {
@@ -114,7 +113,7 @@ const ExportFormFirstStep = ({
                     <AsyncSelectInput
                         label="partners"
                         placeHolder="Đối tác"
-                        icon={<FaUserGear />}
+                        icon={<FaUserGear className="text-sky-800" />}
                         asyncSelectorCallback={searchPartnerCallback}
                         selectedValue={
                             partner?.name ?? exportTicket?.customer_detail?.name
@@ -200,7 +199,7 @@ const ExportFormFirstStep = ({
             </div>
             <div className="flex items-center gap-5 mt-5 w-fit mx-auto">
                 <Button
-                    className="text-[#008767] border-[#008767] bg-[#16C098]"
+                    className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                     text="Tiếp theo"
                     action={handleFirstStep}
                 />

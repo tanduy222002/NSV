@@ -13,6 +13,7 @@ import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
 import { getSlotDetail, getSlotStatistic } from '@renderer/services/api';
 import { useLocalStorage } from '@renderer/hooks';
 import { ColumnType } from '@renderer/components/TableView';
+import { formatDate } from '@renderer/utils/formatText';
 
 const batchTableConfig = [
     {
@@ -90,7 +91,7 @@ const WarehouseSlotDetailPage = () => {
         batches.map((batch) => ({
             id: batch?.bin_id,
             name: batch?.ticket_name,
-            importDate: batch?.import_date,
+            importDate: formatDate(batch?.import_date),
             productName: batch?.product_name,
             category: batch?.product_type,
             packageType: batch?.packaged,
@@ -138,7 +139,7 @@ const WarehouseSlotDetailPage = () => {
                         sqSize={100}
                         percentage={
                             Math.ceil(
-                                (100 * Number(slotStatistic?.containing)) /
+                                (10000 * Number(slotStatistic?.containing)) /
                                     Number(slotStatistic?.capacity)
                             ) / 100
                         }

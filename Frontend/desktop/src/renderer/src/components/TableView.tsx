@@ -74,7 +74,10 @@ const TableView = ({
                                         />
                                     </div>
                                 ) : column.type === ColumnType.Action ? (
-                                    <div className="mx-auto w-fit">
+                                    <div
+                                        className="mx-auto w-fit"
+                                        data-testid={`table-menu#${itemId}`}
+                                    >
                                         <RowAction
                                             id={itemId as string}
                                             viewAction={

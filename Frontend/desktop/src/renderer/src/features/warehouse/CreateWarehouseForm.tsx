@@ -10,15 +10,13 @@ import { createWarehouse } from '@renderer/services/api';
 import {
     AddressPickerController,
     ModalProvider,
-    AsyncSelectInput
+    AsyncSelectInput,
+    PageLoading
 } from '@renderer/components';
 import { WarehouseMapPreview } from './components';
 import { Button, FormInput, InformationPopup } from '@renderer/components';
-import {
-    searchWarehouseMap,
-    getWarehouseMap,
-    getWarehouseCategory
-} from '@renderer/services/api';
+import { getWarehouseMap, getWarehouseCategory } from '@renderer/services/api';
+import { getUnusedMap } from '@renderer/services/api/warehouse/getUnusedMap';
 
 type SelectOption = {
     id: number;
@@ -56,9 +54,8 @@ const CreateWarehouseForm = () => {
         return result;
     };
 
-    const searchWarehouseMapCallback = async () => {
-        const result = await searchWarehouseMap({ token: accessToken });
-        return result;
+    const searchUnusedWarehouseMapCallback = async () => {
+        return await getUnusedMap({ token: accessToken });
     };
 
     const hanldeSubmit = async (e) => {
@@ -138,7 +135,7 @@ const CreateWarehouseForm = () => {
                         label="warehouse-map"
                         selectedValue={warehouseMap?.name}
                         placeHolder="Chọn sơ đồ"
-                        asyncSelectorCallback={searchWarehouseMapCallback}
+                        asyncSelectorCallback={searchUnusedWarehouseMapCallback}
                         onSelect={setWarehouseMap}
                     />
                 </div>
@@ -150,7 +147,7 @@ const CreateWarehouseForm = () => {
             >
                 <FaRegEdit className="absolute -top-7 left-[110px] text-[#F78F1E] cursor-pointer" />
                 {isFetching ? (
-                    <h1>Loading...</h1>
+                    <PageLoading />
                 ) : (
                     data && <WarehouseMapPreview warehouseMap={data} />
                 )}

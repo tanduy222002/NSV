@@ -236,28 +236,25 @@ const ExportFormSecondStep = ({
                 )}
 
                 <Button
-                    className="text-[#008767] border-[#008767]"
+                    className="text-emerald-500 border-emerald-500 mt-5 hover:bg-emerald-50"
                     text="Tìm lô hàng..."
                     action={openSelector}
                 />
                 <div className="flex items-center gap-5 mt-5 w-fit mx-auto">
                     <Button
-                        className="text-[#008767] border-[#008767]"
+                        className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                         text="Quay lại"
                         action={() => goToStep(ExportFormStep.First)}
                     />
                     <Button
-                        className="text-[#008767] border-[#008767] bg-[#16C098]"
+                        className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                         text="Xác nhận"
                         action={() => handleCreateTicket(exportTicket)}
                     />
                 </div>
                 {selectorOpen && (
                     <BinSelector
-                        totalWeight={
-                            Number(weightRef!.current!.value) *
-                            Number(priceRef!.current!.value)
-                        }
+                        totalWeight={Number(weightRef!.current!.value)}
                         warehouseId={warehouse.id}
                         qualityId={productCategory.id}
                         closeSelector={closeSelector}

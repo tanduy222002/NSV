@@ -133,10 +133,6 @@ const LoginForm = () => {
                         }
                     />
                     <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center gap-1 text-sm outline-none text-gray-400">
-                            <input type="checkbox" />
-                            <p>Ghi nhớ đăng nhập</p>
-                        </div>
                         <div
                             className="text-sm underline text-gray-400 hover:font-semibold cursor-pointer"
                             onClick={goToForgotPasswordForm}

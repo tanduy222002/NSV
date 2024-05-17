@@ -24,7 +24,7 @@ export const getWarehouseDetail = async ({
                     name: row?.name,
                     slots: row?.slots?.map((slot) => ({
                         id: slot?.id,
-                        name: slot?.name,
+                        name: `${row?.name}#${slot.name}`,
                         capacity: slot?.capacity,
                         status: slot?.status,
                         currentLoad: slot?.containing,

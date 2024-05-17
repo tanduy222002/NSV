@@ -1,3 +1,4 @@
+import { FaWeightScale } from 'react-icons/fa6';
 import { FormInput, Button, DataField } from '@renderer/components';
 
 type SlotPickerProps = {
@@ -15,23 +16,35 @@ const SlotPicker = ({
 }: SlotPickerProps) => {
     return (
         <div className="flex flex-col gap-3 mb-5">
-            <h2 className="font-semibold">Vị trí kho: </h2>
+            <h2 className="font-semibold text-sky-800 text-lg">Vị trí kho: </h2>
             <DataField
                 name="Sức chứa tối đa:"
                 defaultValue={'...'}
                 disabled={!currentSlot?.capacity}
-                value={currentSlot?.capacity}
+                value={`${currentSlot?.capacity} m²`}
             />
             <DataField
                 name="Sức chứa khả dụng:"
                 defaultValue={'...'}
-                disabled={!(currentSlot?.capacity - currentSlot?.currentLoad)}
-                value={currentSlot?.capacity - currentSlot?.currentLoad}
+                disabled={!currentSlot?.capacity || !currentSlot?.currentLoad}
+                value={`${
+                    Number(currentSlot?.capacity) -
+                    Number(currentSlot?.currentLoad)
+                }  m²`}
             />
-            <FormInput label="Diện tích muốn sử dụng" ref={dataLoadRef} />
-            <FormInput label="Khối lượng lô hàng" ref={weightRef} />
+            <FormInput
+                label="Diện tích muốn sử dụng (m²)"
+                ref={dataLoadRef}
+                bg="bg-white"
+            />
+            <FormInput
+                label="Khối lượng lô hàng (kg)"
+                ref={weightRef}
+                bg="bg-white"
+                icon={<FaWeightScale />}
+            />
             <Button
-                className="mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-700 hover:bg-sky-100 font-semibold w-fit"
+                className="mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-800 hover:bg-sky-100 font-semibold w-fit"
                 text="Thêm mới"
                 action={() => updateCurrentSlot()}
             />

@@ -44,7 +44,7 @@ const WarehouseDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const goToWarehousePage = () => navigate('/warehouse');
-    const goToWarehouseSlotDetailPage = (slotId: number) =>
+    const goToWarehouseSlotDetailPage = (slotId: number | string) =>
         navigate(`/warehouse/${id}/slot/${slotId}`);
 
     const { getItem } = useLocalStorage('access-token');
@@ -141,12 +141,12 @@ const WarehouseDetailPage = () => {
                                 </div>
                             </div>
                             <StatisticSummary
-                                sqSize={100}
+                                sqSize={110}
                                 percentage={
                                     Math.ceil(
                                         (warehouseDetail?.containing /
                                             warehouseDetail?.capacity) *
-                                            100
+                                            10000
                                     ) / 100
                                 }
                                 strokeWidth={10}

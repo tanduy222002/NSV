@@ -246,12 +246,12 @@ const ImportFormSecondStep = ({
 
                 <div className="flex items-center gap-5 mt-5 w-fit mx-auto">
                     <Button
-                        className="text-[#008767] border-[#008767]"
+                        className="text-emerald-500 border-emerald-500 hover:bg-emerald-50"
                         text="Quay lại"
                         action={() => goToStep(ImportFormStep.First)}
                     />
                     <Button
-                        className="text-[#008767] border-[#008767] bg-[#16C098]"
+                        className="bg-emerald-500 text-white hover:bg-emerald-400"
                         text="Xác nhận"
                         action={() => handleCreateTicket(importTicket)}
                     />

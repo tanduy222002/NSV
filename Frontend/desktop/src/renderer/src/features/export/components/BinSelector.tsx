@@ -39,6 +39,9 @@ const BinSelector = ({
         }
     });
 
+    const getTotalTakenWeight = (bins: ImportBinWithSlot[]) =>
+        bins.reduce((prevWeight, bin) => prevWeight + bin?.taken_weight, 0);
+
     const updateExportBins = (bins: ImportBinWithSlot[]) => {
         queryClient.setQueryData(['bins', warehouseId, qualityId], () => ({
             ...data,
@@ -62,8 +65,16 @@ const BinSelector = ({
                 className="w-[20px] h-[20px] hover:text-red-500 ml-auto cursor-pointer"
                 onClick={() => closeSelector()}
             />
-            <div>
-                <h1>Tổng khối lượng: {totalWeight}</h1>
+            <h1 className="mx-auto text-sky-800 text-lg font-semibold">
+                Chọn lô hàng muốn xuất kho
+            </h1>
+            <div className="mb-5">
+                <h1 className="text-sky-800 text-base font-semibold">
+                    Cần lấy: {totalWeight} kg
+                </h1>
+                <h1 className="text-sky-800 text-base font-semibold">
+                    Đã lấy: {getTotalTakenWeight(data?.content)} kg
+                </h1>
             </div>
             {!isFetching && data?.content?.length === 0 && (
                 <p className="text-base font-semibold">
@@ -77,7 +88,7 @@ const BinSelector = ({
                 />
             )}
             <Button
-                className="mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-700 hover:bg-sky-100 font-semibold w-fit"
+                className="mt-5 mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-700 hover:bg-sky-100 font-semibold w-fit"
                 text="Thêm lô hàng"
                 action={hanldeConfirm}
             />

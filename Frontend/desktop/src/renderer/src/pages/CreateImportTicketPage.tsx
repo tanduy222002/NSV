@@ -8,9 +8,9 @@ const CreateImportTicketPage = () => {
     const navigate = useNavigate();
     const goToImportTicketPage = () => navigate('/import');
     return (
-        <div className="w-full px-5 py-5">
+        <div className="w-full p-10">
             <UserInfo />
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-5">
                 <IoChevronBack
                     className="text-blue-800 h-[30px] w-[30px] px-1 py-1 cursor-pointer hover:bg-blue-50 rounded-full"
                     onClick={goToImportTicketPage}

@@ -1,4 +1,4 @@
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 import { WarehouseMap, MapRow } from '@renderer/features/warehouse/type';
 
 type CreateWarehouseMapPayload = {
@@ -30,7 +30,7 @@ export const createWarehouseMap = async ({
 }: CreateWarehouseMapPayload) => {
     let response = undefined;
     try {
-        response = await makeAuthRequest({
+        response = await makeAuthRequestV2({
             token: token,
             url: '/maps',
             method: 'post',

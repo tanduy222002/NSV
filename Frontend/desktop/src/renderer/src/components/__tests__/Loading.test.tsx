@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import Loading from '../Loading';
 
-describe('test Loading component', () => {
+describe('Loading Component Unit Test', () => {
     it('should be displayed on screen', () => {
         render(<Loading />);
-        const button = screen.getByRole('button');
-        expect(button).toBeInTheDocument();
+        const loading = screen.getByTestId('loading-container');
+        expect(loading).toBeInTheDocument();
     });
 });

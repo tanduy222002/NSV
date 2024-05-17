@@ -108,7 +108,7 @@ const CreateProductForm = () => {
             <Button
                 text="Lưu sản phẩm"
                 type="submit"
-                className="text-emerald-500 border-emerald-500 hover:bg-emerald-50 mx-auto"
+                className="mt-5 text-emerald-500 border-emerald-500 hover:bg-emerald-50 mx-auto"
             />
         </form>
     );

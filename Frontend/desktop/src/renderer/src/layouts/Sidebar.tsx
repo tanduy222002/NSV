@@ -1,7 +1,7 @@
 import { LuWarehouse } from 'react-icons/lu';
 import { GoPackageDependencies } from 'react-icons/go';
 import { GoPackageDependents } from 'react-icons/go';
-import { AiOutlineFundProjectionScreen } from 'react-icons/ai';
+// import { AiOutlineFundProjectionScreen } from 'react-icons/ai';
 import { GiFruitBowl } from 'react-icons/gi';
 import { CiSettings } from 'react-icons/ci';
 import { LuHelpCircle } from 'react-icons/lu';
@@ -32,11 +32,11 @@ const firstSectionItems = [
         icon: <GoPackageDependents />,
         path: '/export'
     },
-    {
-        title: 'Thống kê',
-        icon: <AiOutlineFundProjectionScreen />,
-        path: '/statistic'
-    },
+    // {
+    //     title: 'Thống kê',
+    //     icon: <AiOutlineFundProjectionScreen />,
+    //     path: '/statistic'
+    // },
     {
         title: 'Sản phẩm',
         icon: <GiFruitBowl />,

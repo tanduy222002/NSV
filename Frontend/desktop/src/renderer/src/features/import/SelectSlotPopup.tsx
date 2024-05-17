@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { CgCloseR } from 'react-icons/cg';
 import { MapViewMode } from '../warehouse/components/WarehouseMapPreview';
 import { useModal } from '@renderer/hooks';
-import { Button } from '@renderer/components';
+import { Button, PageLoading } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { WarehouseMapPreview } from '../warehouse/components';
 import { getWarehouseDetail } from '@renderer/services/api';
@@ -52,7 +52,7 @@ const SelectSlotPopup = ({
             })
     });
 
-    const currentSlot = data?.rows[rowIndex]?.slots[slotIndex];
+    const currentSlot = data?.map?.rows[rowIndex]?.slots[slotIndex];
 
     const updateCurrentSlot = () => {
         const weight = Number(weightRef?.current?.value);
@@ -62,7 +62,7 @@ const SelectSlotPopup = ({
             // update current slot load
             const newData = { ...data };
             const updatedLoad = currentSlot.currentLoad + load;
-            newData!.rows[rowIndex]!.slots[slotIndex] = {
+            newData!.map!.rows[rowIndex]!.slots[slotIndex] = {
                 ...currentSlot,
                 currentLoad: updatedLoad
             };
@@ -90,7 +90,7 @@ const SelectSlotPopup = ({
         // unload selected slot from warehouse map
         const newData = { ...data };
         const updatedLoad = currentSlot.currentLoad - selectedSlot.usedLoad;
-        newData!.rows[rowIndex]!.slots[slotIndex] = {
+        newData!.map!.rows[rowIndex]!.slots[slotIndex] = {
             ...currentSlot,
             currentLoad: updatedLoad
         };
@@ -108,28 +108,32 @@ const SelectSlotPopup = ({
     const { closeModal } = useModal();
     return (
         <div className="shadow fixed flex flex-col items-center gap-2 px-5 py-5 z-50 bg-white border border-gray-100 rounded-md h-[600px] w-[800px] top-[100px] left-[450px]">
-            <CgCloseR
-                className="ml-auto cursor-pointer hover:text-red-500"
-                onClick={closeModal}
-            />
+            <div className="ml-auto cursor-pointer w-fit">
+                <CgCloseR
+                    className="ml-auto cursor-pointer hover:text-red-500 w-[16px] h-[16px]"
+                    onClick={closeModal}
+                />
+            </div>
             <h1 className="text-xl font-semibold mb-5">Chọn khu vực chứa</h1>
-            <div className="flex gap-20">
+            <div className="flex gap-20 w-full">
                 {isFetching ? (
-                    <h1>Loading map...</h1>
+                    <PageLoading />
                 ) : (
-                    <WarehouseMapPreview
-                        warehouseMap={data}
-                        viewMode={MapViewMode.Select}
-                        selectAction={setCurrentSlotIndex}
-                    />
+                    <div className="space-y-5 w-fit min-w-[300px]">
+                        <WarehouseMapPreview
+                            warehouseMap={data?.map}
+                            viewMode={MapViewMode.Select}
+                            selectAction={setCurrentSlotIndex}
+                        />
+                        <SlotPicker
+                            dataLoadRef={dataLoadRef}
+                            weightRef={weightRef}
+                            currentSlot={currentSlot}
+                            updateCurrentSlot={updateCurrentSlot}
+                        />
+                    </div>
                 )}
                 <div className="w-full max-w-[500px]">
-                    <SlotPicker
-                        dataLoadRef={dataLoadRef}
-                        weightRef={weightRef}
-                        currentSlot={currentSlot}
-                        updateCurrentSlot={updateCurrentSlot}
-                    />
                     {selectedSlots.length > 0 && (
                         <SelectSlotList
                             selectedSlots={selectedSlots}
@@ -139,7 +143,7 @@ const SelectSlotPopup = ({
                 </div>
             </div>
             <Button
-                className="mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-700 hover:bg-sky-100 font-semibold w-fit"
+                className="mx-auto px-2 py-1 border rounded-md border-sky-800 text-sky-800 hover:bg-sky-100 font-semibold w-fit"
                 text="Xác nhận"
                 action={handleConfirm}
             />

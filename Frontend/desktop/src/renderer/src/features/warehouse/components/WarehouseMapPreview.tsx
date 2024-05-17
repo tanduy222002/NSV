@@ -27,7 +27,7 @@ const WareHouseMapPreview = ({
 
     return (
         <div className="flex flex-col items-center">
-            {warehouseMap?.name.length > 0 && (
+            {warehouseMap?.name?.length > 0 && (
                 <h1 className="font-semibold text-xl text-sky-800 mb-2">
                     {warehouseMap?.name}
                 </h1>
@@ -38,7 +38,7 @@ const WareHouseMapPreview = ({
                         <div
                             className={cn(
                                 'rounded-md border border-sky-800 text-sky-800 py-1 px-3 font-semibold',
-                                slot.status !== 'EMPTY'
+                                slot.status !== 'EMPTY' || slot?.curentLoad > 0
                                     ? 'bg-sky-300'
                                     : 'bg-white',
                                 viewMode === MapViewMode.Select &&
@@ -50,7 +50,7 @@ const WareHouseMapPreview = ({
                                 selectAction({ rowIndex, slotIndex })
                             }
                         >
-                            {slot.name}
+                            {slot?.name}
                         </div>
                     ))}
                     {viewMode === MapViewMode.Edit && (

@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { ImportBinWithSlot } from '@renderer/types/export';
 import { GoMoveToEnd } from 'react-icons/go';
 import { IoClose } from 'react-icons/io5';
+import { cn } from '@renderer/utils/util';
 
 type SlotTableProps = {
     slots: ImportBinWithSlot[];
@@ -51,7 +52,7 @@ const SlotTable = ({ slots, updateExportBins }: SlotTableProps) => {
 
     return (
         <table className="w-fit min-w-[750px] h-fit border-collapse table-auto">
-            <tr className="border border-1">
+            <tr className="border border-1 text-sky-800">
                 <th className="px-2 py-2">ID</th>
                 <th className="px-2 py-2">Sản phẩm</th>
                 <th className="px-2 py-2">Loại hàng</th>
@@ -66,25 +67,32 @@ const SlotTable = ({ slots, updateExportBins }: SlotTableProps) => {
             </tr>
             {slots.map((slot, i) => (
                 <tr key={i} className="border border-1">
-                    <td className="text-sm font-semibold text-gray-300 px-2 py-2">
+                    <td className="text-sm font-semibold px-2 py-2">
                         {slot?.bin?.id}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2">
+                    <td className="text-sm font-semibold px-2">
                         {slot?.bin?.product}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2">
+                    <td className="text-sm font-semibold px-2">
                         {slot?.bin?.quality_with_type}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2">
+                    <td className="text-sm font-semibold px-2">
                         {slot?.bin?.packaged}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2">
+                    <td className="text-sm font-semibold px-2">
                         {slot?.in_slot_weight}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2 w-fit">
+                    <td className="text-sm font-semibold px-2 w-fit">
                         {slot?.location}
                     </td>
-                    <td className="text-sm font-semibold text-gray-300 px-2 w-fit">
+                    <td
+                        className={cn(
+                            'text-sm font-semibold px-2 w-fit',
+                            slot.taken_area && slot.taken_weight
+                                ? 'text-sky-800'
+                                : 'text-gray-300'
+                        )}
+                    >
                         {`${slot.taken_area} m2, ${slot.taken_weight} kg`}
                     </td>
                     <td className="w-fit px-2">

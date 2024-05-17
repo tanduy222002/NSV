@@ -39,7 +39,7 @@ const StatisticSummary = ({
                 />
             </svg>
             <p className="absolute top-1/2 left-1/2 -translate-x-[55%] -translate-y-1/2 text-2xl font-semibold whitespace-nowrap">
-                {percentage} %
+                {percentage}%
             </p>
         </div>
     );

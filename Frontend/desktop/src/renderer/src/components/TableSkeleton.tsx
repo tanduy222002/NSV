@@ -1,7 +1,7 @@
 const TableSkeleton = () => {
     return (
         <div
-            role="status"
+            data-testid="table-skeleton"
             className="max-w-md w-fit min-w-[800px] p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
         >
             <div className="flex items-center justify-between">
@@ -39,7 +39,7 @@ const TableSkeleton = () => {
                 </div>
                 <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
             </div>
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">Đang tải...</span>
         </div>
     );
 };

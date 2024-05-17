@@ -92,7 +92,7 @@ const PartnerDetailTransactionSection = () => {
     if (!isFetching) console.log('partner transaction: ', data);
 
     return (
-        <div>
+        <div className="w-full max-w-[900px]">
             <h1 className="text-lg mb-5 font-semibold text-sky-800">
                 Lịch sử giao dịch
             </h1>
@@ -104,14 +104,16 @@ const PartnerDetailTransactionSection = () => {
                     onSelect={setPaidStatus}
                 />
             </div>
-            {isFetching ? (
-                <TableSkeleton />
-            ) : (
-                <TableView
-                    columns={transactionTableConfig}
-                    items={mapTransactionTable(data?.content)}
-                />
-            )}
+            <div className="mt-5">
+                {isFetching ? (
+                    <TableSkeleton />
+                ) : (
+                    <TableView
+                        columns={transactionTableConfig}
+                        items={mapTransactionTable(data?.content)}
+                    />
+                )}
+            </div>
         </div>
     );
 };
