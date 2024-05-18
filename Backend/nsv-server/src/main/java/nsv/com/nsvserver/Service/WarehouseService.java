@@ -41,7 +41,7 @@ public class WarehouseService {
         Address address=addressService.createAddress(streetAddress, wardId,districtId, provinceId);
         Map map = mapRepository.findById(warehouseDto.getMapId()).orElseThrow(()->new NotFoundException("Map not found with id: "+mapId));
         if (map.getWarehouse()!=null){
-            throw new ExistsException("this map is already associate with a exist warehouse");
+            throw new ExistsException("This map is already associate with an existing warehouse");
         }
         double totalCapacity = map.getRows().stream()
                 .flatMap(row -> row.getSlots().stream())
