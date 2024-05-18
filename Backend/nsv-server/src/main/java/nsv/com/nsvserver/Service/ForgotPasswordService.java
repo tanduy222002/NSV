@@ -94,11 +94,11 @@ public class ForgotPasswordService {
 
 
 
-    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        byte[] bytes = Files.readAllBytes(path);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
+//    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
+//        Path path = Paths.get(filePath);
+//        byte[] bytes = Files.readAllBytes(path);
+//        return new String(bytes, StandardCharsets.UTF_8);
+//    }
     @Transactional
     public Otp generateOtp(String email){
         Employee employee = employeeRepository.findByEmail(email).
