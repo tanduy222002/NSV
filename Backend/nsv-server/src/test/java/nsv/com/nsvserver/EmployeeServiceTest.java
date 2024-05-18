@@ -232,6 +232,20 @@ public class EmployeeServiceTest {
         assertEquals("123456789", employeeDto2.getPhoneNumber());
 
     }
+
+    @Test
+    public void updateEmployeeRole_EmployeeNotFound_NotFoundExceptionThrown() {
+        // Arrange
+        Integer employeeId = 1;
+        EmployeeRoles e = EmployeeRoles.ROLE_EMPLOYEE;
+
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class,()->{
+            employeeService.updateEmployeeRole(employeeId, e);
+        });
+
+    }
     @Test
     public void testUpdateEmployeeRole() {
         // Arrange
@@ -261,6 +275,35 @@ public class EmployeeServiceTest {
 
         assertTrue(employee.getRoles().contains(newRole));
         assertFalse(employee.getRoles().contains(currentRole));
+    }
+
+
+    @Test
+    public void updateEmployeeProfile2() {
+        Profile profile = new Profile();
+        profile.setEmail("profile@test.com");
+
+        Address address = new Address();
+        profile.setAddress(address);
+
+        Employee employee = new Employee();
+        employee.setProfile(profile);
+
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setName("New Name");
+        profileDto.setAddresses(null);
+        // Arrange
+        when(employeeRepository.findById(anyInt())).thenReturn(Optional.of(employee));
+
+        // Act
+        employeeService.updateEmployeeProfile(1, profileDto);
+
+        // Assert
+        verify(employeeRepository).findById(1);
+
+
+        assertEquals("New Name", profile.getName());
+//        assertEquals("Male", profile.getGender());
     }
     @Test
     public void testUpdateEmployeeProfile() {

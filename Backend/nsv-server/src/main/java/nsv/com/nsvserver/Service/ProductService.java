@@ -104,7 +104,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void createQualityForType(Quality quality, Integer id) throws Exception {
+    public void createQualityForType(Quality quality, Integer id)  {
         Optional<Type> TypeOptional = typeRepository.findById(id);
         Type type  = TypeOptional.orElseThrow(() -> new NotFoundException("Type not found with id: " + id));
         //bidirectional
