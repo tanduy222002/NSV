@@ -4,7 +4,9 @@ import nsv.com.nsvserver.Client.EmailService;
 import nsv.com.nsvserver.ClientImpl.AsyncEmail;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Exception.EmailNotFoundException;
 import nsv.com.nsvserver.Exception.NotFoundException;
+import nsv.com.nsvserver.Exception.OtpExpiredException;
 import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Service.AddressService;
 import nsv.com.nsvserver.Service.EmployeeService;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +69,104 @@ public class ForgotPasswordServiceTest {
         verify(asyncEmail, times(1)).sendAsyncEmail(argThat(emailDetailDto->{
             return emailDetailDto.getRecipient().equals("test@example.com") ;
         }));
+
+    }
+
+    @Test
+    void generateOtpAndSendByEmail_EmployeeNotFound_NotFoundExceptionThrown() throws Exception {
+        GenerateOtpRequestDto otpRequest = new GenerateOtpRequestDto();
+        otpRequest.setIdentifier("test@example.com");
+
+        Employee employee = new Employee();
+
+
+        when(employeeRepository.findByEmail(otpRequest.getIdentifier())).thenReturn(Optional.empty());  // Call the method under test
+
+        Exception exception = assertThrows(EmailNotFoundException.class,()->{
+            forgotPasswordService.generateOtpAndSendByEmail(otpRequest);
+        });
+    }
+
+    @Test
+    public void resetPassword() {
+        // Mock data
+        String newPassword = "newPassword";
+        String otpCode = "123456";
+        String identifier = "test@example.com";
+        Employee employee = new Employee();
+        Profile profile = new Profile();
+        profile.setEmail(identifier);
+        employee.setProfile(profile);
+
+        long expiryDateMillis = System.currentTimeMillis() + 10000; // Expiry date in the future
+        Otp userOtp = new Otp();
+        userOtp.setEmployee(employee);
+        userOtp.setExpiryDate(new Date(expiryDateMillis));
+
+        // Stubbing repository methods
+        when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
+        when(encoder.encode(newPassword)).thenReturn("encodedPassword");
+        when(employeeRepository.save(any(Employee.class))).thenReturn(employee);
+
+        // Call the method under test
+        String result = forgotPasswordService.resetPassword(newPassword, otpCode, identifier);
+
+        // Verify repository method invocations
+        verify(otpRepository).findByCode(otpCode);
+        verify(employeeRepository).save(any(Employee.class));
+//        verify(refreshTokenRepository).delete(any(RefreshToken.class));
+        verify(otpRepository).delete(userOtp);
+
+        // Assert the result
+        assertEquals("New password was updated", result);
+    }
+
+    @Test
+    public void resetPassword_OtpNotFound_NotFoundExceptionThrown() {
+        // Mock data
+        String newPassword = "newPassword";
+        String otpCode = "123456";
+        String identifier = "test@example.com";
+        Employee employee = new Employee();
+        Profile profile = new Profile();
+        profile.setEmail(identifier);
+        employee.setProfile(profile);
+
+        long expiryDateMillis = System.currentTimeMillis() + 10000; // Expiry date in the future
+        Otp userOtp = new Otp();
+        userOtp.setEmployee(employee);
+        userOtp.setExpiryDate(new Date(expiryDateMillis));
+
+        when(otpRepository.findByCode(otpCode)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class,()->{
+            forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
+        });
+    }
+
+    @Test
+    public void resetPassword_OtpExpired_OtpExpiredException() {
+        // Mock data
+        String newPassword = "newPassword";
+        String otpCode = "123456";
+        String identifier = "test@example.com";
+        Employee employee = new Employee();
+        Profile profile = new Profile();
+        profile.setEmail(identifier);
+        employee.setProfile(profile);
+
+        long expiryDateMillis = System.currentTimeMillis() - 10000; // Expiry date in the future
+        Otp userOtp = new Otp();
+        userOtp.setEmployee(employee);
+        userOtp.setExpiryDate(new Date(expiryDateMillis));
+
+        // Stubbing repository methods
+        when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
+
+        // Call the method under test
+        Exception exception = assertThrows(OtpExpiredException.class,()->{
+            forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
+        });
 
     }
 
