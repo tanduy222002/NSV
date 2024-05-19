@@ -6,8 +6,6 @@ import nsv.com.nsvserver.Dto.SlotStatisticInWarehouseDto;
 import nsv.com.nsvserver.Dto.StatisticOfProductInWarehouseDto;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Repository.SlotDao;
-import nsv.com.nsvserver.Repository.SlotDaoImpl;
-import nsv.com.nsvserver.Util.ConvertUtil;
 import nsv.com.nsvserver.Util.NumberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,7 @@ import java.util.stream.Collectors;
 public class SlotService {
     SlotDao slotDaoImpl;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+
 
     @Autowired
     public SlotService(SlotDao slotDaoImpl) {

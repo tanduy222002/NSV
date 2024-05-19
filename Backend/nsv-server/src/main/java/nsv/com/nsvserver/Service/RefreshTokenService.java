@@ -9,8 +9,8 @@ import nsv.com.nsvserver.Repository.EmployeeRepository;
 import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class RefreshTokenService {
     private RefreshTokenRepository refreshTokenRepository;
     private EmployeeRepository employeeRepository;
+
 
     private JwtTokenService jwtTokenService;
     @Value("${REFRESH_TOKEN_EXPIRATION}")
@@ -41,7 +42,7 @@ public class RefreshTokenService {
         );
 
         employee.setRefreshToken(refreshToken);
-        System.out.println("Save employee vs refresh token");
+
         employeeRepository.save(employee);
 
         return refreshToken;

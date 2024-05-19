@@ -1,8 +1,8 @@
 package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Entity.Map;
+import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.BinWeightMismatchException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.SlotAreaMismatchException;
@@ -10,11 +10,11 @@ import nsv.com.nsvserver.Exception.TicketStatusMismatchException;
 import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Service.EmployeeDetailService;
 import nsv.com.nsvserver.Service.TransferTicketService;
-import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
@@ -1113,7 +1113,6 @@ public class TransferTicketServiceTest {
 
         TicketDetailDto dto= (TicketDetailDto) transferTicketService.getTicketDetail(1);
 
-        System.out.println(dto);
 
         verify(ticketDaoImpl,times(1)).getTicketDetail(1);
         verify(ticketDaoImpl,times(1)).getImportBinInTicketDetail(1);

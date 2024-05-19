@@ -1,7 +1,9 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Entity.Map;
+import nsv.com.nsvserver.Entity.Row;
+import nsv.com.nsvserver.Entity.Slot;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;

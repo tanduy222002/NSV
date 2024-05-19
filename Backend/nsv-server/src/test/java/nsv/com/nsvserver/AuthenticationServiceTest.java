@@ -1,15 +1,18 @@
 package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Dto.AuthResponseDto;
-import nsv.com.nsvserver.Dto.DebtDetailDto;
 import nsv.com.nsvserver.Dto.SignUpRequestDto;
-import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Entity.Employee;
+import nsv.com.nsvserver.Entity.EmployeeDetail;
+import nsv.com.nsvserver.Entity.RefreshToken;
+import nsv.com.nsvserver.Entity.Role;
 import nsv.com.nsvserver.Exception.AccountSuspendedException;
-import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.UserNameExistsException;
-import nsv.com.nsvserver.Repository.*;
+import nsv.com.nsvserver.Repository.EmployeeRepository;
+import nsv.com.nsvserver.Repository.ProfileRepository;
+import nsv.com.nsvserver.Repository.RefreshTokenRepository;
+import nsv.com.nsvserver.Repository.RoleRepository;
 import nsv.com.nsvserver.Service.AuthService;
-import nsv.com.nsvserver.Service.DebtService;
 import nsv.com.nsvserver.Service.JwtTokenService;
 import nsv.com.nsvserver.Service.RefreshTokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +29,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

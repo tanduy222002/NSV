@@ -2,9 +2,9 @@ package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
-import nsv.com.nsvserver.Repository.*;
+import nsv.com.nsvserver.Repository.PartnerDao;
+import nsv.com.nsvserver.Repository.PartnerRepository;
 import nsv.com.nsvserver.Service.AddressService;
-import nsv.com.nsvserver.Service.EmployeeService;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,23 +1,23 @@
 package nsv.com.nsvserver.Service;
 
-import nsv.com.nsvserver.Dto.*;
+import nsv.com.nsvserver.Dto.AddressDto;
+import nsv.com.nsvserver.Dto.EmployeeDto;
+import nsv.com.nsvserver.Dto.PageDto;
+import nsv.com.nsvserver.Dto.ProfileDto;
+import nsv.com.nsvserver.Entity.Address;
+import nsv.com.nsvserver.Entity.Employee;
+import nsv.com.nsvserver.Entity.Profile;
+import nsv.com.nsvserver.Entity.Role;
 import nsv.com.nsvserver.Exception.ExistsException;
+import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Util.ConvertUtil;
 import nsv.com.nsvserver.Util.EmployeeRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import nsv.com.nsvserver.Entity.*;
-
-import nsv.com.nsvserver.Exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,9 +61,8 @@ public class EmployeeService {
         employee.setStatus(status);
     }
     public PageDto getAllEmployeeProfile(Integer page, Integer pageSize, String name, String status){
-        System.out.println("getAllEmployeeProfile");
+
         List<Profile> profiles = profileDaoImpl.findAllWithEagerLoading(page, pageSize,name,status);
-        System.out.println("before mapping");
         List<EmployeeDto> results = profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
         long totalCount = profileDaoImpl.getTotalCount();
         return new PageDto(Math.ceil((double) totalCount / pageSize), totalCount, page, results);
@@ -106,7 +105,7 @@ public class EmployeeService {
     @Transactional
     public void deleteEmployee(Integer id){
         if(employeeRepository.existsById(id)){
-            System.out.println("Before delete");
+
             employeeRepository.deleteById(id);
         }
         else{
@@ -115,6 +114,7 @@ public class EmployeeService {
 
 
     }
+
 
     public EmployeeDto getEmployeeById(Integer id){
         Profile profile = profileDaoImpl.findOneWithEagerLoading(id).orElseThrow(() -> new NotFoundException("Employee not found with ID: " + id));

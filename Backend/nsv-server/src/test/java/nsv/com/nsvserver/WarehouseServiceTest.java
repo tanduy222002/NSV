@@ -1,16 +1,18 @@
 package nsv.com.nsvserver;
+
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.*;
+import nsv.com.nsvserver.Repository.MapRepository;
+import nsv.com.nsvserver.Repository.WarehouseDao;
+import nsv.com.nsvserver.Repository.WarehouseRepository;
 import nsv.com.nsvserver.Service.AddressService;
 import nsv.com.nsvserver.Service.WarehouseService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -18,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;

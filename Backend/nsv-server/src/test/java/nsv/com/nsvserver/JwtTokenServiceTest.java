@@ -2,39 +2,20 @@ package nsv.com.nsvserver;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import jakarta.persistence.Access;
-import jakarta.servlet.ServletException;
 import nsv.com.nsvserver.Entity.Employee;
-import nsv.com.nsvserver.Entity.RefreshToken;
 import nsv.com.nsvserver.Entity.Role;
-import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Exception.RefreshTokenExpiredException;
-import nsv.com.nsvserver.Repository.EmployeeRepository;
-import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import nsv.com.nsvserver.Service.JwtTokenService;
-import nsv.com.nsvserver.Service.RefreshTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtTokenServiceTest {
@@ -61,7 +42,6 @@ public class JwtTokenServiceTest {
 
         // Act
         String token = jwtTokenService.generateToken(employee);
-        System.out.println(token);
         // Assert
         assertNotNull(token);
         assertTrue(token.length() > 0);

@@ -22,8 +22,6 @@ public class NsvServerApplication {
 	BinDao binDaoImpl;
 	TicketDao ticketDaoImpl;
 
-//	@Autowired
-//	ProductRepository productRepository;
 
 	@Autowired
 	public NsvServerApplication(BinDao binDaoImpl, TicketDao ticketDaoImpl) {
