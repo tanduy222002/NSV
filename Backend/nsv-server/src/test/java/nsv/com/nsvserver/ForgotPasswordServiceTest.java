@@ -7,6 +7,7 @@ import nsv.com.nsvserver.Entity.*;
 import nsv.com.nsvserver.Exception.EmailNotFoundException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.OtpExpiredException;
+import nsv.com.nsvserver.Exception.OtpNotMatchIdentifierException;
 import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Service.AddressService;
 import nsv.com.nsvserver.Service.EmployeeService;
@@ -155,16 +156,40 @@ public class ForgotPasswordServiceTest {
         profile.setEmail(identifier);
         employee.setProfile(profile);
 
-        long expiryDateMillis = System.currentTimeMillis() - 10000; // Expiry date in the future
+        long expiryDateMillis = System.currentTimeMillis() - 10000;
         Otp userOtp = new Otp();
         userOtp.setEmployee(employee);
         userOtp.setExpiryDate(new Date(expiryDateMillis));
 
-        // Stubbing repository methods
         when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
 
         // Call the method under test
         Exception exception = assertThrows(OtpExpiredException.class,()->{
+            forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
+        });
+
+    }
+
+    @Test
+    public void resetPassword_wrongEmail_OtpMismatchExceptionThrown() {
+        // Mock data
+        String newPassword = "newPassword";
+        String otpCode = "123456";
+        String identifier = "test@example.com";
+        Employee employee = new Employee();
+        Profile profile = new Profile();
+        profile.setEmail("wrong@gmail.com");
+        employee.setProfile(profile);
+
+        long expiryDateMillis = System.currentTimeMillis() +10000;
+        Otp userOtp = new Otp();
+        userOtp.setEmployee(employee);
+        userOtp.setExpiryDate(new Date(expiryDateMillis));
+
+        when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
+
+        // Call the method under test
+        Exception exception = assertThrows(OtpNotMatchIdentifierException.class,()->{
             forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
         });
 
