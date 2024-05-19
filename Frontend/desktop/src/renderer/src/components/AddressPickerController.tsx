@@ -24,6 +24,7 @@ const AddressPickerController = ({
                         `${address?.address}, ${address?.ward?.name}, ${address?.district?.name}, ${address?.province?.name}`}
                 </div>
                 <FaLocationDot
+                    data-testid="location-icon"
                     onClick={openModal}
                     className="ml-auto hover:text-red-500"
                 />

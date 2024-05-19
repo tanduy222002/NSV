@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TableView, { ColumnType } from '../TableView';
-import { vi } from 'vitest';
 
 describe('TableView Component Unit Test', () => {
     const columns = [
@@ -19,9 +18,9 @@ describe('TableView Component Unit Test', () => {
         { id: '2', name: 'Jane Doe', profile: 'profile2.png' }
     ];
 
-    const viewAction = vi.fn();
-    const editAction = vi.fn();
-    const deleteAction = vi.fn();
+    const viewAction = jest.fn();
+    const editAction = jest.fn();
+    const deleteAction = jest.fn();
 
     it('renders correctly with data', () => {
         render(

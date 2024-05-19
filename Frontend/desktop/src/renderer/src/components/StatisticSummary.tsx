@@ -16,7 +16,12 @@ const StatisticSummary = ({
 
     return (
         <div className="relative">
-            <svg width={sqSize} height={sqSize} viewBox={viewBox}>
+            <svg
+                width={sqSize}
+                height={sqSize}
+                viewBox={viewBox}
+                data-testid="statistic-svg"
+            >
                 <circle
                     className="fill-orange-300 stroke-gray-300"
                     cx={sqSize / 2}

@@ -23,7 +23,10 @@ const FileInput = ({ fileSrc, onChange }: FileInputProps) => {
         <div className="mx-auto flex-col flex items-center">
             <div className="w-[200px] h-[200px] p-3 my-3 border border-gray-300 rounded-md mx-auto flex items-center justify-center">
                 {fileSrc == null ? (
-                    <GiFruitBowl className="w-full h-full min-[400px] text-gray-300" />
+                    <GiFruitBowl
+                        data-testid="default-icon"
+                        className="w-full h-full min-[400px] text-gray-300"
+                    />
                 ) : (
                     <img
                         className="fit-cover w-full h-full"
@@ -37,6 +40,7 @@ const FileInput = ({ fileSrc, onChange }: FileInputProps) => {
                 type="button"
             >
                 <input
+                    data-testid="file-input"
                     type="file"
                     // accept="image/*"
                     className="absolute opacity-0 h-full w-full cursor-pointer"
