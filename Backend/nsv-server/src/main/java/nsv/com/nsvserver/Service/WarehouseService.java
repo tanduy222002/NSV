@@ -1,16 +1,19 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Entity.Address;
+import nsv.com.nsvserver.Entity.Map;
+import nsv.com.nsvserver.Entity.Warehouse;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.*;
+import nsv.com.nsvserver.Repository.MapRepository;
+import nsv.com.nsvserver.Repository.WarehouseDao;
+import nsv.com.nsvserver.Repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +44,7 @@ public class WarehouseService {
         Address address=addressService.createAddress(streetAddress, wardId,districtId, provinceId);
         Map map = mapRepository.findById(warehouseDto.getMapId()).orElseThrow(()->new NotFoundException("Map not found with id: "+mapId));
         if (map.getWarehouse()!=null){
-            throw new ExistsException("this map is already associate with a exist warehouse");
+            throw new ExistsException("This map is already associate with an existing warehouse");
         }
         double totalCapacity = map.getRows().stream()
                 .flatMap(row -> row.getSlots().stream())

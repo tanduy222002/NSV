@@ -1,31 +1,20 @@
 package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Dto.DebtDetailDto;
-import nsv.com.nsvserver.Entity.*;
-import nsv.com.nsvserver.Exception.ExistsException;
+import nsv.com.nsvserver.Entity.Debt;
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.AddressRepository;
 import nsv.com.nsvserver.Repository.DebtRepository;
-import nsv.com.nsvserver.Repository.DistrictRepository;
-import nsv.com.nsvserver.Repository.WardRepository;
-import nsv.com.nsvserver.Service.AddressService;
 import nsv.com.nsvserver.Service.DebtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
-import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

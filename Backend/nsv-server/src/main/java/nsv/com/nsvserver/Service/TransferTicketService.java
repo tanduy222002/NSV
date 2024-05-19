@@ -10,11 +10,10 @@ import nsv.com.nsvserver.Exception.SlotAreaMismatchException;
 import nsv.com.nsvserver.Exception.TicketStatusMismatchException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 @Service
@@ -311,8 +310,7 @@ public class TransferTicketService {
                     List<BinBin> binBins = ticketDaoImpl.fetchBinBinByExportBinId(bin.getId());
                     binBins.stream().forEach(binBin -> {
                         Bin importBin = binBin.getImportBin();
-                        System.out.println(binBin.getWeight());
-                        System.out.println(binBin.getArea());
+
                         if (importBin.getLeftWeight() < binBin.getWeight()) {
                             throw new BinWeightMismatchException();
                         }
@@ -320,7 +318,7 @@ public class TransferTicketService {
                         BinSlot binSlot = binDaoImpl.GetBinSlotBySlotIdAndBinId(importBin.getId(), binBin.getImportSlot().getId());
                         binSlot.setWeight(binSlot.getWeight()-binBin.getWeight());
                         binSlot.setArea(binSlot.getArea()-binBin.getArea());
-                        System.out.println(binSlot.getBin().getId()+"  "+binSlot.getSlot().getId());
+
                         importBin.setLeftWeight(importBin.getLeftWeight() - binBin.getWeight());
 
                         Slot containingSlot = binBin.getImportSlot();

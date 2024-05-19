@@ -1,33 +1,24 @@
 package nsv.com.nsvserver;
 
-import nsv.com.nsvserver.Client.ImageService;
-import nsv.com.nsvserver.Dto.*;
+import nsv.com.nsvserver.Dto.ImportBinInSlot;
+import nsv.com.nsvserver.Dto.PageDto;
 import nsv.com.nsvserver.Entity.*;
-import nsv.com.nsvserver.Exception.ExistsException;
-import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.*;
+import nsv.com.nsvserver.Repository.BinDao;
 import nsv.com.nsvserver.Service.BinService;
-import nsv.com.nsvserver.Service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BinServiceTest {

@@ -1,6 +1,5 @@
 package nsv.com.nsvserver.Service;
 
-import nsv.com.nsvserver.Dto.ProvinceResponseDto;
 import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.District;
 import nsv.com.nsvserver.Entity.Province;

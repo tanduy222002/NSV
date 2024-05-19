@@ -1,7 +1,5 @@
 package nsv.com.nsvserver.Service;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
 import nsv.com.nsvserver.Client.ImageService;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Product;
@@ -9,11 +7,8 @@ import nsv.com.nsvserver.Entity.Quality;
 import nsv.com.nsvserver.Entity.Type;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Exception.ProductExistsException;
-import nsv.com.nsvserver.Exception.UploadImageException;
 import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -71,6 +64,7 @@ public class ProductService {
         return new PageDto(page.getTotalPages(),page.getTotalElements(),pageIndex,productDtos);
 
     }
+
     @Transactional
     public void createNewProduct(String name, String variety, String base64Img) throws Exception {
 

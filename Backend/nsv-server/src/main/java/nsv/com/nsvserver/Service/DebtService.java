@@ -1,7 +1,6 @@
 package nsv.com.nsvserver.Service;
 
 import jakarta.transaction.Transactional;
-import lombok.Data;
 import nsv.com.nsvserver.Dto.DebtDetailDto;
 import nsv.com.nsvserver.Entity.Debt;
 import nsv.com.nsvserver.Exception.NotFoundException;

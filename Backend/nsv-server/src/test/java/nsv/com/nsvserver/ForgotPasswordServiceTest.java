@@ -2,28 +2,27 @@ package nsv.com.nsvserver;
 
 import nsv.com.nsvserver.Client.EmailService;
 import nsv.com.nsvserver.ClientImpl.AsyncEmail;
-import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Entity.*;
+import nsv.com.nsvserver.Dto.GenerateOtpRequestDto;
+import nsv.com.nsvserver.Entity.Employee;
+import nsv.com.nsvserver.Entity.Otp;
+import nsv.com.nsvserver.Entity.Profile;
 import nsv.com.nsvserver.Exception.EmailNotFoundException;
 import nsv.com.nsvserver.Exception.NotFoundException;
 import nsv.com.nsvserver.Exception.OtpExpiredException;
-import nsv.com.nsvserver.Repository.*;
-import nsv.com.nsvserver.Service.AddressService;
-import nsv.com.nsvserver.Service.EmployeeService;
+import nsv.com.nsvserver.Exception.OtpNotMatchIdentifierException;
+import nsv.com.nsvserver.Repository.EmployeeRepository;
+import nsv.com.nsvserver.Repository.OtpRepository;
+import nsv.com.nsvserver.Repository.RefreshTokenRepository;
 import nsv.com.nsvserver.Service.ForgotPasswordService;
 import nsv.com.nsvserver.Service.JwtTokenService;
-import nsv.com.nsvserver.Util.EmployeeRoles;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -155,16 +154,40 @@ public class ForgotPasswordServiceTest {
         profile.setEmail(identifier);
         employee.setProfile(profile);
 
-        long expiryDateMillis = System.currentTimeMillis() - 10000; // Expiry date in the future
+        long expiryDateMillis = System.currentTimeMillis() - 10000;
         Otp userOtp = new Otp();
         userOtp.setEmployee(employee);
         userOtp.setExpiryDate(new Date(expiryDateMillis));
 
-        // Stubbing repository methods
         when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
 
         // Call the method under test
         Exception exception = assertThrows(OtpExpiredException.class,()->{
+            forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
+        });
+
+    }
+
+    @Test
+    public void resetPassword_wrongEmail_OtpMismatchExceptionThrown() {
+        // Mock data
+        String newPassword = "newPassword";
+        String otpCode = "123456";
+        String identifier = "test@example.com";
+        Employee employee = new Employee();
+        Profile profile = new Profile();
+        profile.setEmail("wrong@gmail.com");
+        employee.setProfile(profile);
+
+        long expiryDateMillis = System.currentTimeMillis() +10000;
+        Otp userOtp = new Otp();
+        userOtp.setEmployee(employee);
+        userOtp.setExpiryDate(new Date(expiryDateMillis));
+
+        when(otpRepository.findByCode(otpCode)).thenReturn(Optional.of(userOtp));
+
+        // Call the method under test
+        Exception exception = assertThrows(OtpNotMatchIdentifierException.class,()->{
             forgotPasswordService.resetPassword(newPassword,otpCode,identifier);
         });
 
