@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ProfileDto {
+
     @NotBlank(message = "name is mandatory")
     @Schema( example = "tanduy", required = true)
     private String name;
@@ -22,8 +23,8 @@ public class ProfileDto {
     private String email;
     @Schema( example = "M")
     private String gender;
-    @Schema( example = "[]")
-    private List<String> addresses = new ArrayList<String>();
+
+    private AddressDto addresses;
 
     public ProfileDto() {
     }

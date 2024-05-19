@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,8 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy="product",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy="product",cascade = CascadeType.ALL)
+//    @JsonManagedReference
     private List<Type> types = new ArrayList<>();
 
     public Product() {
@@ -40,5 +42,6 @@ public class Product {
         this.name=dto.getName();
         this.image=dto.getImage();
         this.variety=dto.getVariety();
+        this.types =new ArrayList<>();
     }
 }

@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import nsv.com.nsvserver.Anotation.MatchingPassword;
-import nsv.com.nsvserver.Anotation.StrongPassword;
-import nsv.com.nsvserver.Anotation.ValidEmail;
+import nsv.com.nsvserver.Annotation.MatchingPassword;
+import nsv.com.nsvserver.Annotation.StrongPassword;
+import nsv.com.nsvserver.Annotation.ValidEmail;
 
 import java.util.List;
 
@@ -42,6 +42,6 @@ public class SignUpRequestDto {
     @Schema( example = "tanduy222002@gmail.com", required = true,description = "Email will receive updates, alerts, and important information related to account activity, services...")
     private String email;
 
-    @Schema(example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false,description = "the account will automatically be assigned the default role of \"ROLE_EMPLOYEE\" if no role is specified ")
+    @Schema(hidden = true,example = "[\"ROLE_EMPLOYEE\", \"ROLE_MANAGER\"]", required = false,description = "the account will automatically be assigned the default role of \"ROLE_EMPLOYEE\" if no role is specified ")
     private List<String> roles;
 }

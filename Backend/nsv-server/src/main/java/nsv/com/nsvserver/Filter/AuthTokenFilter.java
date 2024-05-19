@@ -5,7 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nsv.com.nsvserver.Annotation.TraceTime;
 import nsv.com.nsvserver.Entity.EmployeeDetail;
+import nsv.com.nsvserver.Exception.AccountSuspendedException;
 import nsv.com.nsvserver.Service.EmployeeDetailService;
 import nsv.com.nsvserver.Service.JwtTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 
-        System.out.println("header auth: "+ headerAuth);
-
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
@@ -54,15 +54,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            System.out.println("Internal filter");
+
             String jwt = parseJwt(request);
-            System.out.println(jwt);
+
             if (jwt != null && jwtTokenService.validateToken(jwt)) {
                 String userName = jwtTokenService.getUserNameFromJWT(jwt);
-                System.out.println("before construct Employee Detail ");
+
                 EmployeeDetail employeeDetail = employeeDetailService.loadUserByUsername(userName);
-                System.out.println("after construct Employee Detail ");
-                System.out.println(employeeDetail.getEmployee().getRefreshToken().getToken());
+                if(employeeDetail.getEmployee().getStatus().equals("SUSPENDED")){
+                    throw new AccountSuspendedException();
+                }
+
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 employeeDetail,

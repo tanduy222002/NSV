@@ -110,6 +110,15 @@ public class AuthController {
 
     }
 
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/log-out")
+    @Operation(summary = "log out account")
+    public ResponseEntity<?> logout() {
+        authService.logOut();
+        return ResponseEntity.ok("Logout successfully");
+
+    }
+
 
 
 

@@ -2,7 +2,7 @@ package nsv.com.nsvserver.Validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import nsv.com.nsvserver.Anotation.MatchingPassword;
+import nsv.com.nsvserver.Annotation.MatchingPassword;
 import org.springframework.beans.BeanWrapperImpl;
 
 public class MatchingPasswordValidator implements ConstraintValidator<MatchingPassword, Object> {

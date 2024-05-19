@@ -4,20 +4,24 @@ package nsv.com.nsvserver.ExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.persistence.NoResultException;
+import jakarta.validation.ConstraintViolationException;
 import nsv.com.nsvserver.Dto.ErrorResponseDto;
 import nsv.com.nsvserver.Exception.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +40,37 @@ public class AuthExceptionHandler {
                 HttpStatus.BAD_REQUEST);
 
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleTicketStatusMismatchException(TicketStatusMismatchException e) {
+
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleConstraintValidationException(ConstraintViolationException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
     @org.springframework.web.bind.annotation.ExceptionHandler
     public ResponseEntity<?> handleIllegalRoleException(IllegalRoleException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleIHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.BAD_REQUEST.toString(),
                 e.getMessage()),
@@ -53,6 +86,15 @@ public class AuthExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    public ResponseEntity<?> handleAccountSuspendedException(AccountSuspendedException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.FORBIDDEN.toString(),
+                e.getMessage()),
+                HttpStatus.FORBIDDEN);
+    }
+
+
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -65,12 +107,12 @@ public class AuthExceptionHandler {
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<?> handleExpiredToken(ExpiredJwtException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-                HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.UNAUTHORIZED.toString(),
                 e.getMessage()),
-                HttpStatus.BAD_REQUEST);
+                HttpStatus.UNAUTHORIZED);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
@@ -160,12 +202,49 @@ public class AuthExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleExistException(ExistsException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleSlotOverContainingException(SlotAreaMismatchException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleBinWeightMismatchException(BinWeightMismatchException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<?> handleRefreshTokenExpiredException(RefreshTokenExpiredException e) {
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.FORBIDDEN.toString(),
                 e.getMessage()),
                 HttpStatus.FORBIDDEN);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> handleNoResultException(NoResultException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.NOT_FOUND.toString(),
+                e.getMessage()),
+                HttpStatus.NOT_FOUND);
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
@@ -176,15 +255,34 @@ public class AuthExceptionHandler {
                 e.getMessage()),
                 HttpStatus.FORBIDDEN);
     }
-//    @org.springframework.web.bind.annotation.ExceptionHandler
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ResponseEntity<?> handleDefaultException(Exception e) {
-//        System.out.println(e.getClass().getName());
-//        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
-//                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-//                e.getMessage()),
-//                HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<?> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.CONFLICT.toString(),
+                e.getMessage()),
+                HttpStatus.CONFLICT);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleIoException(IOException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleDefaultException(Exception e) {
+        System.out.println(e.getClass().getName());
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }

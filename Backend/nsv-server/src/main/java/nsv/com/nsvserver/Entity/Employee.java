@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class Employee {
     @Column(name = "user_name",unique = true, nullable = false)
     private String userName;
 
-    @Column(name = "pass_word",unique = true,nullable = false)
+    @Column(name = "pass_word",nullable = false)
     private String password;
 
     @Column(name = "status")
@@ -43,6 +44,7 @@ public class Employee {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JsonBackReference
     private Profile profile;
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -71,6 +73,11 @@ public class Employee {
         }
     }
 
+    public void removeRole(Role role){
+        this.roles.remove(role);
+//        role.getEmployeeList().remove(this);
+    }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
         profile.setEmployee(this);
@@ -79,7 +86,7 @@ public class Employee {
     public void setOtp(Otp otp) {
         this.otp = otp;
         if(otp != null){
-        otp.setEmployee(this);
+           otp.setEmployee(this);
         }
     }
 

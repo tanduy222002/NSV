@@ -7,15 +7,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import nsv.com.nsvserver.Dto.*;
-import nsv.com.nsvserver.Service.AuthService;
 import nsv.com.nsvserver.Service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Validated
@@ -29,7 +29,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("")
+    @GetMapping("/search")
     @Operation(summary = "Get all employees")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Get employee list successfully",
@@ -40,10 +40,17 @@ public class EmployeeController {
 
     })
 
-    public ResponseEntity<?> getAllEmployee() {
-        List<EmployeeDto> employeesDtoList = employeeService.getAllEmployee();
-        return ResponseEntity.ok(employeesDtoList);
+    public ResponseEntity<?> getAllEmployee(@RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
+                                            @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
+                                            @RequestParam(required = false)  String name,
+                                            @RequestParam(required = false) @Pattern(regexp = "^(ACTIVE|SUSPENDED)$") @Schema(description = "status of employee account: ACTIVE/SUSPENDED") String status
+    ) {
+        PageDto pageDto = employeeService.getAllEmployeeProfile(pageIndex,pageSize,name,status);
+        return ResponseEntity.ok(pageDto);
     }
+
+
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an employee by id")
@@ -77,7 +84,25 @@ public class EmployeeController {
         return ResponseEntity.ok("Updated profile successfully");
     }
 
+    @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
+    @Operation(summary = "Update employee account status")
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateEmployeeStatus(@PathVariable Integer id, @Valid @RequestBody UpdateEmployeeStatusDto dto) {
+        employeeService.updateEmployeeStatus(id,dto.getStatus().name());
+        return ResponseEntity.ok("Updated account status successfully");
+    }
 
+    @Secured({"ROLE_MANAGER","ROLE_ADMIN"})
+    @Operation(summary = "Update employee role")
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<?> updateEmployeeStatus(@PathVariable Integer id, @Valid @RequestBody UpdateEmployeeRoleDto dto) {
+        employeeService.updateEmployeeRole(id,dto.getRole());
+        return ResponseEntity.ok("Updated employee role successfully");
+    }
+
+
+
+    @Secured({ "ROLE_MANAGER", "ROLE_ADMIN" })
     @Operation(summary = "Delete employee by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete successfully"),

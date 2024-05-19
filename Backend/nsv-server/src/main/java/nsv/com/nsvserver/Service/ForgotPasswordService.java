@@ -1,6 +1,7 @@
 package nsv.com.nsvserver.Service;
 
 import nsv.com.nsvserver.Client.EmailService;
+import nsv.com.nsvserver.ClientImpl.AsyncEmail;
 import nsv.com.nsvserver.Dto.EmailDetailDto;
 import nsv.com.nsvserver.Dto.GenerateOtpRequestDto;
 import nsv.com.nsvserver.Entity.Employee;
@@ -18,11 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 
 @Service
@@ -42,14 +38,17 @@ public class ForgotPasswordService {
 
     PasswordEncoder encoder;
 
+    private AsyncEmail asyncEmail;
+
     @Autowired
-    public ForgotPasswordService(RefreshTokenRepository refreshTokenRepository,PasswordEncoder encoder,EmailService emailService, EmployeeRepository employeeRepository, OtpRepository otpRepository, JwtTokenService jwtTokenService) {
+    public ForgotPasswordService(EmailService emailService, OtpRepository otpRepository, EmployeeRepository employeeRepository, JwtTokenService jwtTokenService, RefreshTokenRepository refreshTokenRepository, PasswordEncoder encoder, AsyncEmail asyncEmail) {
         this.emailService = emailService;
-        this.employeeRepository = employeeRepository;
         this.otpRepository = otpRepository;
-        this.jwtTokenService=jwtTokenService;
-        this.encoder=encoder;
-        this.refreshTokenRepository=refreshTokenRepository;
+        this.employeeRepository = employeeRepository;
+        this.jwtTokenService = jwtTokenService;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.encoder = encoder;
+        this.asyncEmail = asyncEmail;
     }
 
     @Transactional
@@ -58,28 +57,43 @@ public class ForgotPasswordService {
         EmailDetailDto emailDetailDto = new EmailDetailDto();
         emailDetailDto.setRecipient(otpRequest.getIdentifier());
         emailDetailDto.setSubject("Otp for reset password");
-        // Read the HTML template into a String variable
-        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
-        String absolutePath = currentPath.toAbsolutePath().toString();
-
-        String htmlContent = readHtmlTemplateFromFile(absolutePath);
+        String htmlContent = """
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>OTP Password</title>
+            </head>
+            <body>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #333;">Your One-Time Password (OTP)</h2>
+                    <p style="color: #555;">Dear {User},</p>
+                    <p style="color: #555;">Your OTP password is: <strong>{OTP}</strong></p>
+                    <p style="color: #555;">Please use this OTP to proceed with your action.</p>
+                    <p style="color: #555;">If you didn't request this OTP, please ignore this email.</p>
+                                <p style="color: #555;">Thank you!</p>
+                </div>
+            </body>
+            </html>
+        """;
         htmlContent=htmlContent.replace("{User}", emailDetailDto.getRecipient());
         htmlContent=htmlContent.replace("{OTP}",otp.getCode());
 
         emailDetailDto.setMsgBody(htmlContent);
-        emailService.sendEmailWithHtmlContent(emailDetailDto);
-            return otp;
+        asyncEmail.sendAsyncEmail(emailDetailDto);
+        return otp;
 
 
     }
 
 
 
-    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        byte[] bytes = Files.readAllBytes(path);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
+
+//    public static String readHtmlTemplateFromFile(String filePath) throws IOException {
+//        Path path = Paths.get(filePath);
+//        byte[] bytes = Files.readAllBytes(path);
+//        return new String(bytes, StandardCharsets.UTF_8);
+//    }
     @Transactional
     public Otp generateOtp(String email){
         Employee employee = employeeRepository.findByEmail(email).

@@ -3,7 +3,7 @@ package nsv.com.nsvserver.Validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import nsv.com.nsvserver.Anotation.ValidEmail;
+import nsv.com.nsvserver.Annotation.ValidEmail;
 
 public class ValidEmailValidator implements ConstraintValidator<ValidEmail, String> {
     @Override

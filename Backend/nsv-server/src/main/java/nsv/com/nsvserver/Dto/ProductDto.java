@@ -1,7 +1,9 @@
 package nsv.com.nsvserver.Dto;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nsv.com.nsvserver.Entity.Product;
 
@@ -12,8 +14,8 @@ import java.util.List;
 
 @Getter
 @Setter
-
-public class ProductDto {
+@NoArgsConstructor
+public class ProductDto  {
 
     private Integer id;
 
@@ -33,4 +35,6 @@ public class ProductDto {
         this.variety=product.getVariety();
 
     }
+
+
 }

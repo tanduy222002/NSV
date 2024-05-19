@@ -2,7 +2,7 @@ package nsv.com.nsvserver.Validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import nsv.com.nsvserver.Anotation.StrongPassword;
+import nsv.com.nsvserver.Annotation.StrongPassword;
 
 public class StrongPasswordValidator implements ConstraintValidator<StrongPassword, String> {
 

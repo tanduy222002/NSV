@@ -1,15 +1,14 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.ArrayList;
 import java.util.List;
 @Entity
-@Table(name = "Ward")
+@Table(name = "ward")
 @Getter
 @Setter
 @ToString
@@ -18,9 +17,26 @@ public class Ward {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @OneToMany(mappedBy="ward",cascade = CascadeType.ALL)
-    private List<Address> addresses = new ArrayList<Address>();
+    @JsonBackReference
+    private List<Address> addresses;
+
+    @Column(name = "name")
+    private String name;
+
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="district_id", nullable=false)
+    @JsonManagedReference
+    private District district;
+
+
 
     public Ward() {
+    }
+
+    public Ward(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
 }

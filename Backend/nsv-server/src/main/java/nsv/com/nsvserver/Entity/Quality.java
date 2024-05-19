@@ -1,8 +1,12 @@
 package nsv.com.nsvserver.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import nsv.com.nsvserver.Dto.QualityCreateDto;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -18,11 +22,19 @@ public class Quality {
     private String name;
 
     @Column(name = "note")
-    private String seasonal;
+    private String description;
 
-    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name="type_id", nullable=false)
+    @JsonBackReference
     private Type type;
+
+    @OneToMany(mappedBy = "quality",cascade={CascadeType.MERGE, CascadeType.DETACH,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
+    private List<Bin> bin;
+    public Quality(QualityCreateDto dto) {
+        this.name=dto.getName();
+        this.description=dto.getDescription();
+    }
 
     public Quality() {
     }
