@@ -14,7 +14,8 @@ const forgotPasswordFormInitValues: ForgotPasswordFormValues = {
 
 const ForgotPasswordForm = () => {
     const navigate = useNavigate();
-    const goToRenewPasswordForm = () => navigate('/auth/renew-password');
+    const goToRenewPasswordForm = (values: ForgotPasswordFormValues) =>
+        navigate(`/auth/renew-password/${values.email}`);
     const goToLoginForm = () => navigate('/auth/login');
     const validateInput = ({ email }: ForgotPasswordFormValues) => {
         const errors: any = {};
@@ -27,14 +28,14 @@ const ForgotPasswordForm = () => {
         <Formik
             initialValues={forgotPasswordFormInitValues}
             validate={validateInput}
-            onSubmit={goToRenewPasswordForm}
+            onSubmit={(values) => goToRenewPasswordForm(values)}
         >
             {({ values, errors, handleChange, handleSubmit, touched }) => (
                 <form
                     className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col gap-4"
                     onSubmit={handleSubmit}
                 >
-                    <h1 className="text-xl font-semibold text-[#1A3389]">
+                    <h1 className="text-xl font-semibold text-sky-800">
                         Quên mật khẩu
                     </h1>
                     <TextInput
@@ -50,12 +51,12 @@ const ForgotPasswordForm = () => {
                     />
 
                     <Button
-                        className="bg-[#1A3389] rounded-md px-4 py-2 text-white font-semibold w-full"
+                        className="bg-sky-800 rounded-md px-4 py-2 text-white font-semibold w-full"
                         type="submit"
                         text="Xác nhận"
                     />
                     <Button
-                        className="border border-[#1A3389] rounded-md px-4 py-2 text-[#1A3389] font-semibold w-full"
+                        className="border border-sky-800 rounded-md px-4 py-2 text-sky-800 font-semibold w-full"
                         action={goToLoginForm}
                         text="Quay lại"
                     />

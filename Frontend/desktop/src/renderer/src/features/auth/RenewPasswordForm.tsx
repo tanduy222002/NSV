@@ -1,8 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Button } from '@renderer/components';
+import { Button, InformationPopup, Loading } from '@renderer/components';
 import { TextInput, PasswordInput, InputError } from './components';
+import { generateOtp, renewPassword } from '@renderer/services/api';
+import { ResultPopup } from '@renderer/types/common';
+import { RenewPasswordError } from '@renderer/constants/auth';
 
 type RenewPasswordFormValues = {
     password: string;
@@ -15,16 +19,59 @@ const renewPasswordFormInitValues: RenewPasswordFormValues = {
     confirmPassword: '',
     otp: ''
 };
-
 const RenewPasswordForm = () => {
+    const { identifier } = useParams();
     const navigate = useNavigate();
     const [activeTime, setActiveTime] = useState(0);
 
+    const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
+    const closePopup = () => setResultPopup(null);
+
+    const generateOtpMutation = useMutation({
+        mutationFn: async () => {
+            return await generateOtp({
+                identifier: identifier as string,
+                deliveryMethod: 'email'
+            });
+        }
+    });
+
+    const renewPasswordMutation = useMutation({
+        mutationFn: async (values: any) => {
+            return await renewPassword({
+                otp: values.otp,
+                password: values.password,
+                identifier: identifier as string
+            });
+        }
+    });
+
     const goToRenewPasswordSuccess = () => navigate('/auth/renew-success');
     const goToLoginForm = () => navigate('/auth/login');
-    const setRenewPasswordDuration = () => setActiveTime(10);
-    const handleRenewPassword = () => {
-        goToRenewPasswordSuccess();
+    const setRenewPasswordDuration = () => setActiveTime(180);
+
+    const createOtp = async () => {
+        await generateOtpMutation.mutateAsync();
+        setRenewPasswordDuration();
+    };
+    const handleRenewPassword = async (values) => {
+        if (activeTime === 0) {
+            setResultPopup(RenewPasswordError.OtpExpired);
+            return;
+        }
+
+        const response: any = await renewPasswordMutation.mutateAsync({
+            otp: values.otp,
+            password: values.password,
+            identifier: identifier as string
+        });
+
+        if (response?.status === 200) {
+            goToRenewPasswordSuccess();
+            return;
+        } else {
+            setResultPopup(RenewPasswordError.OtpMismatched);
+        }
     };
 
     const validateInput = ({
@@ -42,7 +89,6 @@ const RenewPasswordForm = () => {
             errors.password = 'Mật khẩu không trùng khớp';
             errors.confirmPassword = 'Mật khẩu không trùng khớp';
         }
-        console.log('validation error: ', errors);
 
         return errors;
     };
@@ -58,19 +104,29 @@ const RenewPasswordForm = () => {
         <Formik
             initialValues={renewPasswordFormInitValues}
             validate={validateInput}
-            onSubmit={handleRenewPassword}
+            onSubmit={(values) => handleRenewPassword(values)}
         >
             {({ values, errors, handleChange, handleSubmit, touched }) => (
                 <form
                     className="grow-[3] shrink-[3] h-full bg-white px-[50px] py-[50px] flex flex-col gap-4 relative"
                     onSubmit={handleSubmit}
                 >
+                    {(generateOtpMutation.isPending ||
+                        renewPasswordMutation.isPending) && <Loading />}
+                    {resultPopup && (
+                        <InformationPopup
+                            title={resultPopup.title}
+                            body={resultPopup?.body}
+                            popupType={resultPopup?.popupType}
+                            closeAction={closePopup}
+                        />
+                    )}
                     {activeTime > 0 && (
                         <p className="font-semibold text-sm text-red-500 absolute top-[60px] right-[50px]">
                             {activeTime}
                         </p>
                     )}
-                    <h1 className="text-xl font-semibold text-[#1A3389]">
+                    <h1 className="text-xl font-semibold text-sky-800">
                         Xác nhận mật khẩu mới
                     </h1>
 
@@ -113,19 +169,19 @@ const RenewPasswordForm = () => {
 
                     {activeTime > 0 ? (
                         <Button
-                            className="bg-[#1A3389] rounded-md px-4 py-2 text-white font-semibold w-full"
-                            action={goToRenewPasswordSuccess}
+                            className="bg-sky-800 rounded-md px-4 py-2 text-white font-semibold w-full"
+                            type="submit"
                             text="Xác nhận"
                         />
                     ) : (
                         <Button
-                            className="bg-[#1A3389] rounded-md px-4 py-2 text-white font-semibold w-full"
-                            action={setRenewPasswordDuration}
+                            className="bg-sky-800 rounded-md px-4 py-2 text-white font-semibold w-full"
+                            action={createOtp}
                             text="Tạo mới mật khẩu"
                         />
                     )}
                     <Button
-                        className="border border-[#1A3389] rounded-md px-4 py-2 text-[#1A3389] font-semibold w-full"
+                        className="border border-sky-800 rounded-md px-4 py-2 text-sky-800 font-semibold w-full"
                         action={goToLoginForm}
                         text="Quay lại"
                     />

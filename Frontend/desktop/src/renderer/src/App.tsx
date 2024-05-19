@@ -10,9 +10,23 @@ import {
     ProductPage,
     WareHousePage,
     ExportPage,
+    CreateExportTicketPage,
     ImportPage,
+    CreateWarehousePage,
+    CreateWarehouseMapPage,
+    ProductLocationDetailPage,
     CreateProductPage,
-    EditProductPage
+    EditProductPage,
+    PartnerPage,
+    CreateImportTicketPage,
+    ImportTicketDetailPage,
+    WarehouseDetailPage,
+    WarehouseSlotDetailPage,
+    ExportTicketDetailPage,
+    PartnerDetailPage,
+    CreatePartnerPage,
+    EmployeePage,
+    EmployeeDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -40,7 +54,7 @@ function App(): JSX.Element {
                                     element={<ForgotPasswordForm />}
                                 />
                                 <Route
-                                    path="renew-password"
+                                    path="renew-password/:identifier"
                                     element={<RenewPasswordForm />}
                                 />
                                 <Route
@@ -56,8 +70,28 @@ function App(): JSX.Element {
                                     element={<WareHousePage />}
                                 />
                                 <Route
+                                    path="/warehouse/:id"
+                                    element={<WarehouseDetailPage />}
+                                />
+                                <Route
+                                    path="/warehouse/:id/slot/:slotId"
+                                    element={<WarehouseSlotDetailPage />}
+                                />
+                                <Route
+                                    path="/warehouse/create"
+                                    element={<CreateWarehousePage />}
+                                />
+                                <Route
+                                    path="/warehouse/map/create"
+                                    element={<CreateWarehouseMapPage />}
+                                />
+                                <Route
                                     path="/product"
                                     element={<ProductPage />}
+                                />
+                                <Route
+                                    path="/product/:productId/location"
+                                    element={<ProductLocationDetailPage />}
                                 />
                                 <Route
                                     path="/product/create"
@@ -72,8 +106,44 @@ function App(): JSX.Element {
                                     element={<ExportPage />}
                                 />
                                 <Route
+                                    path="/export/create"
+                                    element={<CreateExportTicketPage />}
+                                />
+                                <Route
+                                    path="/export/:id"
+                                    element={<ExportTicketDetailPage />}
+                                />
+                                <Route
                                     path="/import"
                                     element={<ImportPage />}
+                                />
+                                <Route
+                                    path="/import/:id"
+                                    element={<ImportTicketDetailPage />}
+                                />
+                                <Route
+                                    path="/import/create"
+                                    element={<CreateImportTicketPage />}
+                                />
+                                <Route
+                                    path="/partner"
+                                    element={<PartnerPage />}
+                                />
+                                <Route
+                                    path="/partner/create"
+                                    element={<CreatePartnerPage />}
+                                />
+                                <Route
+                                    path="/partner/:id"
+                                    element={<PartnerDetailPage />}
+                                />
+                                <Route
+                                    path="/employee"
+                                    element={<EmployeePage />}
+                                />
+                                <Route
+                                    path="/employee/:id"
+                                    element={<EmployeeDetailPage />}
                                 />
                             </Route>
                         </Routes>

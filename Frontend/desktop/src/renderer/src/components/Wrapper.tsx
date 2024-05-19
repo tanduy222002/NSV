@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { cn } from '@renderer/lib/util';
+import { cn } from '@renderer/utils/util';
 
 type WrapperProps = {
     children: ReactNode;

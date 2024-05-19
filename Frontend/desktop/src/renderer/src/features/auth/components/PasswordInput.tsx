@@ -26,12 +26,12 @@ const PasswordInput = ({
         <div className="flex flex-col relative">
             <label
                 htmlFor="password"
-                className="font-semibold text-base text-[#1A3389]"
+                className="font-semibold text-base text-sky-800"
             >
                 {placeHolder}
             </label>
             {errorMessage}
-            <div className="flex items-center justify-between border border-[#1A3389] text-[#1A3389] bg-white font-semibold rounded-md text-sm px-4 py-2">
+            <div className="flex items-center justify-between border border-sky-800 text-sky-800 bg-white font-semibold rounded-md text-sm px-4 py-2">
                 <input
                     className="outline-none flex-1"
                     id={label}

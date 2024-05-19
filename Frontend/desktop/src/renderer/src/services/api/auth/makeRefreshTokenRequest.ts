@@ -9,7 +9,7 @@ export const makeLoginRequest = async (payload: RefreshTokenPayload) => {
     let response = undefined;
     try {
         response = await makeRequest({
-            url: '/api/auth/refresh-token',
+            url: '/auth/refresh-token',
             method: 'post',
             body: payload
         });

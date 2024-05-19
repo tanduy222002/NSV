@@ -1,4 +1,4 @@
-import ProductOverview from './ProductOverview';
 import CreateProductForm from './CreateProductForm';
+import ProductList from './ProductList';
 
-export { ProductOverview, CreateProductForm };
+export { CreateProductForm, ProductList };

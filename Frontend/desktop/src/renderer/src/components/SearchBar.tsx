@@ -1,4 +1,4 @@
-import { cn } from '@renderer/lib/util';
+import { cn } from '@renderer/utils/util';
 import { IoSearch } from 'react-icons/io5';
 import { GrSort } from 'react-icons/gr';
 
@@ -15,8 +15,6 @@ const SearchBar = ({
     filterAction,
     filterDisabled = false
 }: SearchBarProps) => {
-    console.log('action: ', filterAction);
-
     return (
         <div
             className={cn(

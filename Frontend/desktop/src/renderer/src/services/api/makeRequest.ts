@@ -15,7 +15,7 @@ type HttpAuthRequest = HttpRequest & {
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.RENDERER_VITE_SERVER,
-    timeout: 1000
+    timeout: 10000
 });
 
 export const makeRequest = ({ method, url, params, body }: HttpRequest) => {
@@ -25,7 +25,9 @@ export const makeRequest = ({ method, url, params, body }: HttpRequest) => {
         params: params,
         data: body
     })
-        .then((res) => res.data)
+        .then((res) => {
+            return { status: res.status, data: res.data };
+        })
         .catch((err) => err?.response);
 };
 
@@ -45,6 +47,30 @@ export const makeAuthRequest = ({
         params: params,
         data: body
     })
-        .then((res) => res.data)
+        .then((res) => {
+            return res.data;
+        })
         .catch((err) => err);
+};
+
+export const makeAuthRequestV2 = ({
+    method,
+    token,
+    url,
+    params,
+    body
+}: HttpAuthRequest) => {
+    return axiosInstance({
+        url: url,
+        method: method,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: params,
+        data: body
+    })
+        .then((res) => {
+            return { status: res.status, data: res.data };
+        })
+        .catch((err) => err?.response);
 };
