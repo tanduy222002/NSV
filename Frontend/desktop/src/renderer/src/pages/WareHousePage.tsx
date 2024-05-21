@@ -9,7 +9,7 @@ import {
     UserInfo
 } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
-import { usePagination, usePopup } from '@renderer/hooks';
+import { useDeferredState, usePagination, usePopup } from '@renderer/hooks';
 import { Button } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { searchWarehouse } from '@renderer/services/api';
@@ -39,15 +39,18 @@ const WareHousePage = () => {
         navigate(`/warehouse/${id}`);
     const { showPopup, show, hide } = usePopup();
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
 
     const { data, isFetching } = useQuery({
-        queryKey: ['warehouse', currentPage],
+        queryKey: ['warehouse', currentPage, searchValue],
         queryFn: async () => {
             const response = await searchWarehouse({
                 token: accessToken,
-                pageIndex: currentPage
+                pageIndex: currentPage,
+                name: searchValue
             });
             setMaxPage(response?.total_page);
             return response;
@@ -92,8 +95,12 @@ const WareHousePage = () => {
                     action={goToCreateWarehousePage}
                 />
             </div>
-            <SearchBar className="ml-auto" placeHolder="Tìm kiếm..." />
-            <div className="flex flex-col gap-4 mt-6 w-fit">
+            <div className="flex flex-col gap-4 mt-6 w-[1200px]">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm kho..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

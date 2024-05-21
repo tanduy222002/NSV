@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Pagination, UserInfo } from '@renderer/components';
-import { useLocalStorage, usePagination } from '@renderer/hooks';
+import { Pagination, SearchBar, UserInfo } from '@renderer/components';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import partnerIconSrc from '@renderer/assets/partner-icon.png';
 import { ColumnType } from '@renderer/components/TableView';
 import { TableSkeleton, Button, TableView } from '@renderer/components';
@@ -46,14 +50,17 @@ const PartnerPage = () => {
     const [maxPage, setMaxPage] = useState(1);
     const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data } = useQuery({
-        queryKey: ['partners', currentPage],
+        queryKey: ['partners', currentPage, searchValue],
         queryFn: async () => {
             const response = await getPartnerList({
                 token: accessToken,
-                pageIndex: currentPage
+                pageIndex: currentPage,
+                name: searchValue.length > 0 ? searchValue : undefined
             });
             setMaxPage(currentPage);
             return response;
@@ -104,7 +111,12 @@ const PartnerPage = () => {
                     // action={confirmAction}
                 />
             </div>
-            <div className="flex flex-col gap-4 w-fit max-w-[1200px]">
+            <div className="flex flex-col gap-4 w-[1100px]">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm phiếu..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

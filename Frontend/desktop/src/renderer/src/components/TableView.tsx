@@ -36,7 +36,11 @@ const TableView = ({
     deleteAction
 }: TableViewProps) => {
     if (items.length === 0)
-        return <h2 className="text-sm font-semibold">Chưa có dữ liệu </h2>;
+        return (
+            <h2 className="text-base text-sky-800 font-semibold">
+                Chưa có dữ liệu{' '}
+            </h2>
+        );
     return (
         <table className="table-auto min-w-[720px] h-fit border-collapse">
             <thead>

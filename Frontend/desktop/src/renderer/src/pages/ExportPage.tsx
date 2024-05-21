@@ -9,9 +9,14 @@ import {
     Button,
     TableView,
     TableSkeleton,
-    Pagination
+    Pagination,
+    SearchBar
 } from '@renderer/components';
-import { useLocalStorage, usePagination } from '@renderer/hooks';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import { searchExportTicket } from '@renderer/services/api';
 import { formatNumber, formatDate } from '@renderer/utils/formatText';
 
@@ -58,6 +63,8 @@ const ExportPage = () => {
         TicketStatus.All
     );
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const updateTicketStatus = (status: TicketStatus) =>
         setTicketStatus(status);
 
@@ -79,10 +86,11 @@ const ExportPage = () => {
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { data, isFetching } = useQuery({
-        queryKey: ['export', ticketStatus],
+        queryKey: ['export', ticketStatus, searchValue],
         queryFn: async () => {
             const response = await searchExportTicket({
                 token: accessToken,
+                name: searchValue,
                 pageIndex: currentPage,
                 status: ticketStatus
             });
@@ -128,7 +136,12 @@ const ExportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.Rejected)}
                 />
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-[800px]">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm phiếu..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage, usePagination } from '@renderer/hooks';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import { getProductListStatistic } from '@renderer/services/api';
 import {
     TableView,
     Button,
     TableSkeleton,
-    Pagination
+    Pagination,
+    SearchBar
 } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
 import { ProductLineItem } from '@renderer/types/product';
@@ -55,6 +60,8 @@ const ProductList = () => {
         navigate(`/product/${productId}/location`);
     };
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const [maxPage, setMaxPage] = useState(1);
     const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
 
@@ -62,12 +69,13 @@ const ProductList = () => {
     const accessToken = getItem();
 
     const { isFetching, data } = useQuery({
-        queryKey: ['products', currentPage],
+        queryKey: ['products', currentPage, searchValue],
         queryFn: async () => {
             const response = await getProductListStatistic({
                 token: accessToken,
                 pageIndex: currentPage,
-                pageSize: 5
+                pageSize: 5,
+                name: searchValue.length > 0 ? searchValue : undefined
             });
             setMaxPage(response?.total_page);
             return response;
@@ -75,7 +83,7 @@ const ProductList = () => {
     });
 
     const mapProductData = (products: ProductLineItem[]) =>
-        products.map((product) => ({
+        products?.map((product) => ({
             image: product.image,
             id: product.id,
             name: product.name,
@@ -90,7 +98,12 @@ const ProductList = () => {
                 className="text-emerald-500 border-emerald-500 hover:bg-emerald-50 mb-5"
                 action={goToCreateProductPage}
             />
-            <div className="flex flex-col h-full max-h-screen gap-10">
+            <div className="flex flex-col w-[680px] gap-4">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm sản phẩm..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

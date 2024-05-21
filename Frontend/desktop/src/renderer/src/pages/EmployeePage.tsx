@@ -3,14 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { GrUserWorker } from 'react-icons/gr';
 import { getEmployeeList } from '@renderer/services/api';
-import { useLocalStorage, usePagination } from '@renderer/hooks';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import {
     Button,
     ConfirmationPopup,
     InformationPopup,
     Pagination,
     TableSkeleton,
-    UserInfo
+    UserInfo,
+    SearchBar
 } from '@renderer/components';
 import TableView, { ColumnType } from '@renderer/components/TableView';
 import { InfoPopup, ResultPopup } from '@renderer/types/common';
@@ -60,6 +65,8 @@ const employeeTableConfig = [
 ];
 
 const EmployeePage = () => {
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const deleteEmployeeId = useRef<number | null>(null);
     const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
     const closeResultPopup = () => setResultPopup(null);
@@ -83,11 +90,12 @@ const EmployeePage = () => {
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data, refetch } = useQuery({
-        queryKey: ['employees', accountStatus, currentPage],
+        queryKey: ['employees', accountStatus, currentPage, searchValue],
         queryFn: async () => {
             const response = await getEmployeeList({
                 token: accessToken,
                 pageIndex: currentPage,
+                name: searchValue.length > 0 ? searchValue : undefined,
                 status:
                     accountStatus === EmployeeAccountStatus.All
                         ? undefined
@@ -201,7 +209,12 @@ const EmployeePage = () => {
                     }
                 />
             </div>
-            <div className="w-fit max-w-[1200px] flex flex-col gap-4">
+            <div className="w-[800px] flex flex-col gap-4">
+                <SearchBar
+                    className="ml-auto w-fit"
+                    placeHolder="Tìm nhân viên..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (

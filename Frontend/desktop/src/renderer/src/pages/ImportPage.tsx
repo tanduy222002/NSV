@@ -9,9 +9,14 @@ import {
     Button,
     TableView,
     TableSkeleton,
-    Pagination
+    Pagination,
+    SearchBar
 } from '@renderer/components';
-import { useLocalStorage, usePagination } from '@renderer/hooks';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import { searchImportTicket } from '@renderer/services/api';
 import { formatDate, formatNumber } from '@renderer/utils/formatText';
 
@@ -54,6 +59,8 @@ const ImportPage = () => {
     const goToImportTicketDetailPage = (ticketId: number | string) =>
         navigate(`/import/${ticketId}`);
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const [ticketStatus, setTicketStatus] = useState<TicketStatus>(
         TicketStatus.All
     );
@@ -79,11 +86,12 @@ const ImportPage = () => {
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { data, isFetching } = useQuery({
-        queryKey: ['import', ticketStatus, currentPage],
+        queryKey: ['import', ticketStatus, currentPage, searchValue],
         queryFn: async () => {
-            const response = searchImportTicket({
+            const response: any = searchImportTicket({
                 token: accessToken,
                 pageIndex: currentPage,
+                name: searchValue,
                 status: ticketStatus
             });
             setMaxPage(response?.total_page);
@@ -129,7 +137,12 @@ const ImportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.Rejected)}
                 />
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-[800px]">
+                <SearchBar
+                    className="ml-auto"
+                    updateSearchValue={setSearchValue}
+                    placeHolder="Tìm phiếu..."
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
