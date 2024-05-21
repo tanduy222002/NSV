@@ -4,6 +4,7 @@ import usePagination from './usePagination';
 import { useModal } from './useModal';
 import { usePopup } from './usePopup';
 import { useLocalStorage } from './useLocalStorage';
+import { useDeferredState } from './useDeferredState';
 
 export {
     usePagination,
@@ -11,5 +12,6 @@ export {
     useAppSelector,
     useModal,
     usePopup,
-    useLocalStorage
+    useLocalStorage,
+    useDeferredState
 };
