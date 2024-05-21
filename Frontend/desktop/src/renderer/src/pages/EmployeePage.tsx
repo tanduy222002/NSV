@@ -145,11 +145,11 @@ const EmployeePage = () => {
             <UserInfo />
             <div className="flex items-center gap-2 mb-5">
                 <GrUserWorker className="w-[20px] h-[20px] text-sky-800" />
-                <h1 className="font-semibold text-xl">Đối tác</h1>
+                <h1 className="font-semibold text-xl">Nhân viên</h1>
             </div>
             <Button
                 className="mb-5 px-2 py-1 border border-emerald-500 rounded-md hover:bg-emerald-50 text-emerald-500 text-base font-semibold w-fit"
-                text="Thêm đối tác"
+                text="Thêm nhân viên"
                 action={goToCreateEmployeePage}
             />
             <div className="flex gap-2 mb-5">

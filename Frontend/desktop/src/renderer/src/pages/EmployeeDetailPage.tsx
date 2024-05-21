@@ -138,18 +138,18 @@ const EmployeeDetailPage = () => {
                     onClick={goToEmployeePage}
                 />
                 <GrUserWorker className="w-[20px] h-[20px] text-sky-800" />
-                <h1 className="text-xl font-semibold">Đối tác</h1>
+                <h1 className="text-xl font-semibold">Nhân viên</h1>
             </div>
             {isFetching ? (
                 <PageLoading />
             ) : (
                 <div className="space-y-5 max-w-[450px]">
                     <DataField
-                        name="Tên đối tác"
+                        name="Tên nhân viên"
                         icon={<FaUserCog />}
                         disabled={false}
                         value={employee?.data?.name}
-                        defaultValue="Tên đối tác"
+                        defaultValue="Tên nhân viên"
                     />
                     <DataField
                         name="Email"
