@@ -15,10 +15,9 @@ export const searchImportTicket = async ({
     pageSize = 12,
     name,
     status
-}: SearchImportTicketPayload): Promise<any> => {
-    let response: any = undefined;
+}: SearchImportTicketPayload) => {
     try {
-        response = await makeAuthRequest({
+        const response = await makeAuthRequest({
             token: token,
             url: `/transfer_ticket/search`,
             method: 'get',
@@ -30,9 +29,8 @@ export const searchImportTicket = async ({
                 status: status !== TicketStatus.All ? status : undefined
             }
         });
-        console.log('import tickets: ', response);
         return response;
     } catch (err) {
-        console.log('get partner error: ', err);
+        console.log('get import ticket error: ', err);
     }
 };
