@@ -2,10 +2,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { IoChevronBack } from 'react-icons/io5';
 import fruitIconSrc from '../assets/fruit.png';
-import { useLocalStorage } from '@renderer/hooks';
+import { useLocalStorage, usePagination } from '@renderer/hooks';
 import { getProductLocation } from '@renderer/services/api';
-import { UserInfo, TableView, TableSkeleton } from '@renderer/components';
+import {
+    UserInfo,
+    TableView,
+    TableSkeleton,
+    Pagination
+} from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
+import { useState } from 'react';
 
 const locationTableConfig = [
     {
@@ -51,17 +57,23 @@ const ProductLocationDetailPage = () => {
 
     const { productId } = useParams();
 
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data } = useQuery({
-        queryKey: ['product-location', productId],
-        queryFn: () =>
-            getProductLocation({
+        queryKey: ['product-location', productId, currentPage],
+        queryFn: async () => {
+            const response = await getProductLocation({
                 token: accessToken,
                 productId: productId!,
                 pageIndex: 1,
                 pageSize: 10
-            })
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     const mapLocationTable = (productDetails) =>
@@ -92,14 +104,25 @@ const ProductLocationDetailPage = () => {
                 <img src={fruitIconSrc} />
                 <h1 className="font-semibold text-xl">Vị trí chứa hàng</h1>
             </div>
-            {isFetching ? (
-                <TableSkeleton />
-            ) : (
-                <TableView
-                    columns={locationTableConfig}
-                    items={mapLocationTable(data)}
-                />
-            )}
+            <div className="flex flex-col gap-4 max-w-[700px]">
+                {isFetching ? (
+                    <TableSkeleton />
+                ) : (
+                    <>
+                        <TableView
+                            columns={locationTableConfig}
+                            items={mapLocationTable(data)}
+                        />
+                        <Pagination
+                            currentPage={currentPage}
+                            maxPage={maxPage}
+                            goBack={goBack}
+                            goNext={goNext}
+                            goToPage={goToPage}
+                        />
+                    </>
+                )}
+            </div>
         </div>
     );
 };

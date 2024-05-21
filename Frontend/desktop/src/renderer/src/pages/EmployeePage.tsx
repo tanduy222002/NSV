@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { GrUserWorker } from 'react-icons/gr';
 import { getEmployeeList } from '@renderer/services/api';
-import { useLocalStorage } from '@renderer/hooks';
+import { useLocalStorage, usePagination } from '@renderer/hooks';
 import {
     Button,
     ConfirmationPopup,
     InformationPopup,
+    Pagination,
     TableSkeleton,
     UserInfo
 } from '@renderer/components';
@@ -76,19 +77,25 @@ const EmployeePage = () => {
     };
     const closeInfoPopup = () => setInfoPopup(null);
 
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data, refetch } = useQuery({
-        queryKey: ['employees', accountStatus],
-        queryFn: () =>
-            getEmployeeList({
+        queryKey: ['employees', accountStatus, currentPage],
+        queryFn: async () => {
+            const response = await getEmployeeList({
                 token: accessToken,
-                pageIndex: 1,
+                pageIndex: currentPage,
                 status:
                     accountStatus === EmployeeAccountStatus.All
                         ? undefined
                         : accountStatus
-            })
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     const navigate = useNavigate();
@@ -194,16 +201,25 @@ const EmployeePage = () => {
                     }
                 />
             </div>
-            <div className="w-fit max-w-[1200px]">
+            <div className="w-fit max-w-[1200px] flex flex-col gap-4">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
-                    <TableView
-                        columns={employeeTableConfig}
-                        items={mapEmployeeTable(data?.content)}
-                        viewAction={goToEmployeeDetailPage}
-                        deleteAction={openDeleteEmployeeConfirmPopup}
-                    />
+                    <>
+                        <TableView
+                            columns={employeeTableConfig}
+                            items={mapEmployeeTable(data?.content)}
+                            viewAction={goToEmployeeDetailPage}
+                            deleteAction={openDeleteEmployeeConfirmPopup}
+                        />
+                        <Pagination
+                            maxPage={maxPage}
+                            currentPage={currentPage}
+                            goNext={goNext}
+                            goBack={goBack}
+                            goToPage={goToPage}
+                        />
+                    </>
                 )}
             </div>
         </div>

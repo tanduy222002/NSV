@@ -8,9 +8,10 @@ import {
     UserInfo,
     Button,
     TableView,
-    TableSkeleton
+    TableSkeleton,
+    Pagination
 } from '@renderer/components';
-import { useLocalStorage } from '@renderer/hooks';
+import { useLocalStorage, usePagination } from '@renderer/hooks';
 import { searchImportTicket } from '@renderer/services/api';
 import { formatDate, formatNumber } from '@renderer/utils/formatText';
 
@@ -72,16 +73,22 @@ const ImportPage = () => {
         []
     );
 
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { data, isFetching } = useQuery({
-        queryKey: ['import', ticketStatus],
-        queryFn: () =>
-            searchImportTicket({
+        queryKey: ['import', ticketStatus, currentPage],
+        queryFn: async () => {
+            const response = searchImportTicket({
                 token: accessToken,
-                pageIndex: 1,
+                pageIndex: currentPage,
                 status: ticketStatus
-            })
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     if (!isFetching) {
@@ -122,17 +129,24 @@ const ImportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.Rejected)}
                 />
             </div>
-            <div className="">
+            <div className="flex flex-col gap-4">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
-                    data?.content.length > 0 && (
+                    <>
                         <TableView
                             columns={importTicketTableConfig}
                             items={mapTicketTable(data?.content)}
                             viewAction={goToImportTicketDetailPage}
                         />
-                    )
+                        <Pagination
+                            currentPage={currentPage}
+                            maxPage={maxPage}
+                            goBack={goBack}
+                            goNext={goNext}
+                            goToPage={goToPage}
+                        />
+                    </>
                 )}
             </div>
         </div>

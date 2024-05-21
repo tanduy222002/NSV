@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserInfo } from '@renderer/components';
-import { useLocalStorage } from '@renderer/hooks';
+import { Pagination, UserInfo } from '@renderer/components';
+import { useLocalStorage, usePagination } from '@renderer/hooks';
 import partnerIconSrc from '@renderer/assets/partner-icon.png';
 import { ColumnType } from '@renderer/components/TableView';
 import { TableSkeleton, Button, TableView } from '@renderer/components';
 import { getPartnerList } from '@renderer/services/api';
 import { useNavigate } from 'react-router-dom';
 import { formatNumber } from '@renderer/utils/formatText';
+import { useState } from 'react';
 
 const partnerTableConfig = [
     {
@@ -42,11 +43,21 @@ const partnerTableConfig = [
 ];
 
 const PartnerPage = () => {
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data } = useQuery({
-        queryKey: ['partners'],
-        queryFn: () => getPartnerList({ token: accessToken, pageIndex: 1 })
+        queryKey: ['partners', currentPage],
+        queryFn: async () => {
+            const response = await getPartnerList({
+                token: accessToken,
+                pageIndex: currentPage
+            });
+            setMaxPage(currentPage);
+            return response;
+        }
     });
 
     const navigate = useNavigate();
@@ -93,15 +104,24 @@ const PartnerPage = () => {
                     // action={confirmAction}
                 />
             </div>
-            <div className="w-fit max-w-[1200px]">
+            <div className="flex flex-col gap-4 w-fit max-w-[1200px]">
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
-                    <TableView
-                        columns={partnerTableConfig}
-                        items={mapPartnerTable(data?.content)}
-                        viewAction={goToPartnerDetailPage}
-                    />
+                    <>
+                        <TableView
+                            columns={partnerTableConfig}
+                            items={mapPartnerTable(data?.content)}
+                            viewAction={goToPartnerDetailPage}
+                        />
+                        <Pagination
+                            currentPage={currentPage}
+                            maxPage={maxPage}
+                            goBack={goBack}
+                            goNext={goNext}
+                            goToPage={goToPage}
+                        />
+                    </>
                 )}
             </div>
         </div>

@@ -9,11 +9,12 @@ import {
     UserInfo
 } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
-import { usePopup } from '@renderer/hooks';
+import { usePagination, usePopup } from '@renderer/hooks';
 import { Button } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { searchWarehouse } from '@renderer/services/api';
 import { Warehouse } from '@renderer/types/warehouse';
+import { useState } from 'react';
 
 const warehouseTableColumns = [
     { title: 'ID', sortable: true, type: ColumnType.Text },
@@ -26,6 +27,11 @@ const warehouseTableColumns = [
 ];
 
 const WareHousePage = () => {
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goBack, goNext, goToPage } = usePagination(
+        maxPage ?? 1
+    );
+
     const navigate = useNavigate();
     const goToCreateMapPage = () => navigate('/warehouse/map/create');
     const goToCreateWarehousePage = () => navigate('/warehouse/create');
@@ -37,12 +43,15 @@ const WareHousePage = () => {
     const accessToken = getItem();
 
     const { data, isFetching } = useQuery({
-        queryKey: ['warehouse'],
-        queryFn: () =>
-            searchWarehouse({
+        queryKey: ['warehouse', currentPage],
+        queryFn: async () => {
+            const response = await searchWarehouse({
                 token: accessToken,
-                pageIndex: 1
-            })
+                pageIndex: currentPage
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     const mapWarehouseTable = (warehouses: Warehouse[]) =>
@@ -95,7 +104,13 @@ const WareHousePage = () => {
                             deleteAction={show}
                             viewAction={goToWarehouseDetailPage}
                         />
-                        <Pagination maxPage={5} currentPage={1} />
+                        <Pagination
+                            maxPage={maxPage}
+                            currentPage={currentPage}
+                            goNext={goNext}
+                            goBack={goBack}
+                            goToPage={goToPage}
+                        />
                     </>
                 )}
             </div>
