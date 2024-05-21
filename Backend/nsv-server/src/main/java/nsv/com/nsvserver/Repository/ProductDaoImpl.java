@@ -60,14 +60,14 @@ public class ProductDaoImpl implements ProductDao{
     public List<ProductDetailDto> getProductDetails(Integer pageIndex, Integer pageSize, String name) {
         StringBuilder queryString = new StringBuilder(
                 """
-                SELECT new nsv.com.nsvserver.Dto.ProductDetailDto(p.id,p.name,p.image,sum(bs.weight), count(bs.id) ) FROM Product p 
+                SELECT new nsv.com.nsvserver.Dto.ProductDetailDto(p.id,p.name,p.image,sum(bs.weight), count(bs.id)) FROM Product p 
                 left join p.types as t left join t.qualities as q left join q.bin as b left join b.binSlot as bs WHERE 1=1 AND (bs.weight IS NULL OR bs.weight>0 )"""
         );
         //left join b.binSlot as bs
 
 
         if(name!=null){
-            queryString.append(" AND p.name LIKE:namePattern");
+            queryString.append(" AND p.name LIKE :namePattern");
         }
         queryString.append(" GROUP BY p.id");
 
@@ -76,6 +76,7 @@ public class ProductDaoImpl implements ProductDao{
         if(name!=null){
             query.setParameter("namePattern","%"+name+"%");
         }
+
 
 
         List<ProductDetailDto> resultList= query.setFirstResult((pageIndex-1)*pageSize)
@@ -94,7 +95,7 @@ public class ProductDaoImpl implements ProductDao{
 
 
         if(name!=null){
-            queryString.append(" AND p.name LIKE:namePattern");
+            queryString.append(" WHERE p.name LIKE: namePattern ");
         }
 
         Query query = entityManager.createQuery(queryString.toString());
