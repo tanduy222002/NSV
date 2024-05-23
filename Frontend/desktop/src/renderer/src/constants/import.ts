@@ -28,3 +28,26 @@ export const approveTicketSuccessPopup: ResultPopup = {
     body: 'Duyệt phiếu nhập thành công',
     popupType: ResultPopupType.Success
 };
+
+export const createImportTicketConfirmPopupData: InfoPopup = {
+    title: 'Tạo phiếu nhập',
+    body: 'Xác nhận thông tin phiếu nhập muốn tạo?'
+};
+
+type CreateImportTicketResult = {
+    Success: ResultPopup;
+    Error: ResultPopup;
+};
+
+export const CreateImportTicketResult: CreateImportTicketResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Tạo phiếu nhập thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Đã có lỗi xảy ra khi tạo phiếu. Vui lòng thử lại.',
+        popupType: ResultPopupType.Error
+    }
+};

@@ -111,7 +111,7 @@ const ImportPage = () => {
                 <h1 className="font-semibold text-xl">Phiếu nhập</h1>
             </div>
             <Button
-                className="mb-5 px-2 py-1 border border-emerald-600 rounded-md text-emerald-600 text-base font-semibold w-fit"
+                className="mb-5 px-2 py-1 border border-emerald-600 rounded-md text-emerald-600 hover:bg-emerald-50 text-base font-semibold w-fit"
                 text="Tạo phiếu"
                 action={goToCreateImportTicketPage}
             />
@@ -122,7 +122,7 @@ const ImportPage = () => {
                     action={() => updateTicketStatus(TicketStatus.All)}
                 />
                 <Button
-                    className="mb-5 px-2 py-1 border border-emerald-600 rounded-md text-emerald-600 text-base font-semibold w-fit"
+                    className="mb-5 px-2 py-1 border border-emerald-600 rounded-md text-emerald-600 hover:bg-emerald-50 text-base font-semibold w-fit"
                     text="Đã duyệt"
                     action={() => updateTicketStatus(TicketStatus.Approved)}
                 />

@@ -3,7 +3,6 @@ import { ImportFormStep } from './type';
 import FormProgress from './FormProgress';
 import ImportFormFirstStep from './ImportFormFirstStep';
 import ImportFormSecondStep from './ImportFormSecondStep';
-import { ModalProvider } from '@renderer/components';
 import { ImportTicket } from '@renderer/types/import';
 import { defaultImportTicketValue } from '@renderer/constants/import';
 
@@ -35,13 +34,11 @@ const CreateImportTicketForm = () => {
                     updateImportTicket={updateTicketValue}
                 />
             ) : (
-                <ModalProvider>
-                    <ImportFormSecondStep
-                        goToStep={goToStep}
-                        importTicket={importTicket}
-                        updateImportTicket={updateTicketValue}
-                    />
-                </ModalProvider>
+                <ImportFormSecondStep
+                    goToStep={goToStep}
+                    importTicket={importTicket}
+                    updateImportTicket={updateTicketValue}
+                />
             )}
         </form>
     );

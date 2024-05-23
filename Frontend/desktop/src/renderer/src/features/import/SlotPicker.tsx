@@ -20,17 +20,25 @@ const SlotPicker = ({
             <DataField
                 name="Sức chứa tối đa:"
                 defaultValue={'...'}
-                disabled={!currentSlot?.capacity}
-                value={`${currentSlot?.capacity} m²`}
+                disabled={false}
+                value={
+                    currentSlot?.capacity
+                        ? `${currentSlot?.capacity} m²`
+                        : 'Chưa chọn vị trí'
+                }
             />
             <DataField
                 name="Sức chứa khả dụng:"
                 defaultValue={'...'}
-                disabled={!currentSlot?.capacity || !currentSlot?.currentLoad}
-                value={`${
-                    Number(currentSlot?.capacity) -
-                    Number(currentSlot?.currentLoad)
-                }  m²`}
+                disabled={false}
+                value={
+                    currentSlot?.capacity || currentSlot?.currentLoad
+                        ? `${
+                              Number(currentSlot?.capacity) -
+                              Number(currentSlot?.currentLoad)
+                          }  m²`
+                        : 'Chưa chọn vị trí'
+                }
             />
             <FormInput
                 label="Diện tích muốn sử dụng (m²)"

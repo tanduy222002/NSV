@@ -19,7 +19,7 @@ const SelectSlotPopupController = ({
                 type="button"
                 onClick={() => warehouseId !== 0 && openModal && openModal()}
             >
-                <p className="text-xs text-gray-300 hover:text-gray-400 font-semibold ml-5 -translate-y-5">
+                <p className="text-xs hover:underline text-gray-300 hover:text-gray-400 font-semibold ml-5 -translate-y-5">
                     Xem chi tiết
                 </p>
             </button>

@@ -1,4 +1,4 @@
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 import { ImportTicket } from '@renderer/types/import';
 
 type CreateImportTicketPayload = {
@@ -12,7 +12,7 @@ export const createImportTicket = async ({
 }: CreateImportTicketPayload): Promise<any> => {
     let response: any = undefined;
     try {
-        response = await makeAuthRequest({
+        response = await makeAuthRequestV2({
             token: token,
             url: `/transfer_ticket/import_tickets`,
             method: 'post',
