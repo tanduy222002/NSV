@@ -14,6 +14,7 @@ export const defaultPartnerValue: Partner = {
         district: null,
         ward: null
     },
+    phone: '',
     phoneNumber: '',
     taxNumber: '',
     faxNumber: '',
