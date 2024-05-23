@@ -21,7 +21,7 @@ const warehouseTableColumns = [
     { title: 'Tên', sortable: true, type: ColumnType.Text },
     { title: 'Loại kho', sortable: false, type: ColumnType.Text },
     { title: 'Địa điểm', sortable: false, type: ColumnType.Text },
-    { title: 'Sức chứa hiện tại', sortable: true, type: ColumnType.Text },
+    { title: 'Sức chứa hiện tại', sortable: false, type: ColumnType.Text },
     { title: 'Trạng thái', sortable: false, type: ColumnType.Text },
     { title: 'Thao tác', sortable: false, type: ColumnType.Action }
 ];

@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalStorage } from '@renderer/hooks';
 import { getAvailableBin } from '@renderer/services/api';
 import { ImportBinWithSlot } from '@renderer/types/export';
-import { Button } from '@renderer/components';
+import { Button, TableSkeleton } from '@renderer/components';
 import SlotTable from './SlotTable';
 
 type BinSelectorProps = {
@@ -40,7 +40,7 @@ const BinSelector = ({
     });
 
     const getTotalTakenWeight = (bins: ImportBinWithSlot[]) =>
-        bins.reduce((prevWeight, bin) => prevWeight + bin?.taken_weight, 0);
+        bins?.reduce((prevWeight, bin) => prevWeight + bin?.taken_weight, 0);
 
     const updateExportBins = (bins: ImportBinWithSlot[]) => {
         queryClient.setQueryData(['bins', warehouseId, qualityId], () => ({
@@ -54,11 +54,8 @@ const BinSelector = ({
         closeSelector();
     };
 
-    console.log('bins data: ', data);
-
     if (!isFetching) console.log(data);
 
-    console.log(warehouseId, qualityId);
     return (
         <div className="fixed top-[150px] w-[1200px] mx-auto bg-white shadow px-5 py-5">
             <CgCloseR
@@ -76,12 +73,9 @@ const BinSelector = ({
                     Đã lấy: {getTotalTakenWeight(data?.content)} kg
                 </h1>
             </div>
-            {!isFetching && data?.content?.length === 0 && (
-                <p className="text-base font-semibold">
-                    Hiện không có lô hàng nào đáp ứng yêu cầu
-                </p>
-            )}
-            {data?.content?.length > 0 && (
+            {isFetching ? (
+                <TableSkeleton />
+            ) : (
                 <SlotTable
                     slots={data?.content}
                     updateExportBins={updateExportBins}

@@ -25,11 +25,12 @@ const SlotTable = ({ slots, updateExportBins }: SlotTableProps) => {
             slotId === id
                 ? {
                       ...slot,
+                      id: slotId,
                       in_slot_weight: slot.in_slot_weight - weight,
                       taken_area: area,
                       taken_weight: weight
                   }
-                : { ...slot }
+                : { ...slot, id: slotId }
         );
         updateExportBins(updatedBins);
 
@@ -80,7 +81,7 @@ const SlotTable = ({ slots, updateExportBins }: SlotTableProps) => {
                         {slot?.bin?.packaged}
                     </td>
                     <td className="text-sm font-semibold px-2">
-                        {slot?.in_slot_weight}
+                        {slot?.in_slot_weight} kg
                     </td>
                     <td className="text-sm font-semibold px-2 w-fit">
                         {slot?.location}

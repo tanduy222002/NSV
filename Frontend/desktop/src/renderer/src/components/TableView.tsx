@@ -60,7 +60,7 @@ const TableView = ({
                     const itemValues = Object.values(item);
                     const [, itemId] = Object.entries(item).filter(
                         ([key]) => key.toLowerCase() === 'id'
-                    )[0];
+                    )[0] ?? ['id', 0];
                     return (
                         <tr key={i} className="border border-1">
                             {columns.map((column, i) => (

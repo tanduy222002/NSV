@@ -1,3 +1,4 @@
+import { cn } from '@renderer/utils/util';
 import { ReactNode } from 'react';
 import { useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
@@ -8,6 +9,7 @@ type SelectInputProps = {
     icon?: ReactNode;
     values: string[];
     onSelect: (value: any) => void;
+    bg?: string;
 };
 
 const SelectInput = ({
@@ -15,10 +17,10 @@ const SelectInput = ({
     placeHolder,
     values,
     icon,
-    onSelect
+    onSelect,
+    bg = 'bg-white'
 }: SelectInputProps) => {
     const [expanded, setExpanded] = useState(false);
-    // const openSelect = () => setExpanded(true);
     const closeSelect = () => setExpanded(false);
     const toggleSelect = () => {
         setExpanded((prev) => !prev);
@@ -29,10 +31,24 @@ const SelectInput = ({
     };
 
     return (
-        <div className="relative w-full">
+        <div
+            className="relative w-full"
+            onBlur={() => closeSelect()}
+            tabIndex={0}
+        >
             {/* selected option */}
-            <div className="relative flex items-center justify-between bg-gray-50 border border-sky-800 text-gray-900 text-sm rounded-lg  w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                <div className="bg-gray-50 flex items-center gap-2 absolute px-2 -top-3 left-2">
+            <div
+                className={cn(
+                    'relative flex items-center justify-between border border-sky-800 text-gray-900 text-sm rounded-lg  w-full px-4 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white',
+                    bg
+                )}
+            >
+                <div
+                    className={cn(
+                        'flex items-center gap-2 absolute px-2 -top-3 left-2',
+                        bg
+                    )}
+                >
                     {icon}
                     <p className="text-sm font-semibold text-sky-800">
                         {placeHolder}
