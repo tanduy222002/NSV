@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { BiCategoryAlt } from 'react-icons/bi';
-import { FaRegEdit } from 'react-icons/fa';
 import { FaBraille, FaMapLocationDot } from 'react-icons/fa6';
 import { MdWarehouse, MdLabelImportantOutline } from 'react-icons/md';
 import { useLocalStorage } from '@renderer/hooks';
@@ -11,12 +10,19 @@ import {
     AddressPickerController,
     ModalProvider,
     AsyncSelectInput,
-    PageLoading
+    PageLoading,
+    ConfirmationPopup,
+    Loading
 } from '@renderer/components';
 import { WarehouseMapPreview } from './components';
 import { Button, FormInput, InformationPopup } from '@renderer/components';
 import { getWarehouseMap, getWarehouseCategory } from '@renderer/services/api';
 import { getUnusedMap } from '@renderer/services/api/warehouse/getUnusedMap';
+import { InfoPopup, ResultPopup } from '@renderer/types/common';
+import {
+    CreateWarehouseResult,
+    createWarehouseConfirmPopupData
+} from '@renderer/constants/warehouse';
 
 type SelectOption = {
     id: number;
@@ -24,8 +30,13 @@ type SelectOption = {
 };
 
 const CreateWarehouseForm = () => {
-    const [popupInfo, setPopupInfo] = useState<any>(null);
-    const closePopup = () => setPopupInfo(null);
+    const [confirmPopup, setConfirmPopup] = useState<InfoPopup | null>(null);
+    const closeConfirmPopup = () => setConfirmPopup(null);
+    const openConfirmPopup = () =>
+        setConfirmPopup(createWarehouseConfirmPopupData);
+
+    const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
+    const closeResultPopup = () => setResultPopup(null);
 
     const [address, setAddress] = useState<any | null>(null);
     const updateAddress = (address: any) => setAddress(address);
@@ -58,18 +69,18 @@ const CreateWarehouseForm = () => {
         return await getUnusedMap({ token: accessToken });
     };
 
-    const hanldeSubmit = async (e) => {
-        e.preventDefault();
-        console.log('form submitted');
+    const createWarehouseMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await createWarehouse(payload);
+            return response;
+        }
+    });
 
-        console.log('address: ', address);
-        console.log('name: ', nameRef.current?.value);
-        const warehouseName = nameRef.current!.value;
-        console.log('type: ', warehouseCategory);
-        const response = await createWarehouse({
+    const hanldeCreateWarehouse = async () => {
+        const response: any = await createWarehouseMutation.mutateAsync({
             token: accessToken,
             body: {
-                name: warehouseName,
+                name: nameRef.current!.value,
                 type: warehouseCategory,
                 mapId: warehouseMap?.id,
                 address: {
@@ -82,23 +93,35 @@ const CreateWarehouseForm = () => {
         });
 
         console.log('response: ', response);
-        if (response) {
-            setPopupInfo({
-                title: 'Thành công',
-                body: 'Kho mới đã được tạo',
-                type: 'success'
-            });
-            alert('Tạo kho mới thành công');
+        closeConfirmPopup();
+        if (response?.status === 200) {
+            setResultPopup(CreateWarehouseResult.Success);
+            return;
+        }
+        if (response?.status >= 400) {
+            setResultPopup(CreateWarehouseResult.Error);
+            return;
         }
     };
 
     return (
-        <form
-            className="w-full max-w-[900px] relative flex flex-col justify-center bg-white py-5 px-5"
-            onSubmit={hanldeSubmit}
-        >
-            {popupInfo && (
-                <InformationPopup {...popupInfo} closeAction={closePopup} />
+        <form className="w-full max-w-[900px] relative flex flex-col justify-center bg-white py-5 px-5">
+            {createWarehouseMutation.isPending && <Loading />}
+            {confirmPopup && (
+                <ConfirmationPopup
+                    title={confirmPopup.title}
+                    body={confirmPopup.body}
+                    confirmAction={hanldeCreateWarehouse}
+                    cancelAction={closeConfirmPopup}
+                />
+            )}
+            {resultPopup && (
+                <InformationPopup
+                    title={resultPopup.title}
+                    body={resultPopup.body}
+                    popupType={resultPopup.popupType}
+                    closeAction={closeResultPopup}
+                />
             )}
             <FormSection
                 title="Thông tin kho"
@@ -145,7 +168,6 @@ const CreateWarehouseForm = () => {
                 icon={<MdWarehouse />}
                 layoutClassName="flex flex-col items-center relative"
             >
-                <FaRegEdit className="absolute -top-7 left-[110px] text-[#F78F1E] cursor-pointer" />
                 {isFetching ? (
                     <PageLoading />
                 ) : (
@@ -153,9 +175,9 @@ const CreateWarehouseForm = () => {
                 )}
             </FormSection>
             <Button
-                type="submit"
+                action={openConfirmPopup}
                 text="Lưu kho"
-                className="text-[#1A3389] border-[#1A3389] mx-auto mt-6"
+                className="text-sky-800 border-sky-800 hover:text-white hover:bg-sky-800 mx-auto mt-6"
             />
         </form>
     );

@@ -84,6 +84,7 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
                     asyncSelectorCallback={getProvincesCallback}
                     label="Tỉnh"
                     onSelect={updateProvince}
+                    bg="bg-gray-50"
                 />
                 <AsyncSelectInput
                     selectedValue={district?.name}
@@ -91,6 +92,7 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
                     asyncSelectorCallback={getDistrictsCallback}
                     label="Huyện"
                     onSelect={updateDistrict}
+                    bg="bg-gray-50"
                 />
                 <AsyncSelectInput
                     selectedValue={ward?.name}
@@ -98,6 +100,7 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
                     asyncSelectorCallback={getWardsCallback}
                     label="Phường/xã"
                     onSelect={updateWard}
+                    bg="bg-gray-50"
                 />
                 <FormInput
                     label="Địa chỉ"

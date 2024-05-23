@@ -19,14 +19,14 @@ const AddressPickerController = ({
                 <div>Địa chỉ</div>
             </div>
             <div className="flex items-center">
-                <div className="text-sm font-semibold">
+                <div className="text-sm font-semibold text-sky-800">
                     {address &&
-                        `${address?.address}, ${address?.ward?.name}, ${address?.district?.name}, ${address?.province?.name}`}
+                        `${address?.address ?? 'Số nhà, tên đường...'}, ${address?.ward?.name ?? 'Phường/Xã'}, ${address?.district?.name ?? 'Quận/Huyện'}, ${address?.province?.name ?? 'Tỉnh/TP'}`}
                 </div>
                 <FaLocationDot
                     data-testid="location-icon"
                     onClick={openModal}
-                    className="ml-auto hover:text-red-500"
+                    className="ml-auto hover:text-red-500 text-gray-300 cursor-pointer"
                 />
             </div>
             {modalOpen && <AddressPicker updateAddressDetail={updateAddress} />}
