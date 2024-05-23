@@ -14,7 +14,7 @@ const ConfirmationPopup = ({
     cancelAction
 }: ConfirmationPopupProps) => {
     return (
-        <div className="absolute inset-0 bg-black/25 bg-blur z-20 flex items-center justify-center shadow-md">
+        <div className="fixed inset-0 bg-black/20 bg-blur z-20 flex items-center justify-center shadow-md">
             <div className="shadow-md flex flex-col items-center px-5 py-5 w-[400px] bg-gray-50 border border-gray-200 rounded-lg">
                 <h1 className="text-2xl font-semibold text-[#1A3389] mb-2">
                     {title}
