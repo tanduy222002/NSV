@@ -12,7 +12,7 @@ type SearchImportTicketPayload = {
 export const searchImportTicket = async ({
     token,
     pageIndex,
-    pageSize = 12,
+    pageSize = 9,
     name,
     status
 }: SearchImportTicketPayload) => {

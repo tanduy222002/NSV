@@ -94,7 +94,7 @@ const PartnerPage = () => {
                 text="Thêm đối tác"
                 action={goToCreatePartnerPage}
             />
-            <div className="flex gap-2 mb-5">
+            {/* <div className="flex gap-2 mb-5">
                 <Button
                     className="px-2 py-1 border border-sky-700 rounded-md text-sky-700 text-base font-semibold w-fit"
                     text="Toàn bộ"
@@ -110,7 +110,7 @@ const PartnerPage = () => {
                     text="Người mua"
                     // action={confirmAction}
                 />
-            </div>
+            </div> */}
             <div className="flex flex-col gap-4 w-[1100px]">
                 <SearchBar
                     className="ml-auto"
