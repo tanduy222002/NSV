@@ -2,22 +2,17 @@ package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import nsv.com.nsvserver.Annotation.Base64Img;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Data
 @NoArgsConstructor
-public class CreatePartnerDto {
-    @NotBlank(message = "name is mandatory")
-    @Schema( example = "Vinafood", required = true)
+public class UpdatePartnerDto {
+    @Schema( example = "Vinafood")
     private String name;
 
     @Schema( example = "0794368181")
