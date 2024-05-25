@@ -6,3 +6,4 @@
 - Backend: Spring Boot
 - GithubActions
 - Docker
+- Google cloud platform
