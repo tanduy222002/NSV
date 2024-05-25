@@ -276,6 +276,15 @@ public class AuthExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleUploadImageException(UploadImageException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleDefaultException(Exception e) {
         System.out.println(e.getClass().getName());
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),

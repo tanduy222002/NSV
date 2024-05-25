@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Service;
 
+import nsv.com.nsvserver.Client.ImageService;
 import nsv.com.nsvserver.Dto.AddressDto;
 import nsv.com.nsvserver.Dto.EmployeeDto;
 import nsv.com.nsvserver.Dto.PageDto;
@@ -10,6 +11,7 @@ import nsv.com.nsvserver.Entity.Profile;
 import nsv.com.nsvserver.Entity.Role;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
+import nsv.com.nsvserver.Exception.UploadImageException;
 import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Util.ConvertUtil;
 import nsv.com.nsvserver.Util.EmployeeRoles;
@@ -32,6 +34,8 @@ public class EmployeeService {
     private AddressRepository addressRepository;
 
     private ProfileDao profileDaoImpl;
+
+    private ImageService imageServiceImpl;
 
 
     @Autowired
@@ -97,6 +101,14 @@ public class EmployeeService {
         }
         if(profileDto.getPhoneNumber()!=null){
             profile.setPhoneNumber(profileDto.getPhoneNumber());
+        }
+        if (profileDto.getAvatar()!=null){
+            try{
+                String imageUrl = imageServiceImpl.upLoadImageWithBase64(profileDto.getAvatar());
+            }
+            catch(Exception e){
+                throw new UploadImageException();
+            }
         }
 
 
