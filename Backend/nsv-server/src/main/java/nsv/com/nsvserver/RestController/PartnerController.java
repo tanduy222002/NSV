@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import nsv.com.nsvserver.Dto.CreatePartnerDto;
 import nsv.com.nsvserver.Dto.PageDto;
+import nsv.com.nsvserver.Dto.ProfileDto;
+import nsv.com.nsvserver.Dto.UpdatePartnerDto;
 import nsv.com.nsvserver.Service.PartnerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +64,7 @@ public class PartnerController {
 
     @GetMapping("/{id}/transactions")
     @Operation(description = "get partners with statistics information ")
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> getTransactions(
             @PathVariable Integer id,
             @RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
             @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
@@ -75,7 +77,7 @@ public class PartnerController {
 
     @GetMapping("/{id}/debts")
     @Operation(description = "get partners with statistics information ")
-    public ResponseEntity<?> get(
+    public ResponseEntity<?> getDebts(
             @PathVariable Integer id,
             @RequestParam(defaultValue = "1") @Min(1) Integer pageIndex,
             @RequestParam(defaultValue = "5") @Min(1) Integer pageSize,
@@ -83,6 +85,13 @@ public class PartnerController {
     )
     {
         return ResponseEntity.ok(partnerService.getPartnerDebtById(pageIndex, pageSize,id, isPaid));
+    }
+
+    @PutMapping("/{id}/profile")
+    @Operation(description = "update partner detail")
+    public ResponseEntity<?> updateEmployee(@PathVariable Integer id, @Valid @RequestBody UpdatePartnerDto dto) {
+        partnerService.updatePartnerProfile(id,dto);
+        return ResponseEntity.ok("Updated partner successfully");
     }
 
 

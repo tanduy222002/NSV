@@ -15,7 +15,7 @@ import java.util.List;
 public class ProfileDto {
 
 //    @NotBlank(message = "name is mandatory")
-    @Schema( example = "tanduy", required = true)
+    @Schema( example = "tanduy" )
     private String name;
     @Schema( example = "0794368181")
     @JsonProperty("phone_number")

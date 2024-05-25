@@ -1,11 +1,17 @@
 package nsv.com.nsvserver.Service;
 
+import nsv.com.nsvserver.Client.ImageService;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Address;
+import nsv.com.nsvserver.Entity.Employee;
 import nsv.com.nsvserver.Entity.Partner;
 import nsv.com.nsvserver.Entity.Profile;
+import nsv.com.nsvserver.Exception.ExistsException;
+import nsv.com.nsvserver.Exception.NotFoundException;
+import nsv.com.nsvserver.Exception.UploadImageException;
 import nsv.com.nsvserver.Repository.PartnerDao;
 import nsv.com.nsvserver.Repository.PartnerRepository;
+import nsv.com.nsvserver.Repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +26,18 @@ public class PartnerService {
 
     PartnerDao partnerDaoImpl;
 
+    ImageService imageServiceImpl;
+
+    ProfileRepository profileRepository;
+
 
     @Autowired
-    public PartnerService(PartnerRepository partnerRepository, AddressService addressService, PartnerDao partnerDaoImpl) {
+    public PartnerService(PartnerRepository partnerRepository, AddressService addressService, PartnerDao partnerDaoImpl, ImageService imageServiceImpl, ProfileRepository profileRepository) {
         this.partnerRepository = partnerRepository;
         this.addressService = addressService;
         this.partnerDaoImpl = partnerDaoImpl;
+        this.imageServiceImpl = imageServiceImpl;
+        this.profileRepository = profileRepository;
     }
 
     @Transactional
@@ -35,6 +47,18 @@ public class PartnerService {
         partnerProfile.setName(createPartnerDto.getName());
         partnerProfile.setEmail(createPartnerDto.getEmail());
         partnerProfile.setPhoneNumber(createPartnerDto.getPhoneNumber());
+
+        if (createPartnerDto.getAvatar()!=null){
+            try{
+                String imageUrl = imageServiceImpl.upLoadImageWithBase64(createPartnerDto.getAvatar());
+                partnerProfile.setAvatar(imageUrl);
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+                throw new UploadImageException();
+            }
+        }
+
         AddressDto addressDto = createPartnerDto.getAddress();
         Address address = addressService.createAddress(addressDto.getAddress(),addressDto.getWardId(),addressDto.getDistrictId(), addressDto.getProvinceId());
         address.setProfile(partnerProfile);
@@ -80,5 +104,60 @@ public class PartnerService {
         long count = partnerDaoImpl.countDebtsOfPartnerById(pageIndex, pageSize, id, isPaid);
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,debts);
     }
+
+    @Transactional
+    public void updatePartnerProfile(Integer id, UpdatePartnerDto dto) {
+        Partner partner=partnerRepository.findById(id).orElseThrow(()->new NotFoundException("Partner not found"));
+        Profile profile = partner.getProfile();
+        AddressDto addressDtos = dto.getAddress();
+        Address address=profile.getAddress();
+
+        if(addressDtos!=null){
+            profile.setAddress(null);
+            address = addressService.createAddress(
+                    addressDtos.getAddress(), addressDtos.getWardId(),
+                    addressDtos.getDistrictId(), addressDtos.getProvinceId());
+        }
+
+        if(dto.getName()!=null){
+            profile.setName(dto.getName());
+        }
+
+        if(dto.getBankAccount()!=null){
+            partner.setBankAccount(dto.getBankAccount());
+        }
+
+        if(dto.getTaxNumber()!=null){
+            partner.setTaxNumber(dto.getTaxNumber());
+        }
+
+        if(dto.getFaxNumber()!=null){
+            partner.setFaxNumber(dto.getFaxNumber());
+        }
+
+        if(dto.getEmail()!=null){
+            if(profileRepository.existsByEmail(dto.getEmail())
+                    &&!dto.getEmail().equals(profile.getEmail())){
+                throw new ExistsException("Email already taken");
+            }
+            profile.setEmail(dto.getEmail());
+        }
+        if(dto.getPhoneNumber()!=null){
+            profile.setPhoneNumber(dto.getPhoneNumber());
+        }
+        if (dto.getAvatar()!=null){
+            try{
+                String imageUrl = imageServiceImpl.upLoadImageWithBase64(dto.getAvatar());
+                profile.setAvatar(imageUrl);
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+                throw new UploadImageException();
+            }
+        }
+
+
+    }
+
 
 }
