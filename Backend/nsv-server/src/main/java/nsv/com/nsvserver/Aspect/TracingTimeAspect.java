@@ -19,11 +19,8 @@ public class TracingTimeAspect {
             throw throwable;
         }
         long outterTime=System.currentTimeMillis();
-
         long excetuionTime = outterTime-interTime;
         System.out.println("Method " + joinPoint.getSignature().toShortString() + "took " + excetuionTime +" ms "+"to execute");
         return result;
-
-
     }
 }

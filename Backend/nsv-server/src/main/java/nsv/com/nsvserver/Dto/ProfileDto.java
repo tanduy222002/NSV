@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import nsv.com.nsvserver.Annotation.Base64Img;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 public class ProfileDto {
 
-    @NotBlank(message = "name is mandatory")
+//    @NotBlank(message = "name is mandatory")
     @Schema( example = "tanduy", required = true)
     private String name;
     @Schema( example = "0794368181")
@@ -23,6 +24,10 @@ public class ProfileDto {
     private String email;
     @Schema( example = "M")
     private String gender;
+
+    @Base64Img
+    @Schema(description = "The base64 encoded of image start with prefix: \"data:image/jpeg;base64,\" + code")
+    private String avatar;
 
     private AddressDto addresses;
 
