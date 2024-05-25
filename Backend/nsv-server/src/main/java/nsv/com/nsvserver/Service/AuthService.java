@@ -100,6 +100,8 @@ public class AuthService {
         // Create new employee
         Employee employee =new Employee(userName, encoder.encode(password));
 
+
+
         roles =Arrays.asList("ROLE_EMPLOYEE");
         List<Role> authorization = new ArrayList<>();
         for(String role : roles){
