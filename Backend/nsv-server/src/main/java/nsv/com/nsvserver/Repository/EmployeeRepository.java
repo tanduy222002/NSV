@@ -20,8 +20,8 @@ public interface EmployeeRepository extends JpaRepository<Employee,Integer> {
     public boolean existsByUserName(String userName);
 
     @TraceTime
-    @Query("SELECT e FROM Employee e JOIN FETCH e.profile p join fetch e.roles join fetch e.otp join fetch e.refreshToken join fetch" +
-            " p.address as a join fetch a.ward as w join fetch w.district as d join fetch d.province WHERE e.userName = :userName")
+    @Query("SELECT e FROM Employee e left JOIN FETCH e.profile p left join fetch e.roles left join fetch e.otp left join fetch e.refreshToken left join fetch" +
+            " p.address as a left join fetch a.ward as w left join fetch w.district as d left join fetch d.province WHERE e.userName = :userName")
     public Employee findByUserName(String userName);
 
 
