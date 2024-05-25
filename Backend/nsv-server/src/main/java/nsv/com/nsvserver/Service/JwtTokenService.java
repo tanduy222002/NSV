@@ -47,6 +47,7 @@ public class JwtTokenService {
                 .setSubject(employee.getUserName())
                 .setIssuedAt(now)
                 .claim("roles", roles)
+                .claim("id", employee.getId())
                 .setExpiration(expiryDate)
                 .signWith(key)
                 .compact();
