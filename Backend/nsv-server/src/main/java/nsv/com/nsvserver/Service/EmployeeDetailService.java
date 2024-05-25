@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Service;
 
+import nsv.com.nsvserver.Annotation.TraceTime;
 import nsv.com.nsvserver.Entity.Employee;
 import nsv.com.nsvserver.Entity.EmployeeDetail;
 import nsv.com.nsvserver.Repository.EmployeeRepository;
@@ -19,6 +20,7 @@ public class EmployeeDetailService implements UserDetailsService {
     }
 
     @Override
+    @TraceTime
     public EmployeeDetail loadUserByUsername(String userName) {
         // Kiểm tra xem user có tồn tại trong database không?
 

@@ -79,10 +79,10 @@ public class JwtTokenService {
 
             return true;
         } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
+//            log.error("Invalid JWT token");
             throw ex;
         } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
+//            log.error("Expired JWT token");
             throw ex;
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");

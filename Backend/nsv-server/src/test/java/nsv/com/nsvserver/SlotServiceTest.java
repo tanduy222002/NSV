@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 public class SlotServiceTest {
     @Mock
     SlotDao slotDaoImpl;
-
     @InjectMocks
     SlotService slotService;
 
