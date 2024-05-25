@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 public class ProfileDto {
 
-    @NotBlank(message = "name is mandatory")
+//    @NotBlank(message = "name is mandatory")
     @Schema( example = "tanduy", required = true)
     private String name;
     @Schema( example = "0794368181")

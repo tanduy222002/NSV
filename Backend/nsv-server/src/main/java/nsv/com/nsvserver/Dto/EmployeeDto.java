@@ -33,6 +33,10 @@ public class EmployeeDto {
     private String email;
     @Schema( example = "M")
     private String gender;
+
+    @Schema(hidden = true)
+    private String avatar;
+
 //    @Schema( example = "[]")
     private Address addresses;
 

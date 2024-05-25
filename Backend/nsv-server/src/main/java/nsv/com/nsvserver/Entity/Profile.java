@@ -28,8 +28,13 @@ public class Profile {
     private String phoneNumber;
     @Column(name = "email")
     private String email;
+
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "gender")
     private String gender;
+
     @OneToOne(mappedBy = "profile",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonManagedReference
     private Employee employee;

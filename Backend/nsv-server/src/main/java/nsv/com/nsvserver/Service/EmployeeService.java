@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,13 +40,14 @@ public class EmployeeService {
 
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl, RoleRepository roleRepository) {
+    public EmployeeService(ImageService imageService, EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl, RoleRepository roleRepository) {
         this.employeeRepository = employeeRepository;
         this.profileRepository = profileRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
         this.profileDaoImpl = profileDaoImpl;
         this.roleRepository = roleRepository;
+        this.imageServiceImpl = imageService;
     }
 
     @Transactional
@@ -105,8 +107,10 @@ public class EmployeeService {
         if (profileDto.getAvatar()!=null){
             try{
                 String imageUrl = imageServiceImpl.upLoadImageWithBase64(profileDto.getAvatar());
+                profile.setAvatar(imageUrl);
             }
             catch(Exception e){
+                System.out.println(e.getMessage());
                 throw new UploadImageException();
             }
         }
@@ -151,6 +155,7 @@ public class EmployeeService {
         employeeDto.setEmail(profile.getEmail());
         employeeDto.setGender(profile.getGender());
         employeeDto.setStatus(profile.getEmployee().getStatus());
+        employeeDto.setAvatar(profile.getAvatar());
         Address address = profile.getAddress();
         if(address != null){
             employeeDto.setAddresses(address);
