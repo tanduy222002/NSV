@@ -68,7 +68,9 @@ public class Profile {
 
     public void setAddress(Address address) {
         this.address = address;
-        address.setProfile(this);
+        if(address!=null){
+            address.setProfile(this);
+        }
     }
 
     @Override
