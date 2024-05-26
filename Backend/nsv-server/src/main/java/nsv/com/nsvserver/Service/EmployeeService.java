@@ -70,7 +70,7 @@ public class EmployeeService {
 
         List<Profile> profiles = profileDaoImpl.findAllWithEagerLoading(page, pageSize,name,status);
         List<EmployeeDto> results = profiles.stream().map(profileDto -> createEmployeeDto(profileDto)).collect(Collectors.toList());
-        long totalCount = profileDaoImpl.getTotalCount();
+        long totalCount = profileDaoImpl.getTotalCountWithFilerAndPagination(name,status);
         return new PageDto(Math.ceil((double) totalCount / pageSize), totalCount, page, results);
     }
 

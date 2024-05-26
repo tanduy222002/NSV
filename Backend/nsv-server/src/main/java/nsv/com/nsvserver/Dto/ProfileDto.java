@@ -2,10 +2,12 @@ package nsv.com.nsvserver.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import nsv.com.nsvserver.Annotation.Base64Img;
+import nsv.com.nsvserver.Annotation.ValidEmail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class ProfileDto {
     @Schema(description = "The base64 encoded of image start with prefix: \"data:image/jpeg;base64,\" + code")
     private String avatar;
 
+    @Valid
     private AddressDto addresses;
 
     public ProfileDto() {
