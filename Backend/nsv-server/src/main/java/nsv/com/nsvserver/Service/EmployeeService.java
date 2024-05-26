@@ -16,6 +16,7 @@ import nsv.com.nsvserver.Repository.*;
 import nsv.com.nsvserver.Util.ConvertUtil;
 import nsv.com.nsvserver.Util.EmployeeRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
     private final RoleRepository roleRepository;
+    private final ProjectInfoAutoConfiguration projectInfoAutoConfiguration;
     private EmployeeRepository employeeRepository;
 
     private ProfileRepository profileRepository;
@@ -40,7 +42,7 @@ public class EmployeeService {
 
 
     @Autowired
-    public EmployeeService(ImageService imageService, EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl, RoleRepository roleRepository) {
+    public EmployeeService(ImageService imageService, EmployeeRepository employeeRepository, ProfileRepository profileRepository, AddressService addressService, AddressRepository addressRepository, ProfileDao profileDaoImpl, RoleRepository roleRepository, ProjectInfoAutoConfiguration projectInfoAutoConfiguration) {
         this.employeeRepository = employeeRepository;
         this.profileRepository = profileRepository;
         this.addressService = addressService;
@@ -48,6 +50,7 @@ public class EmployeeService {
         this.profileDaoImpl = profileDaoImpl;
         this.roleRepository = roleRepository;
         this.imageServiceImpl = imageService;
+        this.projectInfoAutoConfiguration = projectInfoAutoConfiguration;
     }
 
     @Transactional
@@ -86,6 +89,7 @@ public class EmployeeService {
             address = addressService.createAddress(
                     addressDtos.getAddress(), addressDtos.getWardId(),
                     addressDtos.getDistrictId(), addressDtos.getProvinceId());
+            profile.setAddress(address);
         }
 
         if(profileDto.getName()!=null){

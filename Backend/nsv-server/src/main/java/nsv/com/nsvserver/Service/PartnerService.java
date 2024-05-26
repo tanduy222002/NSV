@@ -117,6 +117,7 @@ public class PartnerService {
             address = addressService.createAddress(
                     addressDtos.getAddress(), addressDtos.getWardId(),
                     addressDtos.getDistrictId(), addressDtos.getProvinceId());
+            profile.setAddress(address);
         }
 
         if(dto.getName()!=null){
