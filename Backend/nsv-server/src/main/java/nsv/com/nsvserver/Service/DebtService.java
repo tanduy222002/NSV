@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import nsv.com.nsvserver.Dto.DebtDetailDto;
 import nsv.com.nsvserver.Entity.Debt;
@@ -50,5 +51,11 @@ public class DebtService {
         DebtDetailDto debtDetailDto = new DebtDetailDto(debt.getId(), debt.getName(), debt.getAmount(),
                 debt.getCreateDate(), debt.getDueDate(), debt.getIsPaid(), debt.getNote(),debt.getUnit(),debt.getPaidDate());
         return debtDetailDto;
+    }
+
+    public String deleteDebt(Integer id) {
+        Debt debt = debtRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        debtRepository.delete(debt);
+        return "Debt deleted successfully";
     }
 }

@@ -14,4 +14,6 @@ public interface ProfileDao {
     Optional<Profile> findOneWithEagerLoading(Integer id);
 
     public long getTotalCount();
+
+    public long getTotalCountWithFilerAndPagination(String name, String status);
 }

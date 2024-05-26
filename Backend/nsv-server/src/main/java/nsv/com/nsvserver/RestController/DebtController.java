@@ -34,4 +34,15 @@ public class DebtController {
         );
     }
 
+
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "delete debt by id")
+    public ResponseEntity<?> deleteDebt(@PathVariable Integer id){
+
+        return ResponseEntity.ok(
+               debtService.deleteDebt(id)
+        );
+    }
+
 }

@@ -70,4 +70,27 @@ public class ProfileDaoImpl implements ProfileDao{
         return totalCount;
 
     }
+
+    @Override
+    public long getTotalCountWithFilerAndPagination(String name, String status) {
+        StringBuilder queryString = new StringBuilder("select count( p) from Profile p left join p.employee e WHERE 1=1");
+
+        if(name!=null){
+            queryString.append(" AND p.name LIKE :name");
+        }
+        if(status!=null){
+            queryString.append(" AND e.status = :status");
+        }
+
+        Query query = entityManager.createQuery(queryString.toString(), Long.class);
+
+        if(name!=null){
+            query.setParameter("name","%"+name+"%");
+        }
+        if(status!=null){
+            query.setParameter("status",status);
+        }
+
+        return (Long) query.getSingleResult();
+    }
 }
