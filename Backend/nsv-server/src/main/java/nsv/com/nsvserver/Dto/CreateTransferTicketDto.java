@@ -17,8 +17,11 @@ import java.util.List;
 public class CreateTransferTicketDto {
     @NotBlank(message = "name is mandatory")
     private String name;
+
+    @NotNull(message = "provider_id must not be null")
     @JsonProperty("provider_id")
     private Integer providerId;
+
     @JsonProperty("import_date")
     private Date importDate;
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface WarehouseDao {
     List<?> getStatisticsOfProductInWarehouse(Integer warehouseId);
-    public Slot fetchSlot(Integer Id);
+//    public Slot fetchSlot(Integer Id);
 
     public Warehouse getMapDetail(Integer mapId);
 
