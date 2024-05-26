@@ -64,20 +64,20 @@ public class WarehouseDaoImpl implements WarehouseDao {
 
     }
 
-
-    @Override
-    public Slot fetchSlot(Integer Id) {
-        Query query = entityManager.createQuery("select s from Slot s join s.warehouse as w Where w.id = :warehouseId");
-        query.setParameter("warehouseId",Id);
-        return (Slot) query.getResultList();
-    }
+//
+//    @Override
+//    public Slot fetchSlot(Integer Id) {
+//        Query query = entityManager.createQuery("select s from Slot s join s. as w Where w.id = :warehouseId");
+//        query.setParameter("warehouseId",Id);
+//        return (Slot) query.getResultList();
+//    }
 
     @Override
     public List<WarehouseDto> getWarehouses(Integer pageIndex, Integer pageSize, String name, String type, String status) {
         StringBuilder queryString = new StringBuilder(
                 """
                     select new nsv.com.nsvserver.Dto.WarehouseDto(w.id,w.name,w.type,a,w.containing,w.capacity,w.status)
-                    from Warehouse w join w.address as a join fetch a.ward as wa join fetch wa.district as d join fetch d.province as p WHERE 1=1 """
+                    from Warehouse w left join w.address as a left join fetch a.ward as wa left join fetch wa.district as d left join fetch d.province as p WHERE 1=1 """
         );
 
 
