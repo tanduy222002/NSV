@@ -424,6 +424,7 @@ public class TransferTicketService {
                         binInSlotDto.setSlotId(currSlot.getId());
                         binInSlotDto.setSlotName(currSlot.getName());
                         binInSlotDto.setWarehouseName(warehouseName);
+                        binInSlotDto.setWarehouseId(warehouse.getId());
                         binInSlotDto.setLocation(currSlot.getName()+"/"+warehouseName);
                         binInSlotDto.setInSlotWeight(binSlot.getWeight());
                         return binInSlotDto;

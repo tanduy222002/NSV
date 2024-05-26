@@ -23,6 +23,8 @@ public class ImportBinInSlot {
     @JsonProperty("taken_area")
     private Double takenArea =0.0;
     private BinDto bin;
+    @JsonProperty("warehouse_id")
+    private Integer warehouseId;
 
 
 }

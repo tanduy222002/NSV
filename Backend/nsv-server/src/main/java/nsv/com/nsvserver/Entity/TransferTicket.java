@@ -63,7 +63,7 @@ public class TransferTicket {
     private Partner partner;
 
     @OneToMany(mappedBy = "transferTicket"
-            ,cascade = {CascadeType.DETACH, CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
+            ,cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bin> bins;
 
     @OneToOne(mappedBy = "transferTicket",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
