@@ -43,6 +43,8 @@ public class Profile {
     @OneToOne(mappedBy="profile",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
     private Address address;
+
+
     public Profile(String name, String phoneNumber, String email, String gender, Employee employee) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -62,6 +64,11 @@ public class Profile {
         this.gender=employeeDto.getGender();
         this.phoneNumber=employeeDto.getPhoneNumber();
 
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+        address.setProfile(this);
     }
 
     @Override
