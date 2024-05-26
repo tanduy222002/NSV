@@ -19,15 +19,6 @@ public class NsvServerApplication {
 	@Value("${server.port}")
 	private String port;
 
-	BinDao binDaoImpl;
-	TicketDao ticketDaoImpl;
-
-
-	@Autowired
-	public NsvServerApplication(BinDao binDaoImpl, TicketDao ticketDaoImpl) {
-		this.binDaoImpl = binDaoImpl;
-		this.ticketDaoImpl = ticketDaoImpl;
-	}
 
 	public static void main(String[] args) {
 
