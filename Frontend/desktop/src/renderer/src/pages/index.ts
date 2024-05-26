@@ -20,6 +20,8 @@ import PartnerDetailPage from './PartnerDetailPage';
 import CreatePartnerPage from './CreatePartnerPage';
 import EmployeePage from './EmployeePage';
 import EmployeeDetailPage from './EmployeeDetailPage';
+import UserProfilePage from './UserProfilePage';
+import EditUserProfilePage from './EditUserProfilePage';
 
 export {
     AuthPage,
@@ -43,5 +45,7 @@ export {
     PartnerDetailPage,
     CreatePartnerPage,
     EmployeePage,
-    EmployeeDetailPage
+    EmployeeDetailPage,
+    UserProfilePage,
+    EditUserProfilePage
 };

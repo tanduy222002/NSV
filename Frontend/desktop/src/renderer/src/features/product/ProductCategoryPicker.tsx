@@ -3,6 +3,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { MdOutlineAddBox } from 'react-icons/md';
 import { FormInput, Button, FileInput } from '@renderer/components';
 import { Quality, ProductCategory } from '@renderer/types/product';
+import { GiFruitBowl } from 'react-icons/gi';
 
 type ProductCategoryPickerProps = {
     addCategory: (categories: ProductCategory) => void;
@@ -61,7 +62,16 @@ const ProductCategoryPicker = ({ addCategory }: ProductCategoryPickerProps) => {
                 bg="bg-white"
                 ref={categoryNameRef}
             />
-            <FileInput fileSrc={categoryImage} onChange={updateImage} />
+            <FileInput
+                fileSrc={categoryImage}
+                onChange={updateImage}
+                fallbackImage={
+                    <GiFruitBowl
+                        data-testid="default-icon"
+                        className="w-full h-full min-[400px] text-gray-300"
+                    />
+                }
+            />
             <h2 className="mb-3 font-semibold text-base">Nhiệt độ bảo quản</h2>
             <div className="flex items-center gap-3">
                 <FormInput

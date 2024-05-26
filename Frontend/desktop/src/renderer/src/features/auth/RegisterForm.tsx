@@ -118,9 +118,18 @@ const RegisterForm = () => {
             // save user information
             setAccessToken(response?.data?.token);
             setRefreshToken(response?.data?.refresh_token);
-            const { sub } = parseJwt(response?.data?.token);
+            const { sub, roles, avatar } = parseJwt(response?.data?.token);
             dispatch(
-                loggedIn({ value: { username: sub, email: '', phoneNo: '' } })
+                loggedIn({
+                    value: {
+                        id: response?.data?.id,
+                        username: sub,
+                        email: '',
+                        phoneNo: '',
+                        roles: roles,
+                        avatar: avatar
+                    }
+                })
             );
         }
     };

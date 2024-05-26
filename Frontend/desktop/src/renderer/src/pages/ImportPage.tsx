@@ -76,7 +76,7 @@ const ImportPage = () => {
 
     const mapTicketTable = useCallback(
         (tickets: any[]) =>
-            tickets.map((ticket) => ({
+            tickets?.map((ticket) => ({
                 id: ticket?.id,
                 name: ticket?.name,
                 weight: `${formatNumber(ticket?.weight)} kg`,

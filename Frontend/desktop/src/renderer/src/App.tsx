@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import LoginForm from './features/auth/LoginForm';
 import RegisterForm from './features/auth/RegisterForm';
 import RenewPasswordForm from './features/auth/RenewPasswordForm';
@@ -26,7 +26,9 @@ import {
     PartnerDetailPage,
     CreatePartnerPage,
     EmployeePage,
-    EmployeeDetailPage
+    EmployeeDetailPage,
+    UserProfilePage,
+    EditUserProfilePage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -39,7 +41,7 @@ function App(): JSX.Element {
     return (
         <Provider store={store}>
             <QueryClientProvider client={client}>
-                <BrowserRouter>
+                <HashRouter>
                     <div className="min-w-screen min-h-screen">
                         <Routes>
                             {/* auth route */}
@@ -145,10 +147,18 @@ function App(): JSX.Element {
                                     path="/employee/:id"
                                     element={<EmployeeDetailPage />}
                                 />
+                                <Route
+                                    path="/profile"
+                                    element={<UserProfilePage />}
+                                />
+                                <Route
+                                    path="/profile/edit"
+                                    element={<EditUserProfilePage />}
+                                />
                             </Route>
                         </Routes>
                     </div>
-                </BrowserRouter>
+                </HashRouter>
             </QueryClientProvider>
         </Provider>
     );

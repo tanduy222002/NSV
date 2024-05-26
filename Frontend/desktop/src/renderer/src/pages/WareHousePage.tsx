@@ -65,7 +65,7 @@ const WareHousePage = () => {
             address: warehouse?.address_string,
             capacity: warehouse?.current_capacity,
             status: warehouse?.status
-        }));
+        })) ?? [];
 
     if (!isFetching) console.log('data: ', data);
 

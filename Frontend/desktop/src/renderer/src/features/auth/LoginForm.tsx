@@ -74,10 +74,18 @@ const LoginForm = () => {
         // update user
         setAccessToken(response?.data?.token);
         setRefreshToken(response?.data?.refresh_token);
-        console.log('login res: ', response);
-        const { sub } = parseJwt(response?.data?.token);
+        const { sub, roles, avatar } = parseJwt(response?.data?.token);
         dispatch(
-            loggedIn({ value: { username: sub, email: '', phoneNo: '' } })
+            loggedIn({
+                value: {
+                    id: response?.data?.id,
+                    username: sub,
+                    email: '',
+                    phoneNo: '',
+                    roles: roles,
+                    avatar: avatar
+                }
+            })
         );
         navigate('/');
     };

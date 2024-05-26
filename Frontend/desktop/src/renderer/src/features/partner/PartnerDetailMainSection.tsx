@@ -81,14 +81,14 @@ const PartnerDetailMainSection = ({
                     name="Số giao dịch"
                     icon={<BiTransfer className="rotate-90" />}
                     disabled={false}
-                    value={totalTransactionCount}
+                    value={totalTransactionCount ?? 0}
                     defaultValue={'Trạng thái'}
                 />
                 <DataField
                     name={'Tổng giá trị'}
                     icon={<RiMoneyDollarCircleLine />}
                     disabled={false}
-                    value={`${formatNumber(totalTransactionValue)} VND`}
+                    value={`${formatNumber(totalTransactionValue ?? 0)} VND`}
                     defaultValue={'Tổng giá trị'}
                     textColor="text-sky-800"
                 />

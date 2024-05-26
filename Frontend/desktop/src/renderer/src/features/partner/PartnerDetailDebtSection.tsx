@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalStorage } from '@renderer/hooks';
 import { getPartnerDebtDetail } from '@renderer/services/api';

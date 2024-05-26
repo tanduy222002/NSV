@@ -79,14 +79,14 @@ const PartnerDetailTransactionSection = () => {
     });
 
     const mapTransactionTable = (transactions) =>
-        transactions.map((transaction) => ({
+        transactions?.map((transaction) => ({
             id: transaction?.id,
             name: transaction?.name,
             transferDate: formatDate(transaction?.transfer_date),
-            numberOfProducts: `${transaction?.number_of_products} loại sản phẩm`,
+            numberOfProducts: `${transaction?.number_of_products ?? 0} loại sản phẩm`,
             description: transaction?.description,
-            weight: `${formatNumber(transaction?.weight)} kg`,
-            value: `${formatNumber(transaction?.value)} VND`
+            weight: `${formatNumber(transaction?.weight ?? 0)} kg`,
+            value: `${formatNumber(transaction?.value ?? 0)} VND`
         })) ?? [];
 
     if (!isFetching) console.log('partner transaction: ', data);

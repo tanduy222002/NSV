@@ -13,6 +13,7 @@ import { productDefaultValue } from '@renderer/constants/product';
 import DropdownContainer from './DropdownContainer';
 import ProductCategoryList from './ProductCategoryList';
 import { createProduct } from '@renderer/services/api';
+import { GiFruitBowl } from 'react-icons/gi';
 
 const CreateProductForm = () => {
     const nameRef = useRef<HTMLInputElement>(null);
@@ -88,7 +89,16 @@ const CreateProductForm = () => {
                     onSelect={updateProductVariety}
                 />
 
-                <FileInput fileSrc={fileSrc} onChange={handleFileChange} />
+                <FileInput
+                    fileSrc={fileSrc}
+                    onChange={handleFileChange}
+                    fallbackImage={
+                        <GiFruitBowl
+                            data-testid="default-icon"
+                            className="w-full h-full min-[400px] text-gray-300"
+                        />
+                    }
+                />
             </div>
             <DropdownContainer
                 title={

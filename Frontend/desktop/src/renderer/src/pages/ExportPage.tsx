@@ -71,7 +71,7 @@ const ExportPage = () => {
 
     const mapTicketTable = useCallback(
         (tickets: any[]) =>
-            tickets.map((ticket) => ({
+            tickets?.map((ticket) => ({
                 id: ticket?.id,
                 name: ticket?.name,
                 productCount: `${ticket?.number_of_products} sản phẩm`,
@@ -104,7 +104,7 @@ const ExportPage = () => {
         console.log('data: ', data);
     }
     return (
-        <div className="w-full px-5 py-5">
+        <div className="w-full p-10">
             <UserInfo />
             <div className="flex items-center gap-2 mb-5">
                 <img src={warehouseIconSrc} />

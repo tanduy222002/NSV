@@ -42,6 +42,8 @@ import { deleteEmployee } from './employee/deleteEmployee';
 import { getEmployeeDetail } from './employee/getEmployeeDetail';
 import { updateEmployeeAccountStatus } from './employee/updateEmployeeAccountStatus';
 import { updateEmployeeRoles } from './employee/updateEmployeeRoles';
+import { updateEmployeeProfile } from './employee/updateEmployeeProfile';
+import { logout } from './auth/logout';
 
 export {
     login,
@@ -87,5 +89,7 @@ export {
     deleteEmployee,
     getEmployeeDetail,
     updateEmployeeAccountStatus,
-    updateEmployeeRoles
+    updateEmployeeRoles,
+    updateEmployeeProfile,
+    logout
 };

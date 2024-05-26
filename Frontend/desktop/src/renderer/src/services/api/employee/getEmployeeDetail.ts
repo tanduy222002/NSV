@@ -1,4 +1,4 @@
-import { makeAuthRequestV2 } from '../makeRequest';
+import { makeAuthRequest } from '../makeRequest';
 
 type GetEmployeeDetailPayload = {
     token: string;
@@ -11,7 +11,7 @@ export const getEmployeeDetail = async ({
 }: GetEmployeeDetailPayload): Promise<any> => {
     let response: any = undefined;
     try {
-        response = await makeAuthRequestV2({
+        response = await makeAuthRequest({
             token: token,
             url: `/employees/${employeeId}`,
             method: 'get'

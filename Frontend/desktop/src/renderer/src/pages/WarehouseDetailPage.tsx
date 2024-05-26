@@ -2,7 +2,12 @@ import { IoChevronBack } from 'react-icons/io5';
 import { LuBookmark } from 'react-icons/lu';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { UserInfo, TableView, StatisticSummary } from '@renderer/components';
+import {
+    UserInfo,
+    TableView,
+    StatisticSummary,
+    PageLoading
+} from '@renderer/components';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
 import { WarehouseMapPreview } from '@renderer/features/warehouse/components';
 import {
@@ -31,7 +36,8 @@ const slotTableConfig = [
     {
         title: 'Trạng thái',
         sortable: false,
-        type: ColumnType.Text
+        type: ColumnType.Text,
+        stylable: true
     },
     {
         title: 'Thao tác',
@@ -78,7 +84,9 @@ const WarehouseDetailPage = () => {
                 name: `${row?.name}-${slot?.name}`,
                 capacity: slot?.capacity,
                 status: slot?.status === 'EMPTY' ? 'Trống' : 'Đang sử dụng',
-                currentLoad: slot?.currentLoad
+                currentLoad: slot?.currentLoad,
+                textColor:
+                    slot?.status === 'EMPTY' ? 'text-black' : 'text-emerald-600'
             }));
             slots = [...slots, ...newSlots];
         }
@@ -103,7 +111,7 @@ const WarehouseDetailPage = () => {
                 </h1>
             </div>
             {isFetchingDetail ? (
-                <h1>Loading...</h1>
+                <PageLoading />
             ) : (
                 <div className="flex gap-5">
                     <div>

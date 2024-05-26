@@ -88,3 +88,26 @@ export const UpdateAccountRolesResult: UpdateAccountRolesResultType = {
         popupType: ResultPopupType.Error
     }
 };
+
+export const updateProfileConfirmPopupData: InfoPopup = {
+    title: 'Cập nhật thông tin',
+    body: 'Xác nhận thông tin cá nhân mới?'
+};
+
+type UpdateProfileResult = {
+    Success: ResultPopup;
+    Error: ResultPopup;
+};
+
+export const UpdateProfileResult: UpdateProfileResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Cập nhật thông tin cá nhân thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Cập nhật thông tin cá nhân thất bại',
+        popupType: ResultPopupType.Error
+    }
+};

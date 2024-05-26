@@ -80,7 +80,7 @@ const AsyncSelectInput = ({
                 <ul className="absolute top-10 z-50 overflow-hidden max-h-[170px] overflow-y-scroll mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     {isFetching || isRefetching ? (
                         <ListSkeleton />
-                    ) : data?.length > 0 ? (
+                    ) : data && data?.length > 0 ? (
                         data?.map((option, i) => (
                             <li
                                 className="cursor-pointer py-2 text-center text-sm hover:bg-slate-200 hover:font-semibold"
