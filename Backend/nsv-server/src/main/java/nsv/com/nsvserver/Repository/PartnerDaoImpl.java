@@ -188,6 +188,7 @@ public class PartnerDaoImpl implements PartnerDao{
         }
 
         queryString.append(" GROUP BY tt.id,tt.name,tt.transportDate,tt.description, tt.status,tt.type ");
+        queryString.append(" HAVING COUNT(DISTINCT b.id) > 0" );
 
         queryString.append(" ORDER BY tt.transportDate DESC");
 
