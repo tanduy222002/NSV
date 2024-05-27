@@ -286,6 +286,7 @@ public class AuthExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleDefaultException(Exception e) {
+        e.printStackTrace();
         System.out.println(e.getClass().getName());
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),
                 HttpStatus.INTERNAL_SERVER_ERROR.toString(),
