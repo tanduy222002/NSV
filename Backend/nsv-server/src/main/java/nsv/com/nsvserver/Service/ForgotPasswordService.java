@@ -130,7 +130,9 @@ public class ForgotPasswordService {
             throw new OtpNotMatchIdentifierException();
         }
         employee.setPassword(encoder.encode(newPassword));
-        refreshTokenRepository.delete(employee.getRefreshToken());
+        if(employee.getRefreshToken()!=null){
+            refreshTokenRepository.delete(employee.getRefreshToken());
+        }
         otpRepository.delete(userOtp);
         employee.setRefreshToken(null);
         employee.setOtp(null);
