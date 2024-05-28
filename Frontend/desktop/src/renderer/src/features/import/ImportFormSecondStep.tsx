@@ -17,8 +17,8 @@ import { ImportFormStep } from './type';
 import { useLocalStorage } from '@renderer/hooks';
 import {
     getProductList,
-    searchWarehouseMap,
-    getProductCategory
+    getProductCategory,
+    searchWarehouseName
 } from '@renderer/services/api';
 import { ModalProvider, TextAreaInput, TableView } from '@renderer/components';
 import SelectSlotStepController from './SelectSlotPopupController';
@@ -124,8 +124,8 @@ const ImportFormSecondStep = ({
         return response;
     };
 
-    const searchWarehouseMapCallback = async () => {
-        const result = await searchWarehouseMap({ token: accessToken });
+    const searchWarehouseNameCallback = async () => {
+        const result = await searchWarehouseName({ token: accessToken });
         return result;
     };
 
@@ -162,7 +162,6 @@ const ImportFormSecondStep = ({
     };
 
     const getBatchTableData = (importTicket: ImportTicket) => {
-        console.log(importTicket.binDto);
         return (
             importTicket.binDto.map((bin, id) => ({
                 id: id + 1,
@@ -183,6 +182,11 @@ const ImportFormSecondStep = ({
     });
 
     const handleCreateTicket = async (ticket: ImportTicket) => {
+        const ticketValue = ticket.binDto.reduce(
+            (value, bin) => value + bin?.weight * bin.price,
+            0
+        );
+        ticket.value = ticketValue;
         closeInfoPopup();
         const response = await createImportTicketMutation.mutateAsync({
             token: accessToken,
@@ -268,12 +272,15 @@ const ImportFormSecondStep = ({
                         icon={<FaMapLocationDot />}
                         label="warehouse-map"
                         selectedValue={warehouseMap?.name}
-                        placeHolder="Chọn sơ đồ"
-                        asyncSelectorCallback={searchWarehouseMapCallback}
+                        placeHolder="Chọn kho"
+                        asyncSelectorCallback={searchWarehouseNameCallback}
                         onSelect={setWarehouseMap}
                     />
                     <ModalProvider>
                         <SelectSlotStepController
+                            totalWeight={Number(
+                                weightRef?.current?.value ?? '0'
+                            )}
                             addNewBatch={addNewBatch}
                             warehouseId={warehouseMap?.id}
                         />

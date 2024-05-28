@@ -34,13 +34,12 @@ const ImportFormFirstStep = ({
 }: ImportFormFirstStepProps) => {
     const ticketNameRef = useRef<HTMLInputElement>(null);
     const transportRef = useRef<HTMLInputElement>(null);
-    const costRef = useRef<HTMLInputElement>(null);
     const debtRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
     const [debtOption, setDebtOption] = useState<DebtOption>(
         importTicket.debtDto ? DebtOption.Yes : DebtOption.No
     );
-    const [partner, setPartner] = useState<any>(importTicket?.provider_id);
+    const [partner, setPartner] = useState<any>(importTicket?.provider_detail);
     const [importDate, setImportDate] = useState({
         startDate: importTicket?.import_date,
         endDate: importTicket?.import_date
@@ -68,6 +67,8 @@ const ImportFormFirstStep = ({
         return response?.content;
     };
 
+    console.log(importTicket);
+
     const handleFirstStep = () => {
         const newImportTicketValue: ImportTicket = {
             ...importTicket,
@@ -76,8 +77,7 @@ const ImportFormFirstStep = ({
             transporter: transportRef?.current?.value ?? '',
             description: descriptionRef?.current?.value ?? '',
             import_date: importDate?.startDate ?? String(Date.now()),
-            provider_detail: { ...partner },
-            value: Number(costRef?.current?.value ?? '0')
+            provider_detail: { ...partner }
         };
         if (debtOption === DebtOption.Yes) {
             newImportTicketValue.debtDto = {
@@ -152,14 +152,6 @@ const ImportFormFirstStep = ({
                         bg="bg-white"
                         ref={transportRef}
                         defaultValue={importTicket?.transporter}
-                    />
-                    <FormInput
-                        label="Giá trị"
-                        name="Giá trị"
-                        icon={<CiDollar />}
-                        bg="bg-white"
-                        ref={costRef}
-                        defaultValue={formatNumber(importTicket?.value)}
                     />
                     <SelectInput
                         placeHolder="Công nợ"

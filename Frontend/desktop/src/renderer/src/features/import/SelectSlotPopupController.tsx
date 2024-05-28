@@ -4,11 +4,13 @@ import { BinWithSlot } from '@renderer/types/import';
 import { useModal } from '@renderer/hooks';
 
 type SelectSlotPopupControllerProps = {
+    totalWeight: number;
     addNewBatch: (param: BinWithSlot[]) => void;
     warehouseId: number;
 };
 
 const SelectSlotPopupController = ({
+    totalWeight,
     addNewBatch,
     warehouseId
 }: SelectSlotPopupControllerProps) => {
@@ -25,6 +27,7 @@ const SelectSlotPopupController = ({
             </button>
             {modalOpen && (
                 <SelectSlotPopup
+                    totalWeight={totalWeight}
                     warehouseId={warehouseId}
                     addNewBatch={addNewBatch}
                 />
