@@ -74,7 +74,7 @@ const ProductList = () => {
             const response = await getProductListStatistic({
                 token: accessToken,
                 pageIndex: currentPage,
-                pageSize: 5,
+                pageSize: 9,
                 name: searchValue.length > 0 ? searchValue : undefined
             });
             setMaxPage(response?.total_page);
