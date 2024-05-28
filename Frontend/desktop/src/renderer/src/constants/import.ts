@@ -23,10 +23,17 @@ export const approveTicketPopupInfo: InfoPopup = {
     body: 'Duyệt phiếu sẽ cập nhật sức chứa kho tương ứng'
 };
 
-export const approveTicketSuccessPopup: ResultPopup = {
-    title: 'Thành công',
-    body: 'Duyệt phiếu nhập thành công',
-    popupType: ResultPopupType.Success
+export const ApproveImportTicketResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Duyệt phiếu nhập thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Duyệt phiếu nhập thất bại',
+        popupType: ResultPopupType.Error
+    }
 };
 
 export const createImportTicketConfirmPopupData: InfoPopup = {
