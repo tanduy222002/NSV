@@ -27,7 +27,7 @@ const FileInput = ({ fileSrc, onChange, fallbackImage }: FileInputProps) => {
                     fallbackImage
                 ) : (
                     <img
-                        className="fit-cover w-full h-full"
+                        className="object-cover w-full h-full"
                         src={fileSrc}
                         alt="preview-image"
                     />

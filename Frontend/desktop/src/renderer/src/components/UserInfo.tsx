@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { logout } from '@renderer/services/api';
 import { loggedOut } from '@renderer/store/slices/auth/authSlice';
 import Loading from './Loading';
+import { RxAvatar } from 'react-icons/rx';
 
 const UserInfo = () => {
     const navigate = useNavigate();
@@ -36,15 +37,13 @@ const UserInfo = () => {
     });
 
     const handleLogout = async () => {
-        const response = await logoutMutation.mutateAsync({
+        await logoutMutation.mutateAsync({
             token: accessToken
         });
-        if (response?.status === 200) {
-            navigate('/auth/login');
-            deleteAccessToken();
-            deleteRefreshToken();
-            dispatch(loggedOut());
-        }
+        navigate('/auth/login');
+        deleteAccessToken();
+        deleteRefreshToken();
+        dispatch(loggedOut());
     };
 
     return (
@@ -58,7 +57,17 @@ const UserInfo = () => {
                 data-testid="bell-icon"
                 className="w-[20px] h-[20px] cursor-pointer"
             />
-            <div className="flex items-center gap-1 border border-sky-800 rounded-md font-semibold px-2 py-2 text-sky-800">
+            <div className="flex items-center gap-1 border border-sky-800 rounded-md font-semibold px-2 py-1 text-sky-800">
+                <div className="w-[36px] h-[36px] rounded-full overflow-hidden flex items-center">
+                    {user?.avatar ? (
+                        <img
+                            className="w-full h-full cover"
+                            src={user?.avatar}
+                        />
+                    ) : (
+                        <RxAvatar className="h-full" />
+                    )}
+                </div>
                 <p>{user?.username}</p>
                 <MdKeyboardArrowDown
                     data-testid="arrow-icon"
