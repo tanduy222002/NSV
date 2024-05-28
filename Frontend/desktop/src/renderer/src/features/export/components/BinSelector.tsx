@@ -5,6 +5,7 @@ import { getAvailableBin } from '@renderer/services/api';
 import { ImportBinWithSlot } from '@renderer/types/export';
 import { Button, TableSkeleton } from '@renderer/components';
 import SlotTable from './SlotTable';
+import { cn } from '@renderer/utils/util';
 
 type BinSelectorProps = {
     totalWeight: number;
@@ -69,7 +70,14 @@ const BinSelector = ({
                 <h1 className="text-sky-800 text-base font-semibold">
                     Cần lấy: {totalWeight} kg
                 </h1>
-                <h1 className="text-sky-800 text-base font-semibold">
+                <h1
+                    className={cn(
+                        'text-base font-semibold',
+                        totalWeight === getTotalTakenWeight(data?.content)
+                            ? 'text-emerald-500'
+                            : 'text-red-500'
+                    )}
+                >
                     Đã lấy: {getTotalTakenWeight(data?.content)} kg
                 </h1>
             </div>

@@ -178,10 +178,10 @@ const ExportFormSecondStep = ({
             ticket: ticket
         });
         console.log('response: ', response);
-        if (response?.status !== 200) {
+        if (response?.status === 200) {
             setResultPopup(CreateExportTicketResult.Success);
         }
-        if (response?.status !== 400) {
+        if (response?.status >= 400) {
             setResultPopup(CreateExportTicketResult.Error);
         }
     };
