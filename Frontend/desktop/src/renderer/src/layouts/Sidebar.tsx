@@ -91,21 +91,19 @@ const Sidebar = () => {
     });
 
     const loggout = async () => {
-        const response = await logoutMutation.mutateAsync({
+        await logoutMutation.mutateAsync({
             token: accessToken
         });
-        if (response?.status === 200) {
-            navigate('/auth/login');
-            deleteAccessToken();
-            deleteRefreshToken();
-            dispatch(loggedOut());
-        }
+        navigate('/auth/login');
+        deleteAccessToken();
+        deleteRefreshToken();
+        dispatch(loggedOut());
     };
 
     return (
         <div className="flex">
             {logoutMutation.isPending && <Loading />}
-            <div className="flex flex-col items-center w-[280px] h-screen py-8 border-r border-gray-200">
+            <div className="flex flex-col items-center w-[280px] h-screen sticky top-0 py-8 border-r border-gray-200">
                 <div className="flex items-center gap-2 my-8">
                     <div>
                         <img

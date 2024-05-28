@@ -87,12 +87,13 @@ const ExportPage = () => {
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { data, isFetching } = useQuery({
-        queryKey: ['export', ticketStatus, searchValue],
+        queryKey: ['export', ticketStatus, searchValue, currentPage],
         queryFn: async () => {
             const response = await searchExportTicket({
                 token: accessToken,
                 name: searchValue,
                 pageIndex: currentPage,
+                pageSize: 10,
                 status: ticketStatus
             });
             setMaxPage(response?.total_page);

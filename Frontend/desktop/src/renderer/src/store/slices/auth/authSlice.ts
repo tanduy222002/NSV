@@ -5,7 +5,7 @@ type AuthUser = {
     username: string;
     email: string;
     phoneNo: string;
-    avatar: string;
+    avatar?: string;
     roles?: string[];
 };
 
@@ -20,10 +20,12 @@ export const authSlice = createSlice({
     initialState: initState,
     reducers: {
         loggedIn: (_, action: PayloadAction<AuthSliceState>) => action.payload,
-        loggedOut: () => initState
+        loggedOut: () => initState,
+        profileUpdated: (_, action: PayloadAction<AuthSliceState>) =>
+            action.payload
     }
 });
 
-export const { loggedIn, loggedOut } = authSlice.actions;
+export const { loggedIn, loggedOut, profileUpdated } = authSlice.actions;
 
 export default authSlice.reducer;

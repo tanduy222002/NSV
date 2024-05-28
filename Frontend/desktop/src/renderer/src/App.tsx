@@ -28,14 +28,21 @@ import {
     EmployeePage,
     EmployeeDetailPage,
     UserProfilePage,
-    EditUserProfilePage
+    EditUserProfilePage,
+    EditPartnerDetailPage
 } from './pages';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { Sidebar } from './layouts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const client = new QueryClient();
+const client = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false // default: true
+        }
+    }
+});
 
 function App(): JSX.Element {
     return (
@@ -138,6 +145,10 @@ function App(): JSX.Element {
                                 <Route
                                     path="/partner/:id"
                                     element={<PartnerDetailPage />}
+                                />
+                                <Route
+                                    path="/partner/:id/edit"
+                                    element={<EditPartnerDetailPage />}
                                 />
                                 <Route
                                     path="/employee"

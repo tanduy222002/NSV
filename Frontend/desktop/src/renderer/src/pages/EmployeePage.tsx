@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { GrUserWorker } from 'react-icons/gr';
 import { getEmployeeList } from '@renderer/services/api';
 import {
@@ -15,7 +15,8 @@ import {
     Pagination,
     TableSkeleton,
     UserInfo,
-    SearchBar
+    SearchBar,
+    Loading
 } from '@renderer/components';
 import TableView, { ColumnType } from '@renderer/components/TableView';
 import { InfoPopup, ResultPopup } from '@renderer/types/common';
@@ -111,10 +112,18 @@ const EmployeePage = () => {
         navigate(`/employee/${id}`);
     const goToCreateEmployeePage = () => navigate('/employee/create');
 
+    const deleteEmployeeMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await deleteEmployee(payload);
+            return response;
+        }
+    });
+
     const handleDeleteEmployee = async () => {
+        closeInfoPopup();
         const deleteId = deleteEmployeeId.current;
         if (!deleteId) return;
-        const response = await deleteEmployee({
+        const response = await deleteEmployeeMutation.mutateAsync({
             token: accessToken,
             employeeId: String(deleteId)
         });
@@ -124,7 +133,6 @@ const EmployeePage = () => {
         if (response?.status === 200) {
             setResultPopup(DeleteEmployeeResult.Success);
         }
-        closeInfoPopup();
         refetch();
     };
 
@@ -141,6 +149,7 @@ const EmployeePage = () => {
     console.log('employee data: ', data);
     return (
         <div className="w-full p-10">
+            {deleteEmployeeMutation.isPending && <Loading />}
             {infoPopup && (
                 <ConfirmationPopup
                     title={infoPopup.title}
@@ -209,7 +218,7 @@ const EmployeePage = () => {
                     }
                 />
             </div>
-            <div className="w-[800px] flex flex-col gap-4">
+            <div className="w-[850px] flex flex-col gap-4">
                 <SearchBar
                     className="ml-auto w-fit"
                     placeHolder="Tìm nhân viên..."

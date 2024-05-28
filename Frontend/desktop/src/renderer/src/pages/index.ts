@@ -22,6 +22,7 @@ import EmployeePage from './EmployeePage';
 import EmployeeDetailPage from './EmployeeDetailPage';
 import UserProfilePage from './UserProfilePage';
 import EditUserProfilePage from './EditUserProfilePage';
+import EditPartnerDetailPage from './EditPartnerDetailPage';
 
 export {
     AuthPage,
@@ -47,5 +48,6 @@ export {
     EmployeePage,
     EmployeeDetailPage,
     UserProfilePage,
-    EditUserProfilePage
+    EditUserProfilePage,
+    EditPartnerDetailPage
 };

@@ -5,6 +5,7 @@ import { IoChevronBack } from 'react-icons/io5';
 import { UserInfo, Button, PageLoading } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { getPartnerDetail } from '@renderer/services/api';
+import { FaEdit } from 'react-icons/fa';
 import {
     PartnerDetailMainSection,
     PartnerDetailTransactionSection,
@@ -22,6 +23,7 @@ const PartnerDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const goToPartnerPage = () => navigate('/partner');
+    const goToEditPartnerPage = () => navigate(`/partner/${id}/edit`);
 
     const [viewedSection, setViewedSection] = useState(
         PartnerDetailSection.Transaction
@@ -51,12 +53,17 @@ const PartnerDetailPage = () => {
                 />
                 <img alt="form-icon" src={partnerIconSrc} />
                 <h1 className="text-xl font-semibold">Đối tác</h1>
+                <FaEdit
+                    className="w-[20px] h-[20px] text-amber-300 cursor-pointer"
+                    onClick={() => goToEditPartnerPage()}
+                />
             </div>
             {isFetching ? (
                 <PageLoading />
             ) : (
                 <>
                     <PartnerDetailMainSection
+                        avatar={data?.avatar}
                         name={data?.name}
                         phoneNumber={data?.phone}
                         email={data?.email}

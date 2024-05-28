@@ -95,7 +95,7 @@ const WarehouseSlotDetailPage = () => {
             productName: batch?.product_name,
             category: batch?.product_type,
             packageType: batch?.packaged,
-            weight: batch?.weight
+            weight: `${batch?.weight} kg`
         }));
 
     if (!isFetchingSlotDetail) console.log(slotDetail);
@@ -124,7 +124,7 @@ const WarehouseSlotDetailPage = () => {
                             <span>
                                 <GoDotFill className="translate-y-[1px] text-emerald-500" />
                             </span>
-                            Sử dụng: {slotStatistic?.containing}
+                            Sử dụng: {slotStatistic?.containing} m²
                         </p>
                         <p className="font-semibold text-sm flex items-center gap-2">
                             <span>
@@ -132,11 +132,12 @@ const WarehouseSlotDetailPage = () => {
                             </span>
                             Còn trống:{' '}
                             {slotStatistic?.capacity -
-                                slotStatistic?.containing}
+                                slotStatistic?.containing}{' '}
+                            m²
                         </p>
                     </div>
                     <StatisticSummary
-                        sqSize={100}
+                        sqSize={120}
                         percentage={
                             Math.ceil(
                                 (10000 * Number(slotStatistic?.containing)) /
@@ -167,7 +168,8 @@ const WarehouseSlotDetailPage = () => {
                                         >
                                             <LuBookmark />
                                             <p className="text-sm font-semibold">
-                                                {category?.name}
+                                                {category?.name}:{' '}
+                                                {category?.weight} kg
                                             </p>
                                         </div>
                                     ))}

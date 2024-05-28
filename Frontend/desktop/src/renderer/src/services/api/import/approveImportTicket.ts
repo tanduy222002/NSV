@@ -1,4 +1,4 @@
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 
 type ApproveImportTicketPayload = {
     token: string;
@@ -11,7 +11,7 @@ export const approveImportTicket = async ({
 }: ApproveImportTicketPayload): Promise<any> => {
     let response: any = undefined;
     try {
-        response = await makeAuthRequest({
+        response = await makeAuthRequestV2({
             token: token,
             url: `/transfer_ticket/import_tickets/${ticketId}/status/approve`,
             method: 'put'

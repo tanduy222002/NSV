@@ -10,7 +10,11 @@ import {
     SelectInput,
     UserInfo
 } from '@renderer/components';
-import { useAppSelector, useLocalStorage } from '@renderer/hooks';
+import {
+    useAppDispatch,
+    useAppSelector,
+    useLocalStorage
+} from '@renderer/hooks';
 import {
     getEmployeeDetail,
     updateEmployeeProfile
@@ -23,12 +27,17 @@ import { useNavigate } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import { RxAvatar } from 'react-icons/rx';
 import { useRef, useState } from 'react';
-import { InfoPopup, ResultPopup } from '@renderer/types/common';
+import {
+    InfoPopup,
+    ResultPopup,
+    ResultPopupType
+} from '@renderer/types/common';
 import {
     UpdateProfileResult,
     updateProfileConfirmPopupData
 } from '@renderer/constants/employee';
-import { Address } from '@renderer/types/partner';
+import { Address } from '@renderer/types/common';
+import { profileUpdated } from '@renderer/store/slices/auth/authSlice';
 
 const EditUserProfilePage = () => {
     const user = useAppSelector((state) => state.auth.value);
@@ -90,6 +99,8 @@ const EditUserProfilePage = () => {
         setFileSrc(fileSrc);
     };
 
+    const dispatch = useAppDispatch();
+
     const nameRef = useRef<HTMLInputElement>(null);
     const phoneRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
@@ -123,6 +134,15 @@ const EditUserProfilePage = () => {
 
         if (response?.status === 200) {
             setResultPopup(UpdateProfileResult.Success);
+            dispatch(
+                profileUpdated({
+                    value: {
+                        ...user!,
+                        username: nameRef?.current?.value ?? data?.name,
+                        avatar: fileSrc ?? undefined
+                    }
+                })
+            );
             return;
         }
         if (response?.status >= 400) {
@@ -149,7 +169,11 @@ const EditUserProfilePage = () => {
                     title={resultPopup.title}
                     body={resultPopup.body}
                     popupType={resultPopup.popupType}
-                    closeAction={closeResultPopup}
+                    closeAction={() => {
+                        closeResultPopup();
+                        if (resultPopup.popupType === ResultPopupType.Success)
+                            goToUserProfilePage();
+                    }}
                 />
             )}
             <UserInfo />

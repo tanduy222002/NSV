@@ -1,5 +1,5 @@
 import { Partner } from '@renderer/types/partner';
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 
 type createPartnerPayload = {
     token: string;
@@ -10,9 +10,8 @@ export const createPartner = async ({
     token,
     partner
 }: createPartnerPayload): Promise<any> => {
-    let response: any = undefined;
     try {
-        response = await makeAuthRequest({
+        const response = await makeAuthRequestV2({
             token: token,
             url: `/partners`,
             method: 'post',

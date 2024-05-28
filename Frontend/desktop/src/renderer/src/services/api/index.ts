@@ -44,6 +44,8 @@ import { updateEmployeeAccountStatus } from './employee/updateEmployeeAccountSta
 import { updateEmployeeRoles } from './employee/updateEmployeeRoles';
 import { updateEmployeeProfile } from './employee/updateEmployeeProfile';
 import { logout } from './auth/logout';
+import { updatePartnerProfile } from './partner/updatePartnerProfile';
+import { searchWarehouseName } from './warehouse/searchWarehouseName';
 
 export {
     login,
@@ -91,5 +93,7 @@ export {
     updateEmployeeAccountStatus,
     updateEmployeeRoles,
     updateEmployeeProfile,
-    logout
+    logout,
+    updatePartnerProfile,
+    searchWarehouseName
 };
