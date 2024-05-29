@@ -24,3 +24,10 @@ export type Location = {
     id: number;
     name: string;
 };
+
+export type Address = {
+    address: string;
+    ward: Location | null;
+    district: Location | null;
+    province: Location | null;
+};

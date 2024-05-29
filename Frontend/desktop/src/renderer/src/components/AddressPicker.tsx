@@ -4,7 +4,7 @@ import { useModal, useLocalStorage } from '@renderer/hooks';
 import { getProvinces, getDistricts, getWards } from '@renderer/services/api';
 import { FormInput, Button } from '@renderer/components';
 import AsyncSelectInput from './AsyncSelectInput';
-import { Address } from '@renderer/types/partner';
+import { Address } from '@renderer/types/common';
 
 type Location = {
     id: number;
@@ -84,20 +84,23 @@ const AddressPicker = ({ updateAddressDetail }: AddressPickerProps) => {
                     asyncSelectorCallback={getProvincesCallback}
                     label="Tỉnh"
                     onSelect={updateProvince}
+                    bg="bg-gray-50"
                 />
                 <AsyncSelectInput
                     selectedValue={district?.name}
                     placeHolder="Chọn Huyện..."
                     asyncSelectorCallback={getDistrictsCallback}
-                    label="Huyện"
+                    label={`Huyện${province?.id}`}
                     onSelect={updateDistrict}
+                    bg="bg-gray-50"
                 />
                 <AsyncSelectInput
                     selectedValue={ward?.name}
                     placeHolder="Chọn ..."
                     asyncSelectorCallback={getWardsCallback}
-                    label="Phường/xã"
+                    label={`Phường/xã${province?.id}-${district?.id}`}
                     onSelect={updateWard}
+                    bg="bg-gray-50"
                 />
                 <FormInput
                     label="Địa chỉ"

@@ -1,4 +1,4 @@
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 import { Product } from '@renderer/types/product';
 
 type GetProductCategoryPayload = {
@@ -12,8 +12,8 @@ export const createProduct = async ({
 }: GetProductCategoryPayload): Promise<any> => {
     let response = undefined;
     try {
-        response = await makeAuthRequest({
-            url: `/products/products/types/qualities`,
+        response = await makeAuthRequestV2({
+            url: `/products/types/qualities`,
             method: 'post',
             token: token,
             body: {

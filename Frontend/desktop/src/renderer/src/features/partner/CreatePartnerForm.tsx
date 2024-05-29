@@ -5,17 +5,19 @@ import {
     ModalProvider,
     Button,
     InformationPopup,
-    ConfirmationPopup
+    ConfirmationPopup,
+    Loading
 } from '@renderer/components';
 import {
+    CreatePartnerResult,
     createPartnerPopupData,
-    createPartnerSuccessPopupData,
     defaultPartnerValue
 } from '@renderer/constants/partner';
 import { useLocalStorage } from '@renderer/hooks';
 import { createPartner } from '@renderer/services/api/partner/createPartner';
-import { InfoPopup, ResultPopup } from '@renderer/types/common';
-import { Address, Partner } from '@renderer/types/partner';
+import { Address, InfoPopup, ResultPopup } from '@renderer/types/common';
+import { Partner } from '@renderer/types/partner';
+import { useMutation } from '@tanstack/react-query';
 
 const CreatePartnerForm = () => {
     const [partner, setPartner] = useState(defaultPartnerValue);
@@ -36,10 +38,26 @@ const CreatePartnerForm = () => {
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
+
+    const createPartnerMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await createPartner(payload);
+            return response;
+        }
+    });
+
     const handleCreatePartner = async (partner: Partner) => {
-        const response = await createPartner({ token: accessToken, partner });
-        if (response) setResultPopup(createPartnerSuccessPopupData);
         closeInfoPopup();
+        const response = await createPartnerMutation.mutateAsync({
+            token: accessToken,
+            partner: partner
+        });
+        if (response?.status === 200) {
+            setResultPopup(CreatePartnerResult.Success);
+        }
+        if (response?.status >= 400) {
+            setResultPopup(CreatePartnerResult.Error);
+        }
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -50,6 +68,7 @@ const CreatePartnerForm = () => {
 
     return (
         <>
+            {createPartnerMutation.isPending && <Loading />}
             {infoPopup && (
                 <ConfirmationPopup
                     title={infoPopup.title}
@@ -113,7 +132,7 @@ const CreatePartnerForm = () => {
                     bg="bg-white"
                 />
                 <Button
-                    className="justify-self-center px-2 py-1 border rounded-md border-sky-800 text-sky-800 hover:bg-sky-100 font-semibold"
+                    className="justify-self-center px-2 py-1 border rounded-md border-emerald-500 text-emerald-500 hover:bg-emerald-50 font-semibold"
                     text="Xác nhận"
                     type="submit"
                 />

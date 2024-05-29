@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { IoMdAdd, IoMdClose } from 'react-icons/io';
 import { FieldArray } from 'formik';
 import { FormInput, Button, Wrapper } from '@renderer/components';
-import { ButtonVariant } from '@renderer/components/type';
 
 type FormValuePreviewProps = {
     name: string;
@@ -33,7 +32,6 @@ const FormValuesPreview = ({ name, label, values }: FormValuePreviewProps) => {
                                 ref={inputRef}
                             />
                             <Button
-                                variant={ButtonVariant.Icon}
                                 icon={<IoMdAdd />}
                                 className="text-[#1A3389] border-[#1A3389] hover:bg-indigo-200"
                                 action={() =>

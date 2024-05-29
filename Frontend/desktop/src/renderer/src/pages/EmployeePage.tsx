@@ -1,15 +1,22 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { GrUserWorker } from 'react-icons/gr';
 import { getEmployeeList } from '@renderer/services/api';
-import { useLocalStorage } from '@renderer/hooks';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import {
     Button,
     ConfirmationPopup,
     InformationPopup,
+    Pagination,
     TableSkeleton,
-    UserInfo
+    UserInfo,
+    SearchBar,
+    Loading
 } from '@renderer/components';
 import TableView, { ColumnType } from '@renderer/components/TableView';
 import { InfoPopup, ResultPopup } from '@renderer/types/common';
@@ -59,6 +66,8 @@ const employeeTableConfig = [
 ];
 
 const EmployeePage = () => {
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const deleteEmployeeId = useRef<number | null>(null);
     const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
     const closeResultPopup = () => setResultPopup(null);
@@ -76,19 +85,26 @@ const EmployeePage = () => {
     };
     const closeInfoPopup = () => setInfoPopup(null);
 
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data, refetch } = useQuery({
-        queryKey: ['employees', accountStatus],
-        queryFn: () =>
-            getEmployeeList({
+        queryKey: ['employees', accountStatus, currentPage, searchValue],
+        queryFn: async () => {
+            const response = await getEmployeeList({
                 token: accessToken,
-                pageIndex: 1,
+                pageIndex: currentPage,
+                name: searchValue.length > 0 ? searchValue : undefined,
                 status:
                     accountStatus === EmployeeAccountStatus.All
                         ? undefined
                         : accountStatus
-            })
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     const navigate = useNavigate();
@@ -96,10 +112,18 @@ const EmployeePage = () => {
         navigate(`/employee/${id}`);
     const goToCreateEmployeePage = () => navigate('/employee/create');
 
+    const deleteEmployeeMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await deleteEmployee(payload);
+            return response;
+        }
+    });
+
     const handleDeleteEmployee = async () => {
+        closeInfoPopup();
         const deleteId = deleteEmployeeId.current;
         if (!deleteId) return;
-        const response = await deleteEmployee({
+        const response = await deleteEmployeeMutation.mutateAsync({
             token: accessToken,
             employeeId: String(deleteId)
         });
@@ -109,7 +133,6 @@ const EmployeePage = () => {
         if (response?.status === 200) {
             setResultPopup(DeleteEmployeeResult.Success);
         }
-        closeInfoPopup();
         refetch();
     };
 
@@ -126,6 +149,7 @@ const EmployeePage = () => {
     console.log('employee data: ', data);
     return (
         <div className="w-full p-10">
+            {deleteEmployeeMutation.isPending && <Loading />}
             {infoPopup && (
                 <ConfirmationPopup
                     title={infoPopup.title}
@@ -145,11 +169,11 @@ const EmployeePage = () => {
             <UserInfo />
             <div className="flex items-center gap-2 mb-5">
                 <GrUserWorker className="w-[20px] h-[20px] text-sky-800" />
-                <h1 className="font-semibold text-xl">Đối tác</h1>
+                <h1 className="font-semibold text-xl">Nhân viên</h1>
             </div>
             <Button
                 className="mb-5 px-2 py-1 border border-emerald-500 rounded-md hover:bg-emerald-50 text-emerald-500 text-base font-semibold w-fit"
-                text="Thêm đối tác"
+                text="Thêm nhân viên"
                 action={goToCreateEmployeePage}
             />
             <div className="flex gap-2 mb-5">
@@ -194,16 +218,30 @@ const EmployeePage = () => {
                     }
                 />
             </div>
-            <div className="w-fit max-w-[1200px]">
+            <div className="w-[850px] flex flex-col gap-4">
+                <SearchBar
+                    className="ml-auto w-fit"
+                    placeHolder="Tìm nhân viên..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
-                    <TableView
-                        columns={employeeTableConfig}
-                        items={mapEmployeeTable(data?.content)}
-                        viewAction={goToEmployeeDetailPage}
-                        deleteAction={openDeleteEmployeeConfirmPopup}
-                    />
+                    <>
+                        <TableView
+                            columns={employeeTableConfig}
+                            items={mapEmployeeTable(data?.content)}
+                            viewAction={goToEmployeeDetailPage}
+                            deleteAction={openDeleteEmployeeConfirmPopup}
+                        />
+                        <Pagination
+                            maxPage={maxPage}
+                            currentPage={currentPage}
+                            goNext={goNext}
+                            goBack={goBack}
+                            goToPage={goToPage}
+                        />
+                    </>
                 )}
             </div>
         </div>

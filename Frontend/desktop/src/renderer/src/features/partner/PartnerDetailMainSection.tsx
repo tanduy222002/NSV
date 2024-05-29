@@ -8,8 +8,10 @@ import { TbPigMoney } from 'react-icons/tb';
 import { BiTransfer } from 'react-icons/bi';
 import { DataField } from '@renderer/components';
 import { formatNumber } from '@renderer/utils/formatText';
+import { RxAvatar } from 'react-icons/rx';
 
 type PartnerDetailMainSectionProps = {
+    avatar?: string;
     name: string;
     phoneNumber: string;
     address: string;
@@ -21,6 +23,7 @@ type PartnerDetailMainSectionProps = {
 };
 
 const PartnerDetailMainSection = ({
+    avatar,
     name,
     phoneNumber,
     address,
@@ -32,6 +35,13 @@ const PartnerDetailMainSection = ({
 }: PartnerDetailMainSectionProps) => {
     return (
         <div className="flex gap-5 max-w-[900px] mt-5">
+            <div className="w-[200px] h-[200px] p-3 my-3 border border-sky-800 rounded-md mx-auto flex items-center justify-center">
+                {avatar ? (
+                    <img src={avatar} className="w-full h-full object-cover" />
+                ) : (
+                    <RxAvatar className="w-full h-full min-[400px] text-gray-300" />
+                )}
+            </div>
             <div className="space-y-5 flex-1">
                 <DataField
                     name="Tên đối tác"
@@ -81,14 +91,14 @@ const PartnerDetailMainSection = ({
                     name="Số giao dịch"
                     icon={<BiTransfer className="rotate-90" />}
                     disabled={false}
-                    value={totalTransactionCount}
+                    value={totalTransactionCount ?? 0}
                     defaultValue={'Trạng thái'}
                 />
                 <DataField
                     name={'Tổng giá trị'}
                     icon={<RiMoneyDollarCircleLine />}
                     disabled={false}
-                    value={`${formatNumber(totalTransactionValue)} VND`}
+                    value={`${formatNumber(totalTransactionValue ?? 0)} VND`}
                     defaultValue={'Tổng giá trị'}
                     textColor="text-sky-800"
                 />

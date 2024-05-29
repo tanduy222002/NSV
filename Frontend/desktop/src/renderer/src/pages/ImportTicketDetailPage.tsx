@@ -6,7 +6,8 @@ import { GoNote } from 'react-icons/go';
 import { MdMoneyOff } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { MdOutlineWarehouse } from 'react-icons/md';
 import { isEqual } from 'lodash';
 import {
     UserInfo,
@@ -15,7 +16,8 @@ import {
     DataField,
     ConfirmationPopup,
     InformationPopup,
-    PageLoading
+    PageLoading,
+    Loading
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
@@ -25,8 +27,8 @@ import { ColumnType } from '@renderer/components/TableView';
 import { cn } from '@renderer/utils/util';
 import { InfoPopup, ResultPopup } from '@renderer/types/common';
 import {
-    approveTicketPopupInfo,
-    approveTicketSuccessPopup
+    ApproveImportTicketResult,
+    approveTicketPopupInfo
 } from '@renderer/constants/import';
 import {
     removeTicketDebtPopupData,
@@ -71,6 +73,11 @@ const batchTableConfig = [
         title: 'Vị trí',
         sortable: false,
         type: ColumnType.Text
+    },
+    {
+        title: 'Tới kho',
+        sortable: false,
+        type: ColumnType.Link
     }
 ];
 
@@ -89,6 +96,8 @@ const ImportTicketDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const goToImportTicketPage = () => navigate('/import');
+    const goToWarehouseLocationPage = (warehouseId: number, slotId: number) =>
+        navigate(`/warehouse/${warehouseId}/slot/${slotId}`);
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
@@ -108,16 +117,40 @@ const ImportTicketDetailPage = () => {
             productType: batch?.bin?.quality_with_type,
             weight: batch?.in_slot_weight,
             packageType: batch?.bin?.packaged,
-            location: batch?.location
+            location: batch?.location,
+            icon: (
+                <MdOutlineWarehouse
+                    className="w-[20px] h-[20px] text-gray-300 hover:text-gray-500"
+                    onClick={() =>
+                        goToWarehouseLocationPage(
+                            batch?.warehouse_id,
+                            batch?.slot_id
+                        )
+                    }
+                />
+            )
         }));
 
+    const approveImportTicketMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await approveImportTicket(payload);
+            return response;
+        }
+    });
+
     const handleApproveImportTicket = async () => {
-        await approveImportTicket({
+        closeInfoPopup();
+        const response = await approveImportTicketMutation.mutateAsync({
             token: accessToken,
             ticketId: id as string
         });
-        closeInfoPopup();
-        setResultPopup(approveTicketSuccessPopup);
+        if (response?.status === 200) {
+            setResultPopup(ApproveImportTicketResult.Success);
+        }
+        if (response?.status >= 400) {
+            setResultPopup(ApproveImportTicketResult.Error);
+        }
+
         refetch();
     };
 
@@ -145,6 +178,7 @@ const ImportTicketDetailPage = () => {
 
     return (
         <div className="w-full px-5 py-5 relative">
+            {approveImportTicketMutation.isPending && <Loading />}
             {infoPopup && (
                 <ConfirmationPopup
                     title={infoPopup.title}

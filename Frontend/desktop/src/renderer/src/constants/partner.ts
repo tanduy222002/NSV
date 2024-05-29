@@ -14,6 +14,7 @@ export const defaultPartnerValue: Partner = {
         district: null,
         ward: null
     },
+    phone: '',
     phoneNumber: '',
     taxNumber: '',
     faxNumber: '',
@@ -25,8 +26,38 @@ export const createPartnerPopupData: InfoPopup = {
     body: 'Xác nhận thông tin đối tác muốn tạo?'
 };
 
-export const createPartnerSuccessPopupData: ResultPopup = {
-    title: 'Thành công',
-    body: 'Đối tác mới đã được tạo',
-    popupType: ResultPopupType.Success
+export const CreatePartnerResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Đối tác mới đã được tạo',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Tạo đối tác thất bại',
+        popupType: ResultPopupType.Error
+    }
+};
+
+export const updatePartnerProfileConfirmPopupData: InfoPopup = {
+    title: 'Cập nhật đối tác',
+    body: 'Xác nhận thông tin đối tác?'
+};
+
+type UpdatePartnerProfileResult = {
+    Success: ResultPopup;
+    Error: ResultPopup;
+};
+
+export const UpdatePartnerProfileResult: UpdatePartnerProfileResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Cập nhật thông tin đối tác thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Cập nhật thông tin đối tác thất bại',
+        popupType: ResultPopupType.Error
+    }
 };

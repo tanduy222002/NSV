@@ -4,11 +4,13 @@ import { BinWithSlot } from '@renderer/types/import';
 import { useModal } from '@renderer/hooks';
 
 type SelectSlotPopupControllerProps = {
+    totalWeight: number;
     addNewBatch: (param: BinWithSlot[]) => void;
     warehouseId: number;
 };
 
 const SelectSlotPopupController = ({
+    totalWeight,
     addNewBatch,
     warehouseId
 }: SelectSlotPopupControllerProps) => {
@@ -19,12 +21,13 @@ const SelectSlotPopupController = ({
                 type="button"
                 onClick={() => warehouseId !== 0 && openModal && openModal()}
             >
-                <p className="text-xs text-gray-300 hover:text-gray-400 font-semibold ml-5 -translate-y-5">
+                <p className="text-xs hover:underline text-gray-300 hover:text-gray-400 font-semibold ml-5 -translate-y-5">
                     Xem chi tiết
                 </p>
             </button>
             {modalOpen && (
                 <SelectSlotPopup
+                    totalWeight={totalWeight}
                     warehouseId={warehouseId}
                     addNewBatch={addNewBatch}
                 />

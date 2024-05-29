@@ -4,13 +4,13 @@ import FileInput from '../FileInput';
 
 describe('FileInput', () => {
     it('renders correctly', () => {
-        render(<FileInput onChange={() => {}} />);
+        render(<FileInput onChange={() => {}} fallbackImage="test_url" />);
         expect(screen.getByText('Thêm ảnh minh họa')).toBeInTheDocument();
     });
 
     it('triggers onChange event when file is selected', async () => {
         const onChange = jest.fn();
-        render(<FileInput onChange={onChange} />);
+        render(<FileInput onChange={onChange} fallbackImage="test_url" />);
 
         const file = new File(['dummy content'], 'test.png', {
             type: 'image/png'
@@ -24,7 +24,7 @@ describe('FileInput', () => {
     });
 
     it('displays default icon when fileSrc is null', () => {
-        render(<FileInput onChange={() => {}} />);
+        render(<FileInput fallbackImage="test_url" onChange={() => {}} />);
 
         expect(screen.getByTestId('default-icon')).toBeInTheDocument();
     });
@@ -32,7 +32,13 @@ describe('FileInput', () => {
     it('displays selected image when fileSrc is provided', () => {
         const fileSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAf0lEQVQ4jWNgGAWjYBSMglEwQA0CgxAwMDI2UcgjIyMCg4GQDgWkIDgPQAKADeZUfwu+2YsAAAAASUVORK5CYII=';
-        render(<FileInput fileSrc={fileSrc} onChange={() => {}} />);
+        render(
+            <FileInput
+                fallbackImage="test_url"
+                fileSrc={fileSrc}
+                onChange={() => {}}
+            />
+        );
 
         const image = screen.getByAltText('preview-image');
         expect(image).toBeInTheDocument();

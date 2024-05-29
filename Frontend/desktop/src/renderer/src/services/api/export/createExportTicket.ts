@@ -1,5 +1,5 @@
 import { ExportTicket } from '@renderer/types/export';
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 
 type CreateExportTicketPayload = {
     token: string;
@@ -12,7 +12,7 @@ export const createExportTicket = async ({
 }: CreateExportTicketPayload): Promise<any> => {
     let response: any = undefined;
     try {
-        response = await makeAuthRequest({
+        response = await makeAuthRequestV2({
             token: token,
             url: `/transfer_ticket/export_tickets`,
             method: 'post',

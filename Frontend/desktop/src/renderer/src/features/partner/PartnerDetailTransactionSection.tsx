@@ -61,6 +61,12 @@ const PartnerDetailTransactionSection = () => {
     const { id } = useParams();
 
     const [paidStatus, setPaidStatus] = useState(PaidStatus.All);
+    const updatePaidStatus = (statusText: string) => {
+        if (statusText === PaidStatusText.All) setPaidStatus(PaidStatus.All);
+        if (statusText === PaidStatusText.Paid) setPaidStatus(PaidStatus.Paid);
+        if (statusText === PaidStatusText.Unpaid)
+            setPaidStatus(PaidStatus.Unpaid);
+    };
 
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
@@ -79,20 +85,20 @@ const PartnerDetailTransactionSection = () => {
     });
 
     const mapTransactionTable = (transactions) =>
-        transactions.map((transaction) => ({
+        transactions?.map((transaction) => ({
             id: transaction?.id,
             name: transaction?.name,
             transferDate: formatDate(transaction?.transfer_date),
-            numberOfProducts: `${transaction?.number_of_products} loại sản phẩm`,
+            numberOfProducts: `${transaction?.number_of_products ?? 0} loại sản phẩm`,
             description: transaction?.description,
-            weight: `${formatNumber(transaction?.weight)} kg`,
-            value: `${formatNumber(transaction?.value)} VND`
+            weight: `${formatNumber(transaction?.weight ?? 0)} kg`,
+            value: `${formatNumber(transaction?.value ?? 0)} VND`
         })) ?? [];
 
     if (!isFetching) console.log('partner transaction: ', data);
 
     return (
-        <div className="w-full max-w-[900px]">
+        <div className="w-full max-w-[1050px]">
             <h1 className="text-lg mb-5 font-semibold text-sky-800">
                 Lịch sử giao dịch
             </h1>
@@ -101,7 +107,7 @@ const PartnerDetailTransactionSection = () => {
                     placeHolder={PaidStatusText.All}
                     selectedValue={PaidStatusText[paidStatus]}
                     values={Object.values(PaidStatusText)}
-                    onSelect={setPaidStatus}
+                    onSelect={updatePaidStatus}
                 />
             </div>
             <div className="mt-5">

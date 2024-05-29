@@ -8,6 +8,7 @@ type SidebarSectionProps = {
     path: string;
     className?: string;
     activeClassName?: string;
+    show?: boolean;
 };
 
 const SidebarSection = ({
@@ -15,8 +16,10 @@ const SidebarSection = ({
     icon,
     path,
     className = 'text-slate-400',
-    activeClassName = 'text-sky-800'
+    activeClassName = 'text-sky-800',
+    show = true
 }: SidebarSectionProps) => {
+    if (!show) return null;
     return (
         <NavLink
             className={({ isActive }) =>

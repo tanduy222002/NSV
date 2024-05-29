@@ -23,8 +23,38 @@ export const approveTicketPopupInfo: InfoPopup = {
     body: 'Duyệt phiếu sẽ cập nhật sức chứa kho tương ứng'
 };
 
-export const approveTicketSuccessPopup: ResultPopup = {
-    title: 'Thành công',
-    body: 'Duyệt phiếu nhập thành công',
-    popupType: ResultPopupType.Success
+export const ApproveImportTicketResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Duyệt phiếu nhập thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Duyệt phiếu nhập thất bại',
+        popupType: ResultPopupType.Error
+    }
+};
+
+export const createImportTicketConfirmPopupData: InfoPopup = {
+    title: 'Tạo phiếu nhập',
+    body: 'Xác nhận thông tin phiếu nhập muốn tạo?'
+};
+
+type CreateImportTicketResult = {
+    Success: ResultPopup;
+    Error: ResultPopup;
+};
+
+export const CreateImportTicketResult: CreateImportTicketResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Tạo phiếu nhập thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Đã có lỗi xảy ra khi tạo phiếu. Vui lòng thử lại.',
+        popupType: ResultPopupType.Error
+    }
 };

@@ -3,16 +3,26 @@ import {
     FormInput,
     Button,
     AsyncSelectInput,
-    FileInput
+    FileInput,
+    ConfirmationPopup,
+    InformationPopup,
+    Loading
 } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { getProductType } from '@renderer/services/api';
 import ProductCategoryPicker from './ProductCategoryPicker';
 import { ProductCategory } from '@renderer/types/product';
-import { productDefaultValue } from '@renderer/constants/product';
+import {
+    CreateProductResult,
+    createProductPopupData,
+    productDefaultValue
+} from '@renderer/constants/product';
 import DropdownContainer from './DropdownContainer';
 import ProductCategoryList from './ProductCategoryList';
 import { createProduct } from '@renderer/services/api';
+import { GiFruitBowl } from 'react-icons/gi';
+import { InfoPopup, ResultPopup } from '@renderer/types/common';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateProductForm = () => {
     const nameRef = useRef<HTMLInputElement>(null);
@@ -47,9 +57,23 @@ const CreateProductForm = () => {
         }));
     };
 
-    const saveProduct = async (e) => {
-        e.preventDefault();
-        const response = await createProduct({
+    const [infoPopup, setInfoPopup] = useState<InfoPopup | null>(null);
+    const openCreateProductPopup = () => setInfoPopup(createProductPopupData);
+    const closeInfoPopup = () => setInfoPopup(null);
+
+    const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
+    const closeResultPopup = () => setResultPopup(null);
+
+    const createProductMutation = useMutation({
+        mutationFn: async (payload: any) => {
+            const response = await createProduct(payload);
+            return response;
+        }
+    });
+
+    const saveProduct = async () => {
+        closeInfoPopup();
+        const response = await createProductMutation.mutateAsync({
             token: accessToken,
             product: {
                 ...product,
@@ -58,20 +82,37 @@ const CreateProductForm = () => {
             }
         });
 
-        if (response?.status >= 500) {
-            alert('Lỗi tạo sản phẩm');
+        if (response?.status >= 400) {
+            setResultPopup(CreateProductResult.Error);
             return;
         }
-        alert('Tạo sản phẩm thành công');
+        if (response?.status >= 200) {
+            setResultPopup(CreateProductResult.Success);
+            return;
+        }
     };
 
     console.log('product: ', product);
 
     return (
-        <form
-            onSubmit={saveProduct}
-            className="flex flex-col w-full max-w-[700px]"
-        >
+        <form className="flex flex-col w-full max-w-[700px]">
+            {createProductMutation.isPending && <Loading />}
+            {infoPopup && (
+                <ConfirmationPopup
+                    title={infoPopup.title}
+                    body={infoPopup.body}
+                    confirmAction={saveProduct}
+                    cancelAction={closeInfoPopup}
+                />
+            )}
+            {resultPopup && (
+                <InformationPopup
+                    title={resultPopup.title}
+                    body={resultPopup.body}
+                    popupType={resultPopup.popupType}
+                    closeAction={closeResultPopup}
+                />
+            )}
             <div className="flex flex-col gap-5">
                 <h2 className="text-lg font-semibold">Thông tin cơ bản</h2>
                 <FormInput
@@ -88,7 +129,16 @@ const CreateProductForm = () => {
                     onSelect={updateProductVariety}
                 />
 
-                <FileInput fileSrc={fileSrc} onChange={handleFileChange} />
+                <FileInput
+                    fileSrc={fileSrc}
+                    onChange={handleFileChange}
+                    fallbackImage={
+                        <GiFruitBowl
+                            data-testid="default-icon"
+                            className="w-full h-full min-[400px] text-gray-300"
+                        />
+                    }
+                />
             </div>
             <DropdownContainer
                 title={
@@ -107,7 +157,7 @@ const CreateProductForm = () => {
             </DropdownContainer>
             <Button
                 text="Lưu sản phẩm"
-                type="submit"
+                action={openCreateProductPopup}
                 className="mt-5 text-emerald-500 border-emerald-500 hover:bg-emerald-50 mx-auto"
             />
         </form>

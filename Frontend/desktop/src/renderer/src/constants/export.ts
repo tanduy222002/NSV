@@ -25,3 +25,26 @@ export const approveTicketSuccessPopup: ResultPopup = {
     body: 'Duyệt phiếu xuất thành công',
     popupType: ResultPopupType.Success
 };
+
+export const createExportTicketConfirmPopupData: InfoPopup = {
+    title: 'Tạo phiếu xuất',
+    body: 'Xác nhận thông tin phiếu xuất muốn tạo?'
+};
+
+type CreateExportTicketResult = {
+    Success: ResultPopup;
+    Error: ResultPopup;
+};
+
+export const CreateExportTicketResult: CreateExportTicketResult = {
+    Success: {
+        title: 'Thành công',
+        body: 'Tạo phiếu xuất thành công',
+        popupType: ResultPopupType.Success
+    },
+    Error: {
+        title: 'Thất bại',
+        body: 'Đã có lỗi xảy ra khi tạo phiếu. Vui lòng thử lại.',
+        popupType: ResultPopupType.Error
+    }
+};

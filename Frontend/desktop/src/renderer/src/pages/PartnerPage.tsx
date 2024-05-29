@@ -1,12 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserInfo } from '@renderer/components';
-import { useLocalStorage } from '@renderer/hooks';
+import { Pagination, SearchBar, UserInfo } from '@renderer/components';
+import {
+    useDeferredState,
+    useLocalStorage,
+    usePagination
+} from '@renderer/hooks';
 import partnerIconSrc from '@renderer/assets/partner-icon.png';
 import { ColumnType } from '@renderer/components/TableView';
 import { TableSkeleton, Button, TableView } from '@renderer/components';
 import { getPartnerList } from '@renderer/services/api';
 import { useNavigate } from 'react-router-dom';
 import { formatNumber } from '@renderer/utils/formatText';
+import { useState } from 'react';
 
 const partnerTableConfig = [
     {
@@ -42,11 +47,24 @@ const partnerTableConfig = [
 ];
 
 const PartnerPage = () => {
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goNext, goBack, goToPage } = usePagination(maxPage);
+
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
     const { isFetching, data } = useQuery({
-        queryKey: ['partners'],
-        queryFn: () => getPartnerList({ token: accessToken, pageIndex: 1 })
+        queryKey: ['partners', currentPage, searchValue],
+        queryFn: async () => {
+            const response = await getPartnerList({
+                token: accessToken,
+                pageIndex: currentPage,
+                name: searchValue.length > 0 ? searchValue : undefined
+            });
+            setMaxPage(currentPage);
+            return response;
+        }
     });
 
     const navigate = useNavigate();
@@ -76,7 +94,7 @@ const PartnerPage = () => {
                 text="Thêm đối tác"
                 action={goToCreatePartnerPage}
             />
-            <div className="flex gap-2 mb-5">
+            {/* <div className="flex gap-2 mb-5">
                 <Button
                     className="px-2 py-1 border border-sky-700 rounded-md text-sky-700 text-base font-semibold w-fit"
                     text="Toàn bộ"
@@ -92,16 +110,30 @@ const PartnerPage = () => {
                     text="Người mua"
                     // action={confirmAction}
                 />
-            </div>
-            <div className="w-fit max-w-[1200px]">
+            </div> */}
+            <div className="flex flex-col gap-4 w-[1100px]">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm phiếu..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
-                    <TableView
-                        columns={partnerTableConfig}
-                        items={mapPartnerTable(data?.content)}
-                        viewAction={goToPartnerDetailPage}
-                    />
+                    <>
+                        <TableView
+                            columns={partnerTableConfig}
+                            items={mapPartnerTable(data?.content)}
+                            viewAction={goToPartnerDetailPage}
+                        />
+                        <Pagination
+                            currentPage={currentPage}
+                            maxPage={maxPage}
+                            goBack={goBack}
+                            goNext={goNext}
+                            goToPage={goToPage}
+                        />
+                    </>
                 )}
             </div>
         </div>

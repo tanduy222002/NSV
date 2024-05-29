@@ -10,13 +10,16 @@ import { getWarehouseDetail } from '@renderer/services/api';
 import { BinWithSlot } from '@renderer/types/import';
 import SelectSlotList from './SelectSlotList';
 import SlotPicker from './SlotPicker';
+import { cn } from '@renderer/utils/util';
 
 type SelectSlotPopupProps = {
+    totalWeight: number;
     warehouseId: number;
     addNewBatch: (param: BinWithSlot[]) => void;
 };
 
 const SelectSlotPopup = ({
+    totalWeight,
     warehouseId,
     addNewBatch
 }: SelectSlotPopupProps) => {
@@ -52,7 +55,7 @@ const SelectSlotPopup = ({
             })
     });
 
-    const currentSlot = data?.map?.rows[rowIndex]?.slots[slotIndex];
+    const currentSlot = data?.map?.rows?.[rowIndex]?.slots?.[slotIndex] ?? null;
 
     const updateCurrentSlot = () => {
         const weight = Number(weightRef?.current?.value);
@@ -106,8 +109,14 @@ const SelectSlotPopup = ({
     };
 
     const { closeModal } = useModal();
+
+    const selectedWeight = selectedSlots.reduce(
+        (totalWeight, slot) => totalWeight + slot.weight,
+        0
+    );
+
     return (
-        <div className="shadow fixed flex flex-col items-center gap-2 px-5 py-5 z-50 bg-white border border-gray-100 rounded-md h-[600px] w-[800px] top-[100px] left-[450px]">
+        <div className="shadow-md fixed flex flex-col items-center gap-2 p-5 z-50 bg-white border border-gray-100 rounded-md h-full max-h-[700px] w-fit min-w-[1100px] top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
             <div className="ml-auto cursor-pointer w-fit">
                 <CgCloseR
                     className="ml-auto cursor-pointer hover:text-red-500 w-[16px] h-[16px]"
@@ -115,6 +124,21 @@ const SelectSlotPopup = ({
                 />
             </div>
             <h1 className="text-xl font-semibold mb-5">Chọn khu vực chứa</h1>
+            <div className="mr-auto font-semibold">
+                <p className="font-semibold text-lg text-sky-800">
+                    Cần chọn: {totalWeight} kg
+                </p>
+                <p
+                    className={
+                        (cn('text-lg'),
+                        totalWeight !== selectedWeight
+                            ? 'text-red-500'
+                            : 'text-emerald-500')
+                    }
+                >
+                    Đã chọn: {selectedWeight} kg
+                </p>
+            </div>
             <div className="flex gap-20 w-full">
                 {isFetching ? (
                     <PageLoading />

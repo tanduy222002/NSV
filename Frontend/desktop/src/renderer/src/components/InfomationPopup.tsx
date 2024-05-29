@@ -33,7 +33,7 @@ const InformationPopup = ({
     popupType
 }: InformationPopupProps) => {
     return (
-        <div className="absolute inset-0 bg-black/25 bg-blur z-20 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/25 bg-blur z-20 flex items-center justify-center">
             <div className="flex flex-col items-center px-5 py-5 w-[400px] bg-gray-50 border border-gray-200 rounded-lg">
                 <div className="flex gap-2">
                     {Icon[popupType]}

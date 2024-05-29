@@ -16,7 +16,7 @@ const FormSection = ({
 }: FormSectionProps) => {
     return (
         <div className="my-3">
-            <div className="flex items-center gap-2 text-[#7C8DB5] mb-2">
+            <div className="flex items-center gap-2 text-sky-800 mb-5">
                 {icon}
                 <h1 className="text-base font-semibold ">{title}</h1>
             </div>

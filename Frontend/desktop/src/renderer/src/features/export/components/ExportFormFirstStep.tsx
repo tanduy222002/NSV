@@ -19,6 +19,7 @@ import { searchPartner } from '@renderer/services/api';
 import { ExportFormStep } from '@renderer/types/export';
 import { DebtOption } from '@renderer/types/import';
 import { ExportTicket } from '@renderer/types/export';
+import { formatNumber } from '@renderer/utils/formatText';
 
 type ExportFormFirstStepProps = {
     exportTicket: ExportTicket;
@@ -33,25 +34,24 @@ const ExportFormFirstStep = ({
 }: ExportFormFirstStepProps) => {
     const ticketNameRef = useRef<HTMLInputElement>(null);
     const transportRef = useRef<HTMLInputElement>(null);
-    // const costRef = useRef<HTMLInputElement>(null);
     const debtRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
-    const [debtOption, setDebtOption] = useState<DebtOption>(DebtOption.No);
+    const [debtOption, setDebtOption] = useState<DebtOption>(
+        exportTicket.debt ? DebtOption.Yes : DebtOption.No
+    );
     const [partner, setPartner] = useState<any>(exportTicket?.customer_detail);
     const [exportDate, setExportDate] = useState({
         startDate: exportTicket?.export_date,
         endDate: exportTicket?.export_date
     });
     const updateExportDate = (newValue) => {
-        console.log('new date value:', newValue);
         setExportDate(newValue);
     };
     const [dueDate, setDueDate] = useState({
-        startDate: null,
-        endDate: null
+        startDate: exportTicket.debt?.due_date ?? null,
+        endDate: exportTicket.debt?.due_date ?? null
     });
     const updateDueDate = (newValue) => {
-        console.log('new date value:', newValue);
         setDueDate(newValue);
     };
 
@@ -73,6 +73,7 @@ const ExportFormFirstStep = ({
             ...exportTicket,
             name: ticketNameRef?.current?.value ?? '',
             customer_id: partner?.id,
+            customer_detail: partner,
             transporter: transportRef?.current?.value ?? '',
             description: descriptionRef?.current?.value ?? '',
             export_date: exportDate?.startDate ?? String(Date.now())
@@ -89,6 +90,9 @@ const ExportFormFirstStep = ({
                 due_date: dueDate.startDate ?? String(Date.now())
             };
         }
+        if (debtOption === DebtOption.No) {
+            newExportTicketValue.debt = undefined;
+        }
 
         console.log('form 1st step value: ', newExportTicketValue);
         updateExportTicket(newExportTicketValue);
@@ -99,8 +103,8 @@ const ExportFormFirstStep = ({
 
     return (
         <div className="w-full">
-            <div className="text-xl font-semibold mb-2">Phiếu nhập</div>
-            <div className="flex items-center justify-center gap-10">
+            <div className="text-xl font-semibold mb-2">Phiếu xuất</div>
+            <div className="flex justify-center gap-10">
                 <div className="flex flex-col gap-4 flex-1">
                     <FormInput
                         label="Tên phiếu"
@@ -128,13 +132,13 @@ const ExportFormFirstStep = ({
                         }
                         defaultValue="Liên hệ"
                         icon={<BiPhoneCall />}
-                        disabled={!exportTicket?.customer_id}
+                        disabled={false}
                     />
                     <DataField
                         name="Địa chỉ"
                         defaultValue="Địa chỉ"
                         icon={<CiLocationOn />}
-                        disabled={!exportTicket?.customer_id}
+                        disabled={false}
                         value={
                             partner?.address ??
                             exportTicket?.customer_detail?.address
@@ -156,14 +160,6 @@ const ExportFormFirstStep = ({
                         ref={transportRef}
                         defaultValue={exportTicket?.transporter}
                     />
-                    {/* <FormInput
-                        label="Giá trị"
-                        name="Giá trị"
-                        icon={<CiDollar />}
-                        bg="bg-white"
-                        ref={costRef}
-                        defaultValue={exportTicket?.value}
-                    /> */}
                     <SelectInput
                         placeHolder="Công nợ"
                         icon={<CiDollar />}
@@ -179,6 +175,9 @@ const ExportFormFirstStep = ({
                                 icon={<CiDollar />}
                                 bg="bg-white"
                                 ref={debtRef}
+                                defaultValue={formatNumber(
+                                    exportTicket.debt?.value ?? 0
+                                )}
                             />
                             <DatePicker
                                 name="Ngày đáo hạn"
@@ -191,6 +190,7 @@ const ExportFormFirstStep = ({
                                 name="Mô tả"
                                 icon={<FaRegFileAlt />}
                                 bg="bg-white"
+                                defaultValue={exportTicket?.debt?.description}
                                 ref={descriptionRef}
                             />
                         </>

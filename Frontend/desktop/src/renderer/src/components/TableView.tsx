@@ -36,7 +36,11 @@ const TableView = ({
     deleteAction
 }: TableViewProps) => {
     if (items.length === 0)
-        return <h2 className="text-sm font-semibold">Chưa có dữ liệu </h2>;
+        return (
+            <h2 className="text-base text-sky-800 font-semibold">
+                Chưa có dữ liệu{' '}
+            </h2>
+        );
     return (
         <table className="table-auto min-w-[720px] h-fit border-collapse">
             <thead>
@@ -56,7 +60,7 @@ const TableView = ({
                     const itemValues = Object.values(item);
                     const [, itemId] = Object.entries(item).filter(
                         ([key]) => key.toLowerCase() === 'id'
-                    )[0];
+                    )[0] ?? ['id', 0];
                     return (
                         <tr key={i} className="border border-1">
                             {columns.map((column, i) => (

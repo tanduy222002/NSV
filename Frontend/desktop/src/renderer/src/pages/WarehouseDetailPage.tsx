@@ -2,7 +2,12 @@ import { IoChevronBack } from 'react-icons/io5';
 import { LuBookmark } from 'react-icons/lu';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { UserInfo, TableView, StatisticSummary } from '@renderer/components';
+import {
+    UserInfo,
+    TableView,
+    StatisticSummary,
+    PageLoading
+} from '@renderer/components';
 import warehouseIconSrc from '@renderer/assets/warehouse-icon.png';
 import { WarehouseMapPreview } from '@renderer/features/warehouse/components';
 import {
@@ -11,6 +16,7 @@ import {
 } from '@renderer/services/api';
 import { useLocalStorage } from '@renderer/hooks';
 import { ColumnType } from '@renderer/components/TableView';
+import { GoDotFill } from 'react-icons/go';
 
 const slotTableConfig = [
     {
@@ -31,7 +37,8 @@ const slotTableConfig = [
     {
         title: 'Trạng thái',
         sortable: false,
-        type: ColumnType.Text
+        type: ColumnType.Text,
+        stylable: true
     },
     {
         title: 'Thao tác',
@@ -78,7 +85,9 @@ const WarehouseDetailPage = () => {
                 name: `${row?.name}-${slot?.name}`,
                 capacity: slot?.capacity,
                 status: slot?.status === 'EMPTY' ? 'Trống' : 'Đang sử dụng',
-                currentLoad: slot?.currentLoad
+                currentLoad: `${slot?.currentLoad} kg`,
+                textColor:
+                    slot?.status === 'EMPTY' ? 'text-black' : 'text-emerald-600'
             }));
             slots = [...slots, ...newSlots];
         }
@@ -103,7 +112,7 @@ const WarehouseDetailPage = () => {
                 </h1>
             </div>
             {isFetchingDetail ? (
-                <h1>Loading...</h1>
+                <PageLoading />
             ) : (
                 <div className="flex gap-5">
                     <div>
@@ -113,35 +122,41 @@ const WarehouseDetailPage = () => {
                                 rows: warehouseDetail?.map.rows
                             }}
                         />
-                        <TableView
-                            columns={slotTableConfig}
-                            items={mapSlotTable(warehouseDetail?.map.rows)}
-                            viewAction={goToWarehouseSlotDetailPage}
-                        />
+                        <div className="overflow-y-scroll max-h-[500px] my-3">
+                            <TableView
+                                columns={slotTableConfig}
+                                items={mapSlotTable(warehouseDetail?.map.rows)}
+                                viewAction={goToWarehouseSlotDetailPage}
+                            />
+                        </div>
                     </div>
                     <div className="flex flex-col mb-5">
-                        <div className="flex items-center gap-3 border border-sky-800 rounded-md px-3 py-2">
+                        <div className="flex items-center gap-3 border border-sky-800 rounded-md px-3 py-2 mb-5">
                             <div>
-                                <h1 className="text-lg text-sky-800 font-semibold">
+                                <h1 className="text-xl text-sky-800 font-semibold">
                                     Tổng quan
                                 </h1>
-                                <div>
-                                    <h2>
-                                        Tổng diện tích:{' '}
-                                        {warehouseDetail?.capacity}
-                                    </h2>
-                                    <p>
-                                        Sử dụng: {warehouseDetail?.containing}
-                                    </p>
-                                    <p>
-                                        Còn trống:{' '}
-                                        {warehouseDetail?.capacity -
-                                            warehouseDetail?.containing}
-                                    </p>
-                                </div>
+                                <p className="font-semibold text-base">
+                                    {warehouseDetail?.capacity} m²
+                                </p>
+                                <p className="font-semibold text-sm flex items-center gap-2">
+                                    <span>
+                                        <GoDotFill className="translate-y-[1px] text-emerald-500" />
+                                    </span>
+                                    Sử dụng: {warehouseDetail?.containing} m²
+                                </p>
+                                <p className="font-semibold text-sm flex items-center gap-2">
+                                    <span>
+                                        <GoDotFill className="translate-y-[1px] text-gray-300" />
+                                    </span>
+                                    Còn trống:{' '}
+                                    {warehouseDetail?.capacity -
+                                        warehouseDetail?.containing}{' '}
+                                    m²
+                                </p>
                             </div>
                             <StatisticSummary
-                                sqSize={110}
+                                sqSize={120}
                                 percentage={
                                     Math.ceil(
                                         (warehouseDetail?.containing /
@@ -173,11 +188,13 @@ const WarehouseDetailPage = () => {
                                                 (category, i) => (
                                                     <div
                                                         key={i}
-                                                        className="flex items-center gap-2"
+                                                        className="flex items-center gap-2 space-y-1"
                                                     >
                                                         <LuBookmark />
                                                         <p className="text-sm font-semibold">
-                                                            {category?.name}
+                                                            {category?.name}:{' '}
+                                                            {category?.weight}{' '}
+                                                            kg
                                                         </p>
                                                     </div>
                                                 )

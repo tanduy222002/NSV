@@ -67,7 +67,7 @@ const EmployeeDetailPage = () => {
             token: accessToken,
             employeeId: id as string,
             status:
-                employee?.data?.status === EmployeeAccountStatus.Active
+                employee?.status === EmployeeAccountStatus.Active
                     ? EmployeeAccountStatus.Suspended
                     : EmployeeAccountStatus.Active
         });
@@ -84,7 +84,7 @@ const EmployeeDetailPage = () => {
         const response = await updateEmployeeRoles({
             token: accessToken,
             employeeId: id as string,
-            role: employee?.data?.roles.includes(EmployeeRole.Manager)
+            role: employee?.roles.includes(EmployeeRole.Manager)
                 ? EmployeeRole.Employee
                 : EmployeeRole.Manager
         });
@@ -111,7 +111,7 @@ const EmployeeDetailPage = () => {
     const [resultPopup, setResultPopup] = useState<ResultPopup | null>(null);
     const closeResultPopup = () => setResultPopup(null);
 
-    if (!isFetching) console.log('employee detail: ', employee?.data);
+    if (!isFetching) console.log('employee detail: ', employee);
 
     return (
         <div className="w-full p-10">
@@ -138,39 +138,37 @@ const EmployeeDetailPage = () => {
                     onClick={goToEmployeePage}
                 />
                 <GrUserWorker className="w-[20px] h-[20px] text-sky-800" />
-                <h1 className="text-xl font-semibold">Đối tác</h1>
+                <h1 className="text-xl font-semibold">Nhân viên</h1>
             </div>
             {isFetching ? (
                 <PageLoading />
             ) : (
                 <div className="space-y-5 max-w-[450px]">
                     <DataField
-                        name="Tên đối tác"
+                        name="Tên nhân viên"
                         icon={<FaUserCog />}
                         disabled={false}
-                        value={employee?.data?.name}
-                        defaultValue="Tên đối tác"
+                        value={employee?.name}
+                        defaultValue="Tên nhân viên"
                     />
                     <DataField
                         name="Email"
                         icon={<MdOutlineEmail />}
                         disabled={false}
-                        value={employee?.data?.name}
+                        value={employee?.name}
                         defaultValue="Email"
                     />
                     <DataField
                         name="Trạng thái"
                         disabled={false}
-                        value={AccountStatusText[employee?.data?.status]}
+                        value={AccountStatusText[employee?.status]}
                         defaultValue="Trạng thái"
-                        textColor={
-                            AccountStatusTextColor[employee?.data?.status]
-                        }
+                        textColor={AccountStatusTextColor[employee?.status]}
                     />
                     <div className="flex flex-col gap-3 text-sky-800 font-semibold">
                         <h3>Loại tài khoản</h3>
                         <div className="flex items-center gap-4">
-                            {employee?.data?.roles.map((role, i) => (
+                            {employee?.roles.map((role, i) => (
                                 <div
                                     className="text-sm border border-sky-800 rounded-md p-1"
                                     key={i}
@@ -193,9 +191,7 @@ const EmployeeDetailPage = () => {
                             }
                             className="mx-auto px-2 py-1 border rounded-md border-emerald-500 text-emerald-500 hover:bg-emerald-100 font-semibold w-fit"
                             text={
-                                employee?.data?.roles.includes(
-                                    EmployeeRole.Manager
-                                )
+                                employee?.roles.includes(EmployeeRole.Manager)
                                     ? 'Hạ quyền'
                                     : 'Nâng quyền'
                             }
@@ -203,7 +199,7 @@ const EmployeeDetailPage = () => {
                         />
                         <Button
                             icon={
-                                employee?.data?.status ===
+                                employee?.status ===
                                 EmployeeAccountStatus.Active ? (
                                     <FaLock />
                                 ) : (
@@ -212,7 +208,7 @@ const EmployeeDetailPage = () => {
                             }
                             className="mx-auto px-2 py-1 border rounded-md border-amber-300 text-amber-300 hover:bg-amber-50 font-semibold w-fit"
                             text={
-                                employee?.data?.status ===
+                                employee?.status ===
                                 EmployeeAccountStatus.Active
                                     ? 'Khóa tài khoản'
                                     : 'Mở khóa tài khoản'

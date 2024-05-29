@@ -1,11 +1,4 @@
-import { Location } from './common';
-
-export type Address = {
-    address: string;
-    ward: Location | null;
-    district: Location | null;
-    province: Location | null;
-};
+import { Address } from './common';
 
 export type Partner = {
     name: string;

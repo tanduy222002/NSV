@@ -15,7 +15,7 @@ export const searchExportTicket = async ({
     pageSize = 12,
     name,
     status
-}: SearchExportTicketPayload): Promise<any> => {
+}: SearchExportTicketPayload) => {
     let response: any = undefined;
     try {
         response = await makeAuthRequest({
@@ -30,9 +30,8 @@ export const searchExportTicket = async ({
                 status: status !== TicketStatus.All ? status : undefined
             }
         });
-        console.log('export tickets: ', response);
         return response;
     } catch (err) {
-        console.log('get partner error: ', err);
+        console.log('get export ticket error: ', err);
     }
 };

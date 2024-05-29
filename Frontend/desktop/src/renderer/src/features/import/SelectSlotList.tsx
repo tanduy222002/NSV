@@ -14,7 +14,7 @@ const SelectSlotList = ({
             <h2 className="font-semibold text-lg text-sky-800">
                 Các vị trí kho đã chọn
             </h2>
-            <div className="flex flex-col gap-3 px-3 py-3 max-h-[200px] overflow-y-scroll">
+            <div className="flex flex-col gap-3 px-3 py-3  overflow-y-scroll">
                 {selectedSlots?.map((slot, index) => (
                     <div
                         className="border border-sky-800 text-sky-800 rounded-md relative px-3 py-3"

@@ -9,23 +9,29 @@ import {
     UserInfo
 } from '@renderer/components';
 import { ColumnType } from '@renderer/components/TableView';
-import { usePopup } from '@renderer/hooks';
+import { useDeferredState, usePagination, usePopup } from '@renderer/hooks';
 import { Button } from '@renderer/components';
 import { useLocalStorage } from '@renderer/hooks';
 import { searchWarehouse } from '@renderer/services/api';
 import { Warehouse } from '@renderer/types/warehouse';
+import { useState } from 'react';
 
 const warehouseTableColumns = [
     { title: 'ID', sortable: true, type: ColumnType.Text },
     { title: 'Tên', sortable: true, type: ColumnType.Text },
     { title: 'Loại kho', sortable: false, type: ColumnType.Text },
     { title: 'Địa điểm', sortable: false, type: ColumnType.Text },
-    { title: 'Sức chứa hiện tại', sortable: true, type: ColumnType.Text },
+    { title: 'Sức chứa hiện tại', sortable: false, type: ColumnType.Text },
     { title: 'Trạng thái', sortable: false, type: ColumnType.Text },
     { title: 'Thao tác', sortable: false, type: ColumnType.Action }
 ];
 
 const WareHousePage = () => {
+    const [maxPage, setMaxPage] = useState(1);
+    const { currentPage, goBack, goNext, goToPage } = usePagination(
+        maxPage ?? 1
+    );
+
     const navigate = useNavigate();
     const goToCreateMapPage = () => navigate('/warehouse/map/create');
     const goToCreateWarehousePage = () => navigate('/warehouse/create');
@@ -33,16 +39,22 @@ const WareHousePage = () => {
         navigate(`/warehouse/${id}`);
     const { showPopup, show, hide } = usePopup();
 
+    const [searchValue, setSearchValue] = useDeferredState('');
+
     const { getItem } = useLocalStorage('access-token');
     const accessToken = getItem();
 
     const { data, isFetching } = useQuery({
-        queryKey: ['warehouse'],
-        queryFn: () =>
-            searchWarehouse({
+        queryKey: ['warehouse', currentPage, searchValue],
+        queryFn: async () => {
+            const response = await searchWarehouse({
                 token: accessToken,
-                pageIndex: 1
-            })
+                pageIndex: currentPage,
+                name: searchValue
+            });
+            setMaxPage(response?.total_page);
+            return response;
+        }
     });
 
     const mapWarehouseTable = (warehouses: Warehouse[]) =>
@@ -53,7 +65,7 @@ const WareHousePage = () => {
             address: warehouse?.address_string,
             capacity: warehouse?.current_capacity,
             status: warehouse?.status
-        }));
+        })) ?? [];
 
     if (!isFetching) console.log('data: ', data);
 
@@ -83,8 +95,12 @@ const WareHousePage = () => {
                     action={goToCreateWarehousePage}
                 />
             </div>
-            <SearchBar className="ml-auto" placeHolder="Tìm kiếm..." />
-            <div className="flex flex-col gap-4 mt-6 w-fit">
+            <div className="flex flex-col gap-4 mt-6 w-[1200px]">
+                <SearchBar
+                    className="ml-auto"
+                    placeHolder="Tìm kho..."
+                    updateSearchValue={setSearchValue}
+                />
                 {isFetching ? (
                     <TableSkeleton />
                 ) : (
@@ -95,7 +111,13 @@ const WareHousePage = () => {
                             deleteAction={show}
                             viewAction={goToWarehouseDetailPage}
                         />
-                        <Pagination maxPage={5} currentPage={1} />
+                        <Pagination
+                            maxPage={maxPage}
+                            currentPage={currentPage}
+                            goNext={goNext}
+                            goBack={goBack}
+                            goToPage={goToPage}
+                        />
                     </>
                 )}
             </div>

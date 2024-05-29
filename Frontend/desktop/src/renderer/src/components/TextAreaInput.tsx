@@ -6,12 +6,21 @@ type TextAreaInputProps = {
     name?: string;
     label: string;
     onChange?: any;
+    defaultValue?: string;
     bg?: string;
     icon?: ReactNode;
 };
 
 const TextAreaInput = (
-    { name, label, icon, value, bg, onChange }: TextAreaInputProps,
+    {
+        name,
+        label,
+        icon,
+        value,
+        bg,
+        defaultValue,
+        onChange
+    }: TextAreaInputProps,
     ref
 ) => {
     return (
@@ -34,6 +43,7 @@ const TextAreaInput = (
                 name={name}
                 onChange={onChange}
                 value={value}
+                defaultValue={defaultValue}
                 ref={ref}
                 className={cn('w-full outline-none', bg)}
             ></textarea>

@@ -23,7 +23,6 @@ const preparePayload = (warehouseMap: WarehouseMap) => {
     console.log('map response: ', response);
     return response;
 };
-
 export const createWarehouseMap = async ({
     token,
     warehouseMap

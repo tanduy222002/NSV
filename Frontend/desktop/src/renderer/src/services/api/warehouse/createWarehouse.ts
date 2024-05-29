@@ -1,4 +1,4 @@
-import { makeAuthRequest } from '../makeRequest';
+import { makeAuthRequestV2 } from '../makeRequest';
 
 type CreateWarehousePayload = {
     token: string;
@@ -21,7 +21,7 @@ export const createWarehouse = async ({
 }: CreateWarehousePayload) => {
     let response = undefined;
     try {
-        response = await makeAuthRequest({
+        response = await makeAuthRequestV2({
             token: token,
             url: '/warehouses',
             method: 'post',
