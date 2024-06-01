@@ -11,6 +11,16 @@ import lombok.NoArgsConstructor;
 public class QualityInTypeDto {
     @JsonProperty("quality_id")
     private Integer qualityId;
+    @JsonProperty("type_id")
+    private Integer typeId;
     private String name;
+    @JsonProperty(value = "lower_temperature")
+    private String lowerTemperature;
+    @JsonProperty(value = "upper_temperature")
+    private String upperTemperature;
 
+    public QualityInTypeDto(Integer qualityId, String name) {
+        this.qualityId = qualityId;
+        this.name = name;
+    }
 }

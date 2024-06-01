@@ -36,6 +36,11 @@ public class WarehouseDto {
 
     private String status;
 
+    @JsonProperty(value = "lower_temperature")
+    private Double lowerTemperature;
+    @JsonProperty(value = "upper_temperature")
+    private Double upperTemperature;
+
     public WarehouseDto(Integer id, String name, String type, Address address, Double containing, Double capacity, String status) {
         this.id = id;
         this.name = name;
@@ -46,5 +51,20 @@ public class WarehouseDto {
         this.status = status;
         this.currentCapacity =NumberUtil.removeTrailingZero(containing)+"/"+NumberUtil.removeTrailingZero(capacity);
         this.addressString= ConvertUtil.convertAddressToString(address);
+    }
+
+
+    public WarehouseDto(Integer id, String name, String type, Address address, Double containing, Double capacity, String status, Double lowerTemperature, Double upperTemperature) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.containing = containing;
+        this.capacity = capacity;
+        this.status = status;
+        this.currentCapacity =NumberUtil.removeTrailingZero(containing)+"/"+NumberUtil.removeTrailingZero(capacity);
+        this.addressString= ConvertUtil.convertAddressToString(address);
+        this.lowerTemperature = lowerTemperature;
+        this.upperTemperature = upperTemperature;
     }
 }

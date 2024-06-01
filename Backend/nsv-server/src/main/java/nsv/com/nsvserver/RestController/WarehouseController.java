@@ -88,9 +88,15 @@ public class WarehouseController {
     @GetMapping("/name_and_id")
     @Operation(summary = "Get list of warehouse name and id")
     public ResponseEntity<?> getWarehouseNameAndId()  {
-        warehouseService.getWarehouseNameAndId();
         return ResponseEntity.ok(warehouseService.getWarehouseNameAndId());
     }
+
+    @GetMapping("/suitable-for-product-type/{typeId}")
+    @Operation(summary = "Get list of warehouse that suitable to store product")
+    public ResponseEntity<?> getSuitableForProductType(@PathVariable Integer typeId)  {
+        return ResponseEntity.ok(warehouseService.getWarehouseSuitableForProduct(typeId));
+    }
+
 
     @GetMapping("/search")
     @Operation(summary = "Get list of warehouse with filter and pagination")
