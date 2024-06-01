@@ -76,7 +76,7 @@ public class WarehouseDaoImpl implements WarehouseDao {
     public List<WarehouseDto> getWarehouses(Integer pageIndex, Integer pageSize, String name, String type, String status) {
         StringBuilder queryString = new StringBuilder(
                 """
-                    select new nsv.com.nsvserver.Dto.WarehouseDto(w.id,w.name,w.type,a,w.containing,w.capacity,w.status)
+                    select new nsv.com.nsvserver.Dto.WarehouseDto(w.id,w.name,w.type,a,w.containing,w.capacity,w.status, w.lowerTemperature, w.upperTemperature)
                     from Warehouse w left join w.address as a left join fetch a.ward as wa left join fetch wa.district as d left join fetch d.province as p WHERE 1=1 """
         );
 

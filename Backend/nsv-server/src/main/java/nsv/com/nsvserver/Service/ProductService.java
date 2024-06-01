@@ -147,7 +147,10 @@ public class ProductService {
                 type.getQualities().parallelStream().map(quality -> {
                     QualityInTypeDto dto = new QualityInTypeDto();
                     dto.setQualityId(quality.getId());
+                    dto.setTypeId(type.getId());
                     dto.setName(type.getName() + " " + quality.getName());
+                    dto.setLowerTemperature(type.getLowerTemperatureThreshold());
+                    dto.setUpperTemperature(type.getUpperTemperatureThreshold());
                     return dto;
                 })
         ).collect(Collectors.toList());

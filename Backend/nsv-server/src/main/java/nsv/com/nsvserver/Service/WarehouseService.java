@@ -3,12 +3,11 @@ package nsv.com.nsvserver.Service;
 import nsv.com.nsvserver.Dto.*;
 import nsv.com.nsvserver.Entity.Address;
 import nsv.com.nsvserver.Entity.Map;
+import nsv.com.nsvserver.Entity.Type;
 import nsv.com.nsvserver.Entity.Warehouse;
 import nsv.com.nsvserver.Exception.ExistsException;
 import nsv.com.nsvserver.Exception.NotFoundException;
-import nsv.com.nsvserver.Repository.MapRepository;
-import nsv.com.nsvserver.Repository.WarehouseDao;
-import nsv.com.nsvserver.Repository.WarehouseRepository;
+import nsv.com.nsvserver.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class WarehouseService {
+    private final TypeRepository typeRepository;
+    private final ProductRepository productRepository;
     WarehouseRepository warehouseRepository;
 
     AddressService addressService;
@@ -27,11 +28,13 @@ public class WarehouseService {
     WarehouseDao warehouseDaoImpl;
 
     @Autowired
-    public WarehouseService(WarehouseRepository warehouseRepository, AddressService addressService, MapRepository mapRepository, WarehouseDao warehouseDaoImpl) {
+    public WarehouseService(WarehouseRepository warehouseRepository, AddressService addressService, MapRepository mapRepository, WarehouseDao warehouseDaoImpl, TypeRepository typeRepository, ProductRepository productRepository) {
         this.warehouseRepository = warehouseRepository;
         this.addressService = addressService;
         this.mapRepository = mapRepository;
         this.warehouseDaoImpl = warehouseDaoImpl;
+        this.typeRepository = typeRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -55,6 +58,8 @@ public class WarehouseService {
         warehouse.setType(warehouseDto.getType());
         warehouse.setAddress(address);
         warehouse.setMap(map);
+        warehouse.setLowerTemperature(warehouse.getLowerTemperature());
+        warehouse.setUpperTemperature(warehouse.getUpperTemperature());
         warehouse.setCapacity(totalCapacity);
 
         warehouseRepository.save(warehouse);
@@ -78,6 +83,8 @@ public class WarehouseService {
         warehouseDto.setId(warehouse.getId());
         warehouseDto.setCapacity(warehouse.getCapacity());
         warehouseDto.setContaining(warehouse.getContaining());
+        warehouseDto.setUpperTemperature(warehouse.getUpperTemperature());
+        warehouseDto.setLowerTemperature(warehouse.getLowerTemperature());
 
         MapInWareHouseDto mapDto =new MapInWareHouseDto();
         mapDto.setMapName(map.getName());
@@ -122,5 +129,10 @@ public class WarehouseService {
         long count= warehouseDaoImpl.countTotalGetWarehouse(pageIndex, pageSize, name, type, status);
         return new PageDto(Math.ceil((double)count/pageSize),count,pageIndex,warehouse);
 
+    }
+
+    public List<?> getWarehouseSuitableForProduct(Integer typeId) {
+        Type type = typeRepository.findById(typeId).orElseThrow(NotFoundException::new);
+        return warehouseRepository.getWarehouseSuitableForProductTemperature(Double.parseDouble(type.getLowerTemperatureThreshold()),Double.parseDouble(type.getUpperTemperatureThreshold()));
     }
 }

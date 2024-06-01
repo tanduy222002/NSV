@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Warehouse {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +43,14 @@ public class Warehouse {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @Column(name = "lower_temperature")
+    private Double lowerTemperature;
+
+    @Column(name = "upper_temperature")
+    private Double upperTemperature;
+
+
 
 
 

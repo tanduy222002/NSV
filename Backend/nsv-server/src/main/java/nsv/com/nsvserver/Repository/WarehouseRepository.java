@@ -11,8 +11,11 @@ import java.util.List;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse,Integer> {
-    @Query("select new nsv.com.nsvserver.Dto.WarehouseNameAndIdDto(w.id, w.name) from Warehouse w")
+    @Query("select new nsv.com.nsvserver.Dto.WarehouseNameAndIdDto(w.id, w.name, w.lowerTemperature, w.upperTemperature) from Warehouse w")
     public List<?> getWarehouseNameAndId();
+
+    @Query("select new nsv.com.nsvserver.Dto.WarehouseNameAndIdDto(w.id, w.name, w.lowerTemperature, w.upperTemperature) from Warehouse w WHERE w.lowerTemperature<= :minTem AND w.upperTemperature>=:maxTem")
+    public List<?> getWarehouseSuitableForProductTemperature(@Param("minTem") Double minTem, @Param("maxTem") Double maxTemp);
 
     @Query("select new nsv.com.nsvserver.Dto.WarehouseSlotsDto(s.id, s.name, s.capacity, s.containing) from Warehouse w " +
             "join w.map as m " +

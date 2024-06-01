@@ -24,7 +24,7 @@ public class ProductDaoImpl implements ProductDao{
     public List<TypeDto> getTypesInProductByProductId(Integer productId) {
         StringBuilder queryString = new StringBuilder(
                 """
-                SELECT new nsv.com.nsvserver.Dto.TypeDto(t.id,t.name) from Type t join t.product as p on p.id = : productId """
+                SELECT new nsv.com.nsvserver.Dto.TypeDto(t.id,t.name, t.lowerTemperatureThreshold, t.upperTemperatureThreshold) from Type t join t.product as p on p.id = : productId """
         );
 
 

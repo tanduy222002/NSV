@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,8 @@ public class WarehouseDetailDto {
     private Double capacity;
     private Double containing;
     private MapInWareHouseDto map;
+    @JsonProperty(value = "lower_temperature")
+    private Double lowerTemperature;
+    @JsonProperty(value = "upper_temperature")
+    private Double upperTemperature;
 }

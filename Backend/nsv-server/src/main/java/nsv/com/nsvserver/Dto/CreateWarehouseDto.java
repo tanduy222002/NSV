@@ -1,5 +1,6 @@
 package nsv.com.nsvserver.Dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -30,4 +31,15 @@ public class CreateWarehouseDto {
     @Valid
     @NotNull(message = "Warehouse address is mandatory")
     private AddressDto address;
+
+    @JsonProperty(value = "lower_temperature")
+    private Double lowerTemperature;
+
+
+    @JsonProperty(value = "upper_temperature")
+    private Double upperTemperature;
+
+
+
+
 }
